@@ -144,6 +144,23 @@ describe('App Global Layout & Anchors', () => {
     ).toBeInTheDocument();
   });
 
+  it('renders Contact section at #contact anchor with form', () => {
+    const { container } = render(<App />);
+    const contactSection = container.querySelector('#contact');
+    expect(contactSection).toBeInTheDocument();
+    expect(
+      within(contactSection as HTMLElement).getByRole('heading', {
+        level: 2,
+        name: /let's connect/i,
+      }),
+    ).toBeInTheDocument();
+    expect(
+      within(contactSection as HTMLElement).getByRole('button', {
+        name: /send message/i,
+      }),
+    ).toBeInTheDocument();
+  });
+
   it('renders global footer with confidentiality notice and copyright', () => {
     render(<App />);
     expect(screen.getByRole('contentinfo')).toBeInTheDocument();
