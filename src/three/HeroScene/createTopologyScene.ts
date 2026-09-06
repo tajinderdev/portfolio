@@ -77,24 +77,29 @@ export function createTopologyScene(
   for (let i = 0; i < nodeCount; i++) {
     // Distribute into 5 architectural tiers along the X axis
     const tier = i % 5;
-    let xRange = [-14, -8];
+    let minX = -14;
+    let maxX = -8;
     let color = colorCyan;
 
     if (tier === 1) {
-      xRange = [-7, -2];
+      minX = -7;
+      maxX = -2;
       color = colorSky;
     } else if (tier === 2) {
-      xRange = [-1, 4];
+      minX = -1;
+      maxX = 4;
       color = colorEmerald;
     } else if (tier === 3) {
-      xRange = [5, 9];
+      minX = 5;
+      maxX = 9;
       color = colorCyan;
     } else if (tier === 4) {
-      xRange = [10, 15];
+      minX = 10;
+      maxX = 15;
       color = colorSlate;
     }
 
-    const x = xRange[0] + Math.random() * (xRange[1] - xRange[0]);
+    const x = minX + Math.random() * (maxX - minX);
     const y = (Math.random() - 0.5) * 16;
     const z = (Math.random() - 0.5) * 8;
 
@@ -144,9 +149,12 @@ export function createTopologyScene(
   const connectedPairs: [number, number][] = [];
 
   for (let i = 0; i < nodeCount; i++) {
+    const nodeA = nodes[i];
+    if (!nodeA) continue;
+
     for (let j = i + 1; j < nodeCount; j++) {
-      const nodeA = nodes[i];
       const nodeB = nodes[j];
+      if (!nodeB) continue;
 
       // Connect nodes in adjacent tiers within proximity distance
       const tierDiff = Math.abs(nodeA.tier - nodeB.tier);
@@ -196,10 +204,12 @@ export function createTopologyScene(
 
   for (let i = 0; i < pulseCount; i++) {
     const pairIndex = Math.floor(Math.random() * connectedPairs.length);
-    const pair = connectedPairs[pairIndex] || [0, 1];
+    const pair = connectedPairs[pairIndex];
+    const startIndex = pair ? pair[0] : 0;
+    const endIndex = pair ? pair[1] : 1;
     pulses.push({
-      startNodeIndex: pair[0],
-      endNodeIndex: pair[1],
+      startNodeIndex: startIndex,
+      endNodeIndex: endIndex,
       progress: Math.random(),
       speed: 0.15 + Math.random() * 0.25,
     });
