@@ -1,9 +1,13 @@
 import { defineConfig } from 'vitest/config';
+import { loadEnv, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import path from 'node:path';
 
-import type { Plugin } from 'vite';
+// Load environment variables for the development server middleware
+const loadedEnv = loadEnv(process.env.NODE_ENV || 'development', process.cwd(), '');
+Object.assign(process.env, loadedEnv);
+
 import { handleContactRequest } from './src/server/contactHandler';
 
 function contactDevPlugin(): Plugin {

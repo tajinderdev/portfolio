@@ -28,23 +28,34 @@ export interface ResendEmailConfig {
 const DEFAULT_SENDER = 'Portfolio Contact <onboarding@resend.dev>';
 
 export class ResendEmailProvider implements EmailProvider {
-  private readonly apiKey: string;
-  private readonly receiverEmail: string;
-  private readonly senderEmail: string;
+  private readonly apiKey?: string;
+  private readonly receiverEmail?: string;
+  private readonly senderEmail?: string;
   private readonly fetchFn: typeof fetch;
 
   constructor(config?: ResendEmailConfig) {
-    this.apiKey = config?.apiKey ?? (process.env.RESEND_API_KEY || '');
-    this.receiverEmail =
-      config?.receiverEmail ?? (process.env.CONTACT_RECEIVER_EMAIL || '');
-    this.senderEmail =
-      config?.senderEmail ?? (process.env.CONTACT_SENDER_EMAIL || DEFAULT_SENDER);
+    this.apiKey = config?.apiKey;
+    this.receiverEmail = config?.receiverEmail;
+    this.senderEmail = config?.senderEmail;
     this.fetchFn = config?.fetchFn ?? globalThis.fetch;
   }
 
   async send(data: ValidatedContactData): Promise<EmailDispatchResult> {
+    const apiKey =
+      this.apiKey !== undefined
+        ? this.apiKey
+        : (process.env.RESEND_API_KEY || '');
+    const receiverEmail =
+      this.receiverEmail !== undefined
+        ? this.receiverEmail
+        : (process.env.CONTACT_RECEIVER_EMAIL || '');
+    const senderEmail =
+      this.senderEmail !== undefined
+        ? this.senderEmail
+        : (process.env.CONTACT_SENDER_EMAIL || DEFAULT_SENDER);
+
     // 1. Safe Development / Testing Simulation Mode
-    if (!this.apiKey) {
+    if (!apiKey) {
       console.info('[DEV SIMULATION] Contact form message received:', {
         name: data.name,
         email: data.email,
@@ -60,7 +71,7 @@ export class ResendEmailProvider implements EmailProvider {
 
     // 2. Production Resend REST Dispatch
     try {
-      const recipient = this.receiverEmail || 'delivered@resend.dev';
+      const recipient = receiverEmail || 'delivered@resend.dev';
 
       const textBody = [
         `New message received via portfolio contact form:`,
@@ -106,11 +117,11 @@ export class ResendEmailProvider implements EmailProvider {
       const response = await this.fetchFn('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${this.apiKey}`,
+          Authorization: `Bearer ${apiKey}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          from: this.senderEmail,
+          from: senderEmail,
           to: [recipient],
           reply_to: data.email,
           subject: data.subject,
