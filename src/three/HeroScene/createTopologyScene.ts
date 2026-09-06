@@ -307,15 +307,21 @@ export function createTopologyScene(
     if (intersects.length > 0 && intersects[0]?.object) {
       const intersectedMesh = intersects[0].object as THREE.Mesh;
       const idx = intersectedMesh.userData['nodeIndex'] as number;
-      if (typeof idx === 'number' && serverNodes[idx]) {
-        hoveredNodeIndex = idx;
-        serverNodes[idx].targetScale = 1.25;
-        (serverNodes[idx].wireframeLines.material as THREE.LineBasicMaterial).opacity = 1.0;
+      if (typeof idx === 'number') {
+        const targetNode = serverNodes[idx];
+        if (targetNode) {
+          hoveredNodeIndex = idx;
+          targetNode.targetScale = 1.25;
+          (targetNode.wireframeLines.material as THREE.LineBasicMaterial).opacity = 1.0;
+        }
       }
     } else {
-      if (hoveredNodeIndex !== null && serverNodes[hoveredNodeIndex]) {
-        serverNodes[hoveredNodeIndex].targetScale = 1.0;
-        (serverNodes[hoveredNodeIndex].wireframeLines.material as THREE.LineBasicMaterial).opacity = 0.85;
+      if (hoveredNodeIndex !== null) {
+        const prevHovered = serverNodes[hoveredNodeIndex];
+        if (prevHovered) {
+          prevHovered.targetScale = 1.0;
+          (prevHovered.wireframeLines.material as THREE.LineBasicMaterial).opacity = 0.85;
+        }
         hoveredNodeIndex = null;
       }
     }
