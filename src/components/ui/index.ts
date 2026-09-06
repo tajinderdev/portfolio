@@ -3,3 +3,5 @@ export * from './Link';
 export * from './Card';
 export * from './Badge';
 export * from './StatusDot';
+export * from './Card3D';
+
