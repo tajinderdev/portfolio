@@ -1,4 +1,5 @@
 import { type ReactElement } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import { RootLayout } from '@/components/layout';
 import {
   Hero,
@@ -40,6 +41,9 @@ export function App(): ReactElement {
 
       {/* Section Anchor 5: Contact & Technical Discussion (#contact) */}
       <Contact />
+
+      {/* Vercel Web Analytics */}
+      <Analytics />
     </RootLayout>
   );
 }
