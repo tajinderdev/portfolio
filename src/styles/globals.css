@@ -15,16 +15,23 @@
 
   /* Accent & Interactive */
   --color-accent: #7cff6b;
+  --color-accent-hover: #95ff87;
   --color-accent-subtle: rgba(124, 255, 107, 0.12);
+  --color-accent-border: rgba(124, 255, 107, 0.35);
 
   /* Border colors */
-  --color-border-subtle: rgba(255, 255, 255, 0.1);
+  --color-border-subtle: rgba(255, 255, 255, 0.10);
   --color-border-strong: rgba(255, 255, 255, 0.16);
 
   /* Typography */
   --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-heading: 'Space Grotesk', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Transition timing */
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+  --transition-slow: 400ms ease;
 }
 
 :root {
