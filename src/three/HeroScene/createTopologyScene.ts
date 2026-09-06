@@ -142,9 +142,9 @@ export function createTopologyScene(
   geometry.setAttribute('position', positionAttribute);
   geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
-  // Small, high-contrast, pinpoint size (matching Antigravity's scale)
+  // Micro-dot pinpoint size matching Antigravity's refined precision
   const material = new THREE.PointsMaterial({
-    size: isMobile ? 2.2 : 2.8,
+    size: isMobile ? 1.6 : 2.0,
     vertexColors: true,
     map: circleTexture,
     transparent: true,
