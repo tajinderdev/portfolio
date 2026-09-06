@@ -65,14 +65,16 @@ export function Footer(): ReactElement {
                   <a
                     href={link.href}
                     onClick={!link.isExternal ? (e) => handleSmoothScrollClick(e, link.href) : undefined}
-                    target={link.isExternal ? '_blank' : undefined}
-                    rel={link.isExternal ? 'noopener noreferrer' : undefined}
+                    target={link.isExternal && !link.href.startsWith('mailto:') ? '_blank' : undefined}
+                    rel={link.isExternal && !link.href.startsWith('mailto:') ? 'noopener noreferrer' : undefined}
                     className="inline-flex items-center gap-1.5 text-text-secondary hover:text-accent transition-colors duration-150"
                   >
                     <span>{link.label}</span>
                     {link.isExternal && (
                       <>
-                        <span className="sr-only"> (opens in a new tab)</span>
+                        <span className="sr-only">
+                          {link.href.startsWith('mailto:') ? ' (opens email client)' : ' (opens in a new tab)'}
+                        </span>
                         <svg
                           className="w-3.5 h-3.5 text-text-muted"
                           fill="none"

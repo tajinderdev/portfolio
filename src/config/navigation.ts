@@ -36,7 +36,7 @@ export const socialLinks: readonly SocialLink[] = [
   {
     id: 'linkedin',
     label: 'LinkedIn',
-    href: 'https://linkedin.com/in/tajinderdev',
+    href: 'https://www.linkedin.com/in/tajinder-developer/',
     isExternal: true,
   },
   {
@@ -48,7 +48,7 @@ export const socialLinks: readonly SocialLink[] = [
   {
     id: 'email',
     label: 'Email',
-    href: '#contact',
-    isExternal: false,
+    href: 'mailto:imtj.human@gmail.com',
+    isExternal: true,
   },
 ];

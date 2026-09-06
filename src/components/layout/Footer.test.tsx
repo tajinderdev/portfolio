@@ -12,7 +12,7 @@ describe('Footer Component', () => {
   it('renders navigation links and social links', () => {
     render(<Footer />);
     expect(screen.getByRole('link', { name: /github/i })).toHaveAttribute('href', 'https://github.com/tajinderdev');
-    expect(screen.getByRole('link', { name: /linkedin/i })).toHaveAttribute('href', 'https://linkedin.com/in/tajinderdev');
+    expect(screen.getByRole('link', { name: /linkedin/i })).toHaveAttribute('href', 'https://www.linkedin.com/in/tajinder-developer/');
   });
 
   it('contains confidentiality notice and current copyright year', () => {
