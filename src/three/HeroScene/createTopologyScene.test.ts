@@ -91,6 +91,19 @@ describe('createTopologyScene', () => {
     expect(container.contains(controller.domElement)).toBe(false);
   });
 
+  it('handles scroll progress updates for exploded architecture view', () => {
+    const controller = createTopologyScene(container);
+
+    expect(typeof controller.setScrollProgress).toBe('function');
+    expect(() => {
+      controller.setScrollProgress(0.4);
+      controller.setScrollProgress(1.0);
+      controller.setScrollProgress(0.0);
+    }).not.toThrow();
+
+    controller.dispose();
+  });
+
   it('supports reduced motion mode without crashing', () => {
     const controller = createTopologyScene(container, { isReducedMotion: true });
 

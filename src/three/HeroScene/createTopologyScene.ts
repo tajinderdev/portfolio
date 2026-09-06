@@ -1,33 +1,37 @@
 /**
- * Hero Topology 3D Scene Core Engine
+ * Hero Topology 3D Scene Core Engine (Tangible 3D Overhaul)
  *
- * Implements a distributed architecture topology in vanilla Three.js:
- * - Edge Clients -> Gateway -> Core Microservices -> Persistence Mesh
- * - Point cloud nodes with tier-based color encoding
- * - Connective network edges with animated telemetry packet pulses
- * - Pointer parallax with clamped lerping
- * - Zero-GPU idle when paused (0% offscreen resource usage)
+ * Implements a tangible, interactive distributed architecture system in Three.js:
+ * - Solid 3D Server Blocks & Microservice Nodes with glowing neon wireframe edges
+ * - Central architectural core lattice with dynamic point lighting
+ * - Connective 3D data conduits with moving telemetry packets
+ * - Interactive Raycaster: mouse hover scales and highlights architectural nodes
+ * - Scroll-driven exploded architecture transformation
+ * - 0% offscreen GPU idle when paused
  * - Deterministic memory cleanup and disposal
  */
 
 import * as THREE from 'three';
 import type { TopologySceneController, TopologySceneOptions } from '../types';
 
-interface NodeDefinition {
-  x: number;
-  y: number;
-  z: number;
-  r: number;
-  g: number;
-  b: number;
+interface ServerNode {
+  meshGroup: THREE.Group;
+  basePosition: THREE.Vector3;
+  currentPosition: THREE.Vector3;
+  baseScale: number;
+  targetScale: number;
   tier: number;
+  color: THREE.Color;
+  wireframeLines: THREE.LineSegments;
+  boxMesh: THREE.Mesh;
 }
 
-interface TelemetryPulse {
-  startNodeIndex: number;
-  endNodeIndex: number;
-  progress: number;
-  speed: number;
+interface TelemetryConduit {
+  startNode: ServerNode;
+  endNode: ServerNode;
+  pulseProgress: number;
+  pulseSpeed: number;
+  pulseMesh: THREE.Mesh;
 }
 
 export function createTopologyScene(
@@ -36,19 +40,22 @@ export function createTopologyScene(
 ): TopologySceneController {
   const isReducedMotion = Boolean(options?.isReducedMotion);
   const isMobile = Boolean(options?.isMobile);
-  const targetDpr = Math.min(options?.dpr ?? (typeof window !== 'undefined' ? window.devicePixelRatio : 1), 1.75);
+  const targetDpr = Math.min(
+    options?.dpr ?? (typeof window !== 'undefined' ? window.devicePixelRatio : 1),
+    1.75
+  );
 
   const width = container.clientWidth || 1000;
   const height = container.clientHeight || 600;
 
-  // 1. Scene & Camera Setup
+  // 1. Scene, Camera & Lighting
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(55, width / height, 0.1, 1000);
+  const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 1000);
   camera.position.set(0, 0, 32);
 
-  // 2. Canvas & WebGLRenderer Setup
+  // Canvas & WebGLRenderer Setup
   const canvas = document.createElement('canvas');
-  canvas.className = 'w-full h-full block pointer-events-none';
+  canvas.className = 'w-full h-full block';
   canvas.style.display = 'block';
   canvas.setAttribute('aria-hidden', 'true');
   container.appendChild(canvas);
@@ -63,209 +70,255 @@ export function createTopologyScene(
   renderer.setPixelRatio(targetDpr);
   renderer.setClearColor(0x000000, 0);
 
-  // 3. Generate Topology Graph Nodes
-  // Node counts tuned for desktop (48 nodes) vs mobile (22 nodes)
-  const nodeCount = isMobile ? 22 : 48;
-  const nodes: NodeDefinition[] = [];
+  // Dynamic Scene Lighting for real 3D depth
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
+  scene.add(ambientLight);
 
-  // Color palettes matching design system
-  const colorCyan = { r: 0.0, g: 0.96, b: 0.83 }; // #00F5D4 (Gateway & Edge)
-  const colorSky = { r: 0.22, g: 0.74, b: 0.97 }; // #38BDF8 (Cloud & Infrastructure)
-  const colorEmerald = { r: 0.2, g: 0.83, b: 0.6 }; // #34D399 (Core Services)
-  const colorSlate = { r: 0.45, g: 0.52, b: 0.62 }; // #718096 (Data Persistence)
+  const coreLight = new THREE.PointLight(0x00f5d4, 3.5, 45);
+  coreLight.position.set(0, 0, 5);
+  scene.add(coreLight);
+
+  const keyLight = new THREE.DirectionalLight(0x38bdf8, 1.5);
+  keyLight.position.set(15, 20, 25);
+  scene.add(keyLight);
+
+  // 2. Shared Geometries and Materials for performance
+  const boxGeo = new THREE.BoxGeometry(1.6, 1.2, 1.2);
+  const edgesGeo = new THREE.EdgesGeometry(boxGeo);
+  const sphereGeo = new THREE.SphereGeometry(0.32, 12, 12);
+  const pulseGeo = new THREE.SphereGeometry(0.22, 8, 8);
+
+  const pulseMat = new THREE.MeshBasicMaterial({
+    color: 0x00f5d4,
+    transparent: true,
+    opacity: 0.95,
+  });
+
+  // Color Tiers:
+  // Tier 0: Gateway & Ingress (#00F5D4 cyan)
+  // Tier 1: Cloud & Cluster (#38BDF8 sky blue)
+  // Tier 2: Core Microservices (#34D399 emerald)
+  // Tier 3: Persistence & Database (#818CF8 indigo)
+  // Tier 4: Storage & Infrastructure (#F59E0B amber)
+  const tierColors = [
+    new THREE.Color(0x00f5d4),
+    new THREE.Color(0x38bdf8),
+    new THREE.Color(0x34d399),
+    new THREE.Color(0x818cf8),
+    new THREE.Color(0xf59e0b),
+  ];
+
+  // 3. Build Solid 3D Architectural Nodes
+  const nodeCount = isMobile ? 12 : 26;
+  const serverNodes: ServerNode[] = [];
+  const raycastMeshes: THREE.Mesh[] = [];
 
   for (let i = 0; i < nodeCount; i++) {
-    // Distribute into 5 architectural tiers along the X axis
     const tier = i % 5;
-    let minX = -14;
-    let maxX = -8;
-    let color = colorCyan;
+    const color = tierColors[tier] ?? tierColors[0]!;
 
+    // Distribute tiers along X-axis to communicate pipeline flow
+    let minX = -13;
+    let maxX = -8;
     if (tier === 1) {
       minX = -7;
       maxX = -2;
-      color = colorSky;
     } else if (tier === 2) {
       minX = -1;
       maxX = 4;
-      color = colorEmerald;
     } else if (tier === 3) {
       minX = 5;
       maxX = 9;
-      color = colorCyan;
     } else if (tier === 4) {
       minX = 10;
-      maxX = 15;
-      color = colorSlate;
+      maxX = 14;
     }
 
     const x = minX + Math.random() * (maxX - minX);
-    const y = (Math.random() - 0.5) * 16;
+    const y = (Math.random() - 0.5) * 12;
     const z = (Math.random() - 0.5) * 8;
 
-    nodes.push({
-      x,
-      y,
-      z,
-      r: color.r,
-      g: color.g,
-      b: color.b,
+    const basePosition = new THREE.Vector3(x, y, z);
+    const currentPosition = basePosition.clone();
+
+    // Group containing solid box, wireframe neon border, and glowing inner status sphere
+    const nodeGroup = new THREE.Group();
+    nodeGroup.position.copy(basePosition);
+
+    // Solid dark translucent box body
+    const boxMat = new THREE.MeshStandardMaterial({
+      color: 0x080f1d,
+      roughness: 0.25,
+      metalness: 0.8,
+      transparent: true,
+      opacity: 0.88,
+    });
+    const boxMesh = new THREE.Mesh(boxGeo, boxMat);
+    boxMesh.userData = { nodeIndex: i, tier };
+    nodeGroup.add(boxMesh);
+    raycastMeshes.push(boxMesh);
+
+    // Bright neon wireframe outline
+    const wireframeMat = new THREE.LineBasicMaterial({
+      color: color,
+      transparent: true,
+      opacity: 0.85,
+    });
+    const wireframeLines = new THREE.LineSegments(edgesGeo, wireframeMat);
+    nodeGroup.add(wireframeLines);
+
+    // Glowing inner telemetry core
+    const coreMat = new THREE.MeshBasicMaterial({
+      color: color,
+      transparent: true,
+      opacity: 0.9,
+    });
+    const coreMesh = new THREE.Mesh(sphereGeo, coreMat);
+    nodeGroup.add(coreMesh);
+
+    scene.add(nodeGroup);
+
+    serverNodes.push({
+      meshGroup: nodeGroup,
+      basePosition,
+      currentPosition,
+      baseScale: 1.0,
+      targetScale: 1.0,
       tier,
+      color,
+      wireframeLines,
+      boxMesh,
     });
   }
 
-  // 4. Build Node Point Cloud Geometry
-  const nodePositions = new Float32Array(nodeCount * 3);
-  const nodeColors = new Float32Array(nodeCount * 3);
-
-  nodes.forEach((node, idx) => {
-    nodePositions[idx * 3] = node.x;
-    nodePositions[idx * 3 + 1] = node.y;
-    nodePositions[idx * 3 + 2] = node.z;
-
-    nodeColors[idx * 3] = node.r;
-    nodeColors[idx * 3 + 1] = node.g;
-    nodeColors[idx * 3 + 2] = node.b;
-  });
-
-  const nodeGeometry = new THREE.BufferGeometry();
-  nodeGeometry.setAttribute('position', new THREE.BufferAttribute(nodePositions, 3));
-  nodeGeometry.setAttribute('color', new THREE.BufferAttribute(nodeColors, 3));
-
-  const nodeMaterial = new THREE.PointsMaterial({
-    size: isMobile ? 3.0 : 3.8,
-    vertexColors: true,
+  // 4. Central Architecture Core Lattice (representing high-availability orchestrator)
+  const coreHubGroup = new THREE.Group();
+  const hubGeo = new THREE.IcosahedronGeometry(2.4, 0);
+  const hubEdgesGeo = new THREE.EdgesGeometry(hubGeo);
+  const hubMat = new THREE.MeshStandardMaterial({
+    color: 0x050c18,
+    roughness: 0.2,
+    metalness: 0.9,
     transparent: true,
-    opacity: 0.85,
-    sizeAttenuation: true,
+    opacity: 0.75,
   });
+  const hubMesh = new THREE.Mesh(hubGeo, hubMat);
+  const hubWireMat = new THREE.LineBasicMaterial({
+    color: 0x00f5d4,
+    transparent: true,
+    opacity: 0.9,
+  });
+  const hubWire = new THREE.LineSegments(hubEdgesGeo, hubWireMat);
+  coreHubGroup.add(hubMesh);
+  coreHubGroup.add(hubWire);
+  coreHubGroup.position.set(0, 0, -2);
+  scene.add(coreHubGroup);
 
-  const nodePoints = new THREE.Points(nodeGeometry, nodeMaterial);
-  scene.add(nodePoints);
+  // 5. Connective Network Conduits & Data Pulses
+  const conduits: TelemetryConduit[] = [];
+  const conduitLinesPositions: number[] = [];
+  const conduitLinesColors: number[] = [];
 
-  // 5. Build Connective Network Edges
-  const edgeLinePositions: number[] = [];
-  const edgeLineColors: number[] = [];
-  const connectedPairs: [number, number][] = [];
-
-  for (let i = 0; i < nodeCount; i++) {
-    const nodeA = nodes[i];
+  for (let i = 0; i < serverNodes.length; i++) {
+    const nodeA = serverNodes[i];
     if (!nodeA) continue;
 
-    for (let j = i + 1; j < nodeCount; j++) {
-      const nodeB = nodes[j];
+    for (let j = i + 1; j < serverNodes.length; j++) {
+      const nodeB = serverNodes[j];
       if (!nodeB) continue;
 
-      // Connect nodes in adjacent tiers within proximity distance
-      const tierDiff = Math.abs(nodeA.tier - nodeB.tier);
-      if (tierDiff <= 1) {
-        const dx = nodeA.x - nodeB.x;
-        const dy = nodeA.y - nodeB.y;
-        const dz = nodeA.z - nodeB.z;
-        const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
-
+      if (Math.abs(nodeA.tier - nodeB.tier) <= 1) {
+        const dist = nodeA.basePosition.distanceTo(nodeB.basePosition);
         if (dist < (isMobile ? 7.5 : 8.5)) {
-          connectedPairs.push([i, j]);
+          conduitLinesPositions.push(
+            nodeA.basePosition.x,
+            nodeA.basePosition.y,
+            nodeA.basePosition.z,
+            nodeB.basePosition.x,
+            nodeB.basePosition.y,
+            nodeB.basePosition.z
+          );
 
-          edgeLinePositions.push(nodeA.x, nodeA.y, nodeA.z);
-          edgeLinePositions.push(nodeB.x, nodeB.y, nodeB.z);
+          conduitLinesColors.push(
+            nodeA.color.r * 0.45,
+            nodeA.color.g * 0.45,
+            nodeA.color.b * 0.45,
+            nodeB.color.r * 0.45,
+            nodeB.color.g * 0.45,
+            nodeB.color.b * 0.45
+          );
 
-          // Subtle blend towards cyan/slate
-          edgeLineColors.push(nodeA.r * 0.5, nodeA.g * 0.5, nodeA.b * 0.5);
-          edgeLineColors.push(nodeB.r * 0.5, nodeB.g * 0.5, nodeB.b * 0.5);
+          // Add moving data pulse on active conduits
+          if (conduits.length < (isMobile ? 6 : 14)) {
+            const pulseMesh = new THREE.Mesh(pulseGeo, pulseMat);
+            scene.add(pulseMesh);
+            conduits.push({
+              startNode: nodeA,
+              endNode: nodeB,
+              pulseProgress: Math.random(),
+              pulseSpeed: 0.2 + Math.random() * 0.25,
+              pulseMesh,
+            });
+          }
         }
       }
     }
   }
 
-  const edgeGeometry = new THREE.BufferGeometry();
-  edgeGeometry.setAttribute(
+  const conduitGeo = new THREE.BufferGeometry();
+  conduitGeo.setAttribute(
     'position',
-    new THREE.Float32BufferAttribute(edgeLinePositions, 3)
+    new THREE.Float32BufferAttribute(conduitLinesPositions, 3)
   );
-  edgeGeometry.setAttribute(
+  conduitGeo.setAttribute(
     'color',
-    new THREE.Float32BufferAttribute(edgeLineColors, 3)
+    new THREE.Float32BufferAttribute(conduitLinesColors, 3)
   );
 
-  const edgeMaterial = new THREE.LineBasicMaterial({
+  const conduitMat = new THREE.LineBasicMaterial({
     vertexColors: true,
     transparent: true,
-    opacity: 0.22,
+    opacity: 0.35,
     depthWrite: false,
   });
 
-  const edgeSegments = new THREE.LineSegments(edgeGeometry, edgeMaterial);
-  scene.add(edgeSegments);
+  const conduitSegments = new THREE.LineSegments(conduitGeo, conduitMat);
+  scene.add(conduitSegments);
 
-  // 6. Build Live Telemetry Packet Pulses
-  const pulseCount = Math.min(connectedPairs.length, isMobile ? 6 : 14);
-  const pulses: TelemetryPulse[] = [];
-
-  for (let i = 0; i < pulseCount; i++) {
-    const pairIndex = Math.floor(Math.random() * connectedPairs.length);
-    const pair = connectedPairs[pairIndex];
-    const startIndex = pair ? pair[0] : 0;
-    const endIndex = pair ? pair[1] : 1;
-    pulses.push({
-      startNodeIndex: startIndex,
-      endNodeIndex: endIndex,
-      progress: Math.random(),
-      speed: 0.15 + Math.random() * 0.25,
-    });
-  }
-
-  const pulsePositions = new Float32Array(pulseCount * 3);
-  const pulseGeometry = new THREE.BufferGeometry();
-  pulseGeometry.setAttribute('position', new THREE.BufferAttribute(pulsePositions, 3));
-
-  const pulseMaterial = new THREE.PointsMaterial({
-    size: 4.2,
-    color: 0x00f5d4,
-    transparent: true,
-    opacity: 0.95,
-    sizeAttenuation: true,
-  });
-
-  const pulsePoints = new THREE.Points(pulseGeometry, pulseMaterial);
-  scene.add(pulsePoints);
-
-  // 7. Interaction & Parallax State
+  // 6. Interaction, Raycasting & Scroll State
+  const raycaster = new THREE.Raycaster();
+  const pointerVec = new THREE.Vector2(-999, -999);
   let targetPointerX = 0;
   let targetPointerY = 0;
   let currentRotX = 0;
   let currentRotY = 0;
+  let targetScrollProgress = 0;
+  let currentScrollProgress = 0;
   let isPaused = false;
   let animationFrameId: number | null = null;
   let lastTime = typeof performance !== 'undefined' ? performance.now() : 0;
+  let hoveredNodeIndex: number | null = null;
 
-  function updateTelemetry(dt: number) {
-    const posAttr = pulseGeometry.attributes.position as THREE.BufferAttribute;
-    const array = posAttr.array as Float32Array;
+  function handleRaycast() {
+    if (isMobile || isReducedMotion) return;
+    raycaster.setFromCamera(pointerVec, camera);
+    const intersects = raycaster.intersectObjects(raycastMeshes);
 
-    pulses.forEach((pulse, idx) => {
-      pulse.progress += pulse.speed * dt;
-      if (pulse.progress >= 1.0) {
-        pulse.progress = 0;
-        // Optionally cycle to a new connected route
-        const newPair = connectedPairs[Math.floor(Math.random() * connectedPairs.length)];
-        if (newPair) {
-          pulse.startNodeIndex = newPair[0];
-          pulse.endNodeIndex = newPair[1];
-        }
+    if (intersects.length > 0 && intersects[0]?.object) {
+      const intersectedMesh = intersects[0].object as THREE.Mesh;
+      const idx = intersectedMesh.userData['nodeIndex'] as number;
+      if (typeof idx === 'number' && serverNodes[idx]) {
+        hoveredNodeIndex = idx;
+        serverNodes[idx].targetScale = 1.25;
+        (serverNodes[idx].wireframeLines.material as THREE.LineBasicMaterial).opacity = 1.0;
       }
-
-      const a = nodes[pulse.startNodeIndex];
-      const b = nodes[pulse.endNodeIndex];
-
-      if (a && b) {
-        array[idx * 3] = a.x + (b.x - a.x) * pulse.progress;
-        array[idx * 3 + 1] = a.y + (b.y - a.y) * pulse.progress;
-        array[idx * 3 + 2] = a.z + (b.z - a.z) * pulse.progress;
+    } else {
+      if (hoveredNodeIndex !== null && serverNodes[hoveredNodeIndex]) {
+        serverNodes[hoveredNodeIndex].targetScale = 1.0;
+        (serverNodes[hoveredNodeIndex].wireframeLines.material as THREE.LineBasicMaterial).opacity = 0.85;
+        hoveredNodeIndex = null;
       }
-    });
-
-    posAttr.needsUpdate = true;
+    }
   }
 
   function renderFrame(now: number) {
@@ -275,16 +328,53 @@ export function createTopologyScene(
     lastTime = now;
 
     if (!isReducedMotion) {
-      // Smoothly ease rotation towards pointer coordinates (clamped to +/- 0.06 rad)
-      currentRotX += (targetPointerY * 0.05 - currentRotX) * 0.05;
-      currentRotY += (targetPointerX * 0.06 - currentRotY) * 0.05;
+      // 1. Mouse pointer parallax rotation (clamped to +/- 0.08 rad)
+      currentRotX += (targetPointerY * 0.08 - currentRotX) * 0.05;
+      currentRotY += (targetPointerX * 0.09 - currentRotY) * 0.05;
 
-      // Subtle ambient drift
-      const elapsed = now * 0.0004;
-      scene.rotation.x = currentRotX + Math.sin(elapsed) * 0.02;
-      scene.rotation.y = currentRotY + Math.cos(elapsed * 0.8) * 0.03;
+      // 2. Smooth scroll-driven camera translation & exploded architecture
+      currentScrollProgress += (targetScrollProgress - currentScrollProgress) * 0.08;
+      camera.position.z = 32 - currentScrollProgress * 12; // Camera travels forward on scroll
 
-      updateTelemetry(dt);
+      // Nodes explode outward along their position vectors as user scrolls
+      const dispersalFactor = 1.0 + currentScrollProgress * 1.5;
+      serverNodes.forEach((node) => {
+        node.meshGroup.position.x = node.basePosition.x * dispersalFactor;
+        node.meshGroup.position.y = node.basePosition.y * dispersalFactor;
+        node.meshGroup.position.z = node.basePosition.z * dispersalFactor;
+
+        // Smooth scale lerping for hover feedback
+        const currentScale = node.meshGroup.scale.x;
+        const newScale = currentScale + (node.targetScale - currentScale) * 0.15;
+        node.meshGroup.scale.set(newScale, newScale, newScale);
+      });
+
+      // 3. Central hub subtle rotation
+      coreHubGroup.rotation.x += 0.003;
+      coreHubGroup.rotation.y += 0.005;
+
+      // 4. Update live telemetry pulses
+      conduits.forEach((conduit) => {
+        conduit.pulseProgress += conduit.pulseSpeed * dt;
+        if (conduit.pulseProgress >= 1.0) {
+          conduit.pulseProgress = 0;
+        }
+
+        const startPos = conduit.startNode.meshGroup.position;
+        const endPos = conduit.endNode.meshGroup.position;
+
+        conduit.pulseMesh.position.lerpVectors(
+          startPos,
+          endPos,
+          conduit.pulseProgress
+        );
+      });
+
+      // 5. Ambient group drift
+      scene.rotation.x = currentRotX + Math.sin(now * 0.0004) * 0.02;
+      scene.rotation.y = currentRotY + Math.cos(now * 0.0003) * 0.025;
+
+      handleRaycast();
     }
 
     renderer.render(scene, camera);
@@ -300,13 +390,18 @@ export function createTopologyScene(
     animationFrameId = requestAnimationFrame(renderFrame);
   }
 
-  // 8. Controller API
   return {
     domElement: canvas,
 
     setPointer(x: number, y: number) {
       targetPointerX = Math.max(-1, Math.min(1, x));
       targetPointerY = Math.max(-1, Math.min(1, y));
+      pointerVec.x = targetPointerX;
+      pointerVec.y = targetPointerY;
+    },
+
+    setScrollProgress(progress: number) {
+      targetScrollProgress = Math.max(0, Math.min(1, progress));
     },
 
     pause() {
@@ -343,22 +438,31 @@ export function createTopologyScene(
         animationFrameId = null;
       }
 
-      // Explicitly dispose all geometries
-      nodeGeometry.dispose();
-      edgeGeometry.dispose();
-      pulseGeometry.dispose();
+      // Dispose shared geometries
+      boxGeo.dispose();
+      edgesGeo.dispose();
+      sphereGeo.dispose();
+      pulseGeo.dispose();
+      hubGeo.dispose();
+      hubEdgesGeo.dispose();
+      conduitGeo.dispose();
 
-      // Explicitly dispose all materials
-      nodeMaterial.dispose();
-      edgeMaterial.dispose();
-      pulseMaterial.dispose();
+      // Dispose materials
+      pulseMat.dispose();
+      hubMat.dispose();
+      hubWireMat.dispose();
+      conduitMat.dispose();
 
-      // Safely detach canvas from DOM
+      serverNodes.forEach((node) => {
+        (node.boxMesh.material as THREE.Material).dispose();
+        (node.wireframeLines.material as THREE.Material).dispose();
+      });
+
+      // Detach canvas
       if (canvas.parentElement) {
         canvas.parentElement.removeChild(canvas);
       }
 
-      // Dispose renderer and force context loss to prevent WebGL memory leak
       renderer.dispose();
       if (typeof renderer.forceContextLoss === 'function') {
         renderer.forceContextLoss();

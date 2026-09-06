@@ -20,6 +20,7 @@ export interface TopologySceneOptions {
 export interface TopologySceneController {
   readonly domElement: HTMLCanvasElement;
   setPointer(x: number, y: number): void;
+  setScrollProgress(progress: number): void;
   pause(): void;
   resume(): void;
   resize(width: number, height: number): void;
