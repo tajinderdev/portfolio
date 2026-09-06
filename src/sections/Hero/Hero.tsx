@@ -1,9 +1,13 @@
-import type { ReactElement } from 'react';
+import { lazy, Suspense, type ReactElement } from 'react';
 import type { ProfileContent } from '@/content/models';
 import { Container } from '@/components/layout';
+import { ThreeBoundary } from '@/three';
 import { HeroContent } from './HeroContent';
 import { EngineeringBreadth } from './EngineeringBreadth';
 import { SystemFlowVisualizer } from './SystemFlowVisualizer';
+
+// Lazy-load the 3D topology scene to keep initial entry bundle weight at 0 KB
+const HeroTopologyScene = lazy(() => import('@/three/HeroScene'));
 
 export interface HeroProps {
   profile: ProfileContent;
@@ -16,7 +20,7 @@ export function Hero({ profile }: HeroProps): ReactElement {
       aria-label="Hero Introduction"
       className="relative w-full overflow-hidden border-b border-border-subtle pt-12 pb-20 sm:pt-16 sm:pb-28 lg:py-32"
     >
-      {/* Atmospheric Background Layer with Hero Image */}
+      {/* Atmospheric Background Layer with 3D Topology Mesh */}
       <div
         className="absolute inset-0 pointer-events-none select-none overflow-hidden"
         aria-hidden="true"
@@ -26,8 +30,22 @@ export function Hero({ profile }: HeroProps): ReactElement {
           className="absolute inset-0 bg-cover bg-center opacity-10 mix-blend-luminosity scale-105 filter blur-[1px]"
           style={{ backgroundImage: "url('/images/hero.webp')" }}
         />
+
+        {/* 3D WebGL Distributed System Topology (Lazy-Loaded with Fallback) */}
+        <div className="absolute inset-0 opacity-40 mix-blend-screen">
+          <ThreeBoundary
+            fallback={
+              <div className="absolute inset-0 bg-gradient-to-b from-background via-background/95 to-background" />
+            }
+          >
+            <Suspense fallback={null}>
+              <HeroTopologyScene />
+            </Suspense>
+          </ThreeBoundary>
+        </div>
+
         {/* Dark radial glow and gradient mask to protect text contrast */}
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-background/95 to-background" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/90 to-background" />
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/5 rounded-full filter blur-3xl" />
       </div>
 

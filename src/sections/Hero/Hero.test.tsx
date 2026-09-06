@@ -64,4 +64,9 @@ describe('Hero Section Component', () => {
     expect(apiBtn).toHaveAttribute('aria-pressed', 'true');
     expect(screen.getByText(/Strict validation, authentication, and error boundaries/i)).toBeInTheDocument();
   });
+
+  it('mounts the 3D topology background with resilient fallback in headless environment', () => {
+    const { container } = render(<Hero profile={content.profile} />);
+    expect(container.querySelector('.three-fallback-container')).toBeInTheDocument();
+  });
 });
