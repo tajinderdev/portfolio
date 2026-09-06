@@ -11,11 +11,23 @@ describe('Portfolio Content Model & Data Integrity', () => {
     expect(content.profile.promise.headline).toContain('scalable, secure, and intelligent');
   });
 
-  it('contains the 5 core engineering skill pillars', () => {
+  it('contains the 8 core engineering capability pillars', () => {
     const pillars = content.skillPillars.map((p) => p.pillar);
-    expect(pillars).toEqual(['BUILD', 'SCALE', 'INTEGRATE', 'MODERNIZE', 'INTELLIGENCE']);
+    expect(pillars).toEqual([
+      'BUILD',
+      'ARCHITECT',
+      'INTEGRATE',
+      'DATA',
+      'DEPLOY',
+      'TEST',
+      'MODERNIZE',
+      'INTELLIGENCE',
+    ]);
 
     content.skillPillars.forEach((pillar) => {
+      expect(pillar.label.length).toBeGreaterThan(0);
+      expect(pillar.purpose.length).toBeGreaterThan(0);
+      expect(pillar.architecturalRole.length).toBeGreaterThan(0);
       expect(pillar.subcategories.length).toBeGreaterThan(0);
       pillar.subcategories.forEach((sub) => {
         expect(sub.skills.length).toBeGreaterThan(0);
@@ -41,10 +53,21 @@ describe('Portfolio Content Model & Data Integrity', () => {
     expect(urls).toContain('https://marcusrusbournemedia.com');
   });
 
-  it('contains all 6 domain areas and achievements', () => {
+  it('contains all 6 domain areas with problem spaces, system types, and engineering concerns', () => {
     expect(content.domains.length).toBe(6);
     expect(content.achievements.length).toBe(4);
     expect(content.education.length).toBe(2);
+
+    content.domains.forEach((domain) => {
+      expect(domain.name.length).toBeGreaterThan(0);
+      expect(domain.tag.length).toBeGreaterThan(0);
+      expect(domain.summary.length).toBeGreaterThan(0);
+      expect(domain.problemSpace.length).toBeGreaterThan(0);
+      expect(domain.systemTypes.length).toBeGreaterThan(0);
+      expect(domain.engineeringConcerns.length).toBeGreaterThan(0);
+      expect(domain.integrationsWorkflows.length).toBeGreaterThan(0);
+      expect(domain.relevantTechnologies.length).toBeGreaterThan(0);
+    });
   });
 
   it('contains verified engineering philosophy themes and trace nodes', () => {
@@ -61,5 +84,31 @@ describe('Portfolio Content Model & Data Integrity', () => {
     expect(themeIds).toContain('theme-modernization');
     expect(themeIds).toContain('theme-collaboration');
     expect(themeIds).toContain('theme-ai');
+  });
+
+  it('contains 5 chronological experience milestones with progression stages and confidentiality safety', () => {
+    expect(content.experiences.length).toBe(5);
+
+    // Verify chronologically descending order (Present -> 2019)
+    expect(content.experiences[0]?.period).toContain('Present');
+    expect(content.experiences[4]?.period).toContain('2019');
+
+    // Verify progression indices (5 -> 1)
+    const indices = content.experiences.map((e) => e.progressionIndex);
+    expect(indices).toEqual([5, 4, 3, 2, 1]);
+
+    content.experiences.forEach((exp) => {
+      expect(exp.role.length).toBeGreaterThan(0);
+      expect(exp.environment.length).toBeGreaterThan(0);
+      expect(exp.progressionStage.length).toBeGreaterThan(0);
+      expect(exp.summary.length).toBeGreaterThan(0);
+      expect(exp.architecturalInvolvement.length).toBeGreaterThan(0);
+      expect(exp.responsibilities.length).toBeGreaterThan(0);
+      expect(exp.technologies.length).toBeGreaterThan(0);
+
+      // Verify no confidential leakages
+      expect(exp.summary).not.toMatch(/secret|client proprietary|confidential/i);
+      expect(exp.environment).not.toMatch(/secret|internal-only/i);
+    });
   });
 });

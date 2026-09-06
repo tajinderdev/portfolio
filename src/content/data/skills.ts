@@ -4,8 +4,10 @@ export const skillPillarsData: readonly SkillPillarGroup[] = [
   {
     pillar: 'BUILD',
     label: 'Build',
+    purpose: 'Full-stack application engineering from reactive user interfaces to scalable MVC backend systems.',
     description:
-      'Designing and developing scalable, maintainable full-stack systems across frontend, backend, and data tiers.',
+      'Constructing robust web applications with modern frontend frameworks and structured, high-performance backends.',
+    architecturalRole: 'Core Application Layer (Presentation & Business Logic)',
     subcategories: [
       {
         name: 'Frontend Engineering',
@@ -15,161 +17,191 @@ export const skillPillarsData: readonly SkillPillarGroup[] = [
           'Vue',
           'Angular',
           'JavaScript (ES6+)',
-          'HTML5',
-          'CSS3',
           'Tailwind CSS',
+          'HTML5 / CSS3',
           'Bootstrap',
-          'jQuery',
           'Webpack',
         ],
+        context: 'Type-safe component architectures, reactive state management, and accessible responsive interfaces.',
       },
       {
         name: 'Backend Systems',
         skills: [
           'Laravel',
           'PHP',
-          'Python',
-          'Django',
-          'FastAPI',
           'Node.js',
           'Express.js',
+          'Python',
+          'FastAPI',
+          'Django',
         ],
-      },
-      {
-        name: 'Database Architecture & Search',
-        skills: [
-          'MySQL',
-          'PostgreSQL',
-          'MongoDB',
-          'Redis',
-          'Elasticsearch',
-          'SQL',
-          'NoSQL',
-        ],
-      },
-      {
-        name: 'API Design',
-        skills: ['RESTful APIs', 'GraphQL', 'OAuth', 'JSON', 'XML'],
+        context: 'Clean MVC structures, RESTful micro-services, and asynchronous event handling.',
       },
     ],
   },
   {
-    pillar: 'SCALE',
-    label: 'Scale',
+    pillar: 'ARCHITECT',
+    label: 'Architect',
+    purpose: 'Designing scalable system topologies, interface contracts, state transitions, and asynchronous workflows.',
     description:
-      'Architecting for reliability, low latency, caching, and robust cloud infrastructure.',
+      'Formulating end-to-end system designs that isolate faults, enforce strong contracts, and scale gracefully.',
+    architecturalRole: 'System Design & State Coordination',
     subcategories: [
       {
-        name: 'Architecture & Performance',
+        name: 'API & Contract Design',
+        skills: ['RESTful APIs', 'GraphQL', 'OAuth 2.0', 'JSON / XML', 'Swagger / OpenAPI'],
+        context: 'Consistent API contracts, versioning, rate limiting, and strict input validation schemas.',
+      },
+      {
+        name: 'System Topology & Flows',
         skills: [
-          'System Architecture',
           'Modular Architecture',
-          'Performance Optimization',
-          'Query Optimization',
-          'State Management',
+          'State Transition Design',
+          'Asynchronous Queues',
+          'User Flows',
+          'System Blueprints',
         ],
-      },
-      {
-        name: 'Cloud & Infrastructure',
-        skills: [
-          'AWS (EC2, S3, Cloud9)',
-          'Google Cloud',
-          'DigitalOcean',
-          'Docker',
-          'Nginx',
-          'Apache',
-        ],
-      },
-      {
-        name: 'Caching & Background Jobs',
-        skills: ['Redis Caching', 'Queues', 'Background Jobs', 'Asynchronous Processing'],
+        context: 'Decoupled presentation/data boundaries, event queues, and state machine transitions.',
       },
     ],
   },
   {
     pillar: 'INTEGRATE',
     label: 'Integrate',
+    purpose: 'Connecting enterprise CRMs, payment gateways, and third-party ecosystems with resilient event flows.',
     description:
-      'Connecting platforms, payment gateways, CRMs, and third-party ecosystems with resilient event flows.',
+      'Implementing idempotent webhook handlers, secure payment lifecycles, and bidirectional data synchronization.',
+    architecturalRole: 'External Ecosystems & Webhook Pipelines',
     subcategories: [
       {
-        name: 'CRM & Enterprise Systems',
-        skills: ['Zoho CRM', 'HubSpot', 'Data Synchronization', 'Business Workflow Automation'],
+        name: 'Payment & Subscription Gateways',
+        skills: ['Stripe', 'PayPal', 'Webhook Handlers', 'Recurring Billing Automation', 'Payment Gateways'],
+        context: 'Idempotent transaction processing, failure recovery, and automated subscription access governance.',
       },
       {
-        name: 'Payments & Commerce',
-        skills: ['Stripe', 'PayPal', 'Payment Gateways', 'Subscription Workflows', 'Magento 2', 'Shopify', 'WordPress'],
+        name: 'CRM & Enterprise Synchronization',
+        skills: ['Zoho CRM', 'HubSpot', 'Google APIs', 'Social APIs', 'Data Synchronization Pipelines'],
+        context: 'Bi-directional contact and deal synchronization, batch processing, and event-driven automation.',
       },
       {
-        name: 'External Services & Webhooks',
-        skills: ['Webhooks', 'Google APIs', 'Social APIs', 'Event-Driven Synchronization'],
+        name: 'Commerce & Content Platforms',
+        skills: ['Magento 2', 'WordPress', 'Shopify', 'Webflow', 'Custom Module Extensions'],
+        context: 'Custom extension engineering, catalogue/cart workflows, and enterprise commerce integration.',
+      },
+    ],
+  },
+  {
+    pillar: 'DATA',
+    label: 'Data',
+    purpose: 'Modeling relational schemas, persistence strategies, low-latency caching, and full-text search indexing.',
+    description:
+      'Ensuring relational integrity, sub-second query execution, and resilient data storage at scale.',
+    architecturalRole: 'Persistence, Caching & Query Optimization',
+    subcategories: [
+      {
+        name: 'Relational & Document Persistence',
+        skills: ['PostgreSQL', 'MySQL', 'MongoDB', 'SQL Schema Design', 'Database Normalization'],
+        context: 'Complex relational schemas, ACID transactions, foreign key constraints, and indexing.',
+      },
+      {
+        name: 'Caching & Search Engines',
+        skills: ['Redis Caching', 'Elasticsearch', 'Query Optimization', 'Index Tuning', 'In-Memory Queues'],
+        context: 'Targeted composite indexing, query execution plan tuning, and cache invalidation strategies.',
+      },
+    ],
+  },
+  {
+    pillar: 'DEPLOY',
+    label: 'Deploy',
+    purpose: 'Packaging containerized workloads, configuring web servers, and maintaining reliable cloud environments.',
+    description:
+      'Managing predictable deployments across cloud infrastructure with automated CI/CD validation.',
+    architecturalRole: 'Infrastructure, Cloud & Runtime Operations',
+    subcategories: [
+      {
+        name: 'Cloud Hosting & Containers',
+        skills: ['Docker', 'AWS (EC2, S3, Cloud9)', 'Google Cloud', 'DigitalOcean', 'Environment Configuration'],
+        context: 'Containerized development and production environments with cloud storage and compute.',
+      },
+      {
+        name: 'Web Servers & Pipelines',
+        skills: ['Nginx', 'Apache', 'CI/CD/CT Pipelines', 'SSL Termination', 'Production Troubleshooting'],
+        context: 'Reverse proxy routing, static asset caching, automated build pipelines, and production diagnostics.',
+      },
+    ],
+  },
+  {
+    pillar: 'TEST',
+    label: 'Test',
+    purpose: 'Safeguarding system correctness through automated test suites, regression prevention, and contract validation.',
+    description:
+      'Applying test-driven discipline across unit, integration, and end-to-end user journeys.',
+    architecturalRole: 'Automated Verification & Quality Assurance',
+    subcategories: [
+      {
+        name: 'Automated Testing Frameworks',
+        skills: ['PHPUnit', 'Jest', 'Selenium', 'Test-Driven Development (TDD)', 'Regression Testing'],
+        context: 'Unit testing backend business logic, UI component verification, and end-to-end regression runs.',
+      },
+      {
+        name: 'API Validation & Version Control',
+        skills: ['Postman', 'Swagger', 'Git', 'GitHub', 'GitLab', 'Bitbucket'],
+        context: 'Automated endpoint contract testing, branch protection rules, and peer review workflows.',
       },
     ],
   },
   {
     pillar: 'MODERNIZE',
     label: 'Modernize',
+    purpose: 'Pragmatically reducing technical debt, updating deprecated dependencies, and hardening application security.',
     description:
-      'Refactoring legacy codebases, strengthening security postures, reducing technical debt, and automating pipelines.',
+      'Transforming legacy codebases into modern, maintainable architectures without risky all-at-once rewrites.',
+    architecturalRole: 'Refactoring, Security Hardening & Debt Reduction',
     subcategories: [
       {
-        name: 'Legacy Migration & Refactoring',
+        name: 'Legacy Refactoring & Architecture',
         skills: [
           'Incremental Modernization',
           'Technical Debt Reduction',
           'Dependency Auditing',
           'Deprecation Remediation',
         ],
+        context: 'Replacing fragile subsystems incrementally while preserving live production traffic.',
       },
       {
-        name: 'Security & Access Control',
+        name: 'Security Posture & Governance',
         skills: [
           'Role-Based Access Control (RBAC)',
           'Input Validation',
           'API Security',
           'Vulnerability Remediation',
         ],
-      },
-      {
-        name: 'Testing & CI/CD',
-        skills: [
-          'PHPUnit',
-          'Jest',
-          'Selenium',
-          'TDD',
-          'CI/CD/CT Pipelines',
-          'Git',
-          'GitHub',
-          'GitLab',
-          'Bitbucket',
-        ],
+        context: 'Enforcing least-privilege access, eliminating data exposure, and addressing legacy CVEs.',
       },
     ],
   },
   {
     pillar: 'INTELLIGENCE',
     label: 'Intelligence',
+    purpose: 'Amplifying engineering velocity and application capability with Generative AI and LLM workflows.',
     description:
-      'Applying Generative AI, LLM tooling, and workflow automation as engineering multipliers without compromising correctness.',
+      'Employing AI models for code synthesis, testing, and intelligent features while maintaining human architectural rigor.',
+    architecturalRole: 'AI Augmentation & Accelerated Workflows',
     subcategories: [
       {
-        name: 'Generative AI & LLMs',
-        skills: [
-          'LLM Integration',
-          'Generative AI',
-          'Intelligent Search',
-          'Summarization & Classification',
-        ],
+        name: 'LLM & AI Feature Integration',
+        skills: ['Generative AI', 'LLM Integration', 'AI Application Integration', 'Workflow Automation'],
+        context: 'Embedding intelligent capabilities into business applications and automate repetitive workflows.',
       },
       {
-        name: 'AI-Assisted Development',
+        name: 'AI-Augmented Engineering',
         skills: [
           'AI-Assisted Coding',
           'Automated Refactoring & Debugging',
-          'Test Generation',
-          'Code Analysis',
+          'Test Case Synthesis',
           'Requirement Decomposition',
         ],
+        context: 'Accelerating exploration, test coverage generation, and rapid prototyping with LLM tools.',
       },
     ],
   },

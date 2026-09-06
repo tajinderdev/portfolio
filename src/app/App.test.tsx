@@ -25,14 +25,71 @@ describe('App Global Layout & Anchors', () => {
     ).toBeInTheDocument();
   });
 
-  it('contains all 5 anchored sections for smooth scroll navigation', () => {
+  it('contains all anchored sections for smooth scroll navigation', () => {
     const { container } = render(<App />);
     expect(container.querySelector('#hero')).toBeInTheDocument();
     expect(container.querySelector('#work')).toBeInTheDocument();
     expect(container.querySelector('#experience')).toBeInTheDocument();
     expect(container.querySelector('#engineering')).toBeInTheDocument();
+    expect(container.querySelector('#domains')).toBeInTheDocument();
     expect(container.querySelector('#about')).toBeInTheDocument();
     expect(container.querySelector('#contact')).toBeInTheDocument();
+  });
+
+  it('renders Domain Experience section at #domains anchor', () => {
+    const { container } = render(<App />);
+    const domainsSection = container.querySelector('#domains');
+    expect(domainsSection).toBeInTheDocument();
+    expect(
+      within(domainsSection as HTMLElement).getByRole('heading', {
+        level: 2,
+        name: /bridging complex business domains with resilient engineering/i,
+      }),
+    ).toBeInTheDocument();
+    expect(
+      within(domainsSection as HTMLElement).getByRole('tablist', {
+        name: /selectable business domains/i,
+      }),
+    ).toBeInTheDocument();
+  });
+
+  it('renders Professional Experience section at #experience anchor', () => {
+    const { container } = render(<App />);
+    const expSection = container.querySelector('#experience');
+    expect(expSection).toBeInTheDocument();
+    expect(
+      within(expSection as HTMLElement).getByRole('heading', {
+        level: 2,
+        name: /engineering progression from implementation to systems architecture/i,
+      }),
+    ).toBeInTheDocument();
+    expect(
+      within(expSection as HTMLElement).getByRole('tablist', {
+        name: /career progression milestones/i,
+      }),
+    ).toBeInTheDocument();
+  });
+
+  it('renders Technical Capabilities section at #engineering anchor', () => {
+    const { container } = render(<App />);
+    const engineeringSection = container.querySelector('#engineering');
+    expect(engineeringSection).toBeInTheDocument();
+    expect(
+      within(engineeringSection as HTMLElement).getByRole('heading', {
+        level: 2,
+        name: /engineered for capability, resilience, and architectural clarity/i,
+      }),
+    ).toBeInTheDocument();
+    expect(
+      within(engineeringSection as HTMLElement).getByRole('region', {
+        name: /interactive architecture & dependency map/i,
+      }),
+    ).toBeInTheDocument();
+    expect(
+      within(engineeringSection as HTMLElement).getByRole('searchbox', {
+        name: /search technologies and capabilities/i,
+      }),
+    ).toBeInTheDocument();
   });
 
   it('renders About / Engineering Philosophy section at #about anchor', () => {

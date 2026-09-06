@@ -61,17 +61,28 @@ export interface ProfileContent {
   readonly philosophyThemes: readonly PhilosophyTheme[];
 }
 
-export type SkillPillar = 'BUILD' | 'SCALE' | 'INTEGRATE' | 'MODERNIZE' | 'INTELLIGENCE';
+export type SkillPillar =
+  | 'BUILD'
+  | 'ARCHITECT'
+  | 'INTEGRATE'
+  | 'DATA'
+  | 'DEPLOY'
+  | 'TEST'
+  | 'MODERNIZE'
+  | 'INTELLIGENCE';
 
 export interface SkillSubcategory {
   readonly name: string;
   readonly skills: readonly string[];
+  readonly context?: string;
 }
 
 export interface SkillPillarGroup {
   readonly pillar: SkillPillar;
   readonly label: string;
+  readonly purpose: string;
   readonly description: string;
+  readonly architecturalRole: string;
   readonly subcategories: readonly SkillSubcategory[];
 }
 
@@ -80,9 +91,18 @@ export interface ExperienceItem {
   readonly period: string;
   readonly role: string;
   readonly specialization?: string;
-  readonly summary?: string;
+  readonly environment: string;
+  readonly progressionStage: string;
+  readonly progressionIndex: number;
+  readonly summary: string;
   readonly highlights: readonly string[];
-  readonly technologies?: readonly string[];
+  readonly architecturalInvolvement: readonly string[];
+  readonly technicalScope: string;
+  readonly responsibilities: readonly string[];
+  readonly collaboration: string;
+  readonly leadership?: string;
+  readonly outcomes?: readonly string[];
+  readonly technologies: readonly string[];
 }
 
 export interface ProjectCaseStudy {
@@ -107,7 +127,13 @@ export interface PublicReference {
 export interface DomainItem {
   readonly id: string;
   readonly name: string;
-  readonly description: string;
+  readonly tag: string;
+  readonly summary: string;
+  readonly problemSpace: string;
+  readonly systemTypes: readonly string[];
+  readonly engineeringConcerns: readonly string[];
+  readonly integrationsWorkflows: readonly string[];
+  readonly relevantTechnologies: readonly string[];
 }
 
 export interface AchievementItem {

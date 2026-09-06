@@ -7,7 +7,7 @@ import {
   SectionHeader,
 } from '@/components/typography';
 import { Button, Link, Card, Badge } from '@/components/ui';
-import { Hero, About } from '@/sections';
+import { Hero, About, Experience, Capabilities, Domains } from '@/sections';
 import { getPortfolioContent } from '@/content';
 
 export function App(): ReactElement {
@@ -47,49 +47,13 @@ export function App(): ReactElement {
       </Section>
 
       {/* Section Anchor 2: Professional Experience (#experience) */}
-      <Section id="experience" spacing="default" className="border-b border-border-subtle bg-surface/20">
-        <div className="space-y-6">
-          <SectionHeader
-            kicker="02 / TIMELINE"
-            title="Professional Experience"
-            description="Anchored section shell ready for Stage 7 (Experience timeline). 7+ years across international delivery."
-          />
+      <Experience experiences={content.experiences} />
 
-          <Card variant="elevated" padding="md" className="space-y-4 max-w-2xl">
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-semibold text-text-primary">
-                {content.experiences[0]?.role}
-              </span>
-              <MonoText size="xs" color="accent">
-                {content.experiences[0]?.period}
-              </MonoText>
-            </div>
-            <Text variant="small">{content.experiences[0]?.summary}</Text>
-          </Card>
-        </div>
-      </Section>
+      {/* Section Anchor 3: Architecture & Technical Capabilities (#engineering) */}
+      <Capabilities skillPillars={content.skillPillars} />
 
-      {/* Section Anchor 3: Architecture & Engineering (#engineering) */}
-      <Section id="engineering" spacing="default" className="border-b border-border-subtle">
-        <div className="space-y-6">
-          <SectionHeader
-            kicker="03 / ARCHITECTURE"
-            title="Engineering & Systems Approach"
-            description="Anchored section shell ready for Stages 6 & 8 (How I Think & Technical Capabilities)."
-          />
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {content.profile.engineeringBreadth.slice(0, 3).map((item) => (
-              <Card key={item.category} variant="interactive" padding="sm" className="space-y-1">
-                <MonoText size="xs" color="accent">
-                  {item.category.toUpperCase()}
-                </MonoText>
-                <Text variant="small">{item.description}</Text>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </Section>
+      {/* Section Anchor: Domain Experience (#domains) */}
+      <Domains domains={content.domains} />
 
       {/* Section Anchor 4: About / Engineering Philosophy (#about) */}
       <About profile={content.profile} />
