@@ -29,6 +29,12 @@ describe('createTopologyScene', () => {
 
   beforeEach(() => {
     vi.restoreAllMocks();
+    vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue({
+      createRadialGradient: vi.fn().mockReturnValue({
+        addColorStop: vi.fn(),
+      }),
+      fillRect: vi.fn(),
+    } as unknown as CanvasRenderingContext2D);
     container = document.createElement('div');
     Object.defineProperty(container, 'clientWidth', { value: 1000, configurable: true });
     Object.defineProperty(container, 'clientHeight', { value: 600, configurable: true });

@@ -1,38 +1,17 @@
 /**
- * Hero Topology 3D Scene Core Engine (Tangible 3D Overhaul)
+ * Google Antigravity-Inspired Hero Particle Field Engine
  *
- * Implements a tangible, interactive distributed architecture system in Three.js:
- * - Solid 3D Server Blocks & Microservice Nodes with glowing neon wireframe edges
- * - Central architectural core lattice with dynamic point lighting
- * - Connective 3D data conduits with moving telemetry packets
- * - Interactive Raycaster: mouse hover scales and highlights architectural nodes
- * - Scroll-driven exploded architecture transformation
- * - 0% offscreen GPU idle when paused
- * - Deterministic memory cleanup and disposal
+ * Recreates the signature interactive particle field from antigravity.google:
+ * - High-density structured grid of luminous green dots floating with weightless antigravity drift
+ * - Interactive cursor displacement ring: particles dynamically repel away from the cursor with spring-damping restoration
+ * - Radial antialiased soft-glow dot rendering via high-resolution procedural circular texture
+ * - Scroll-driven depth recession and perspective dispersal
+ * - 60+ FPS lightweight GPU-accelerated rendering with 0% offscreen load via IntersectionObserver pause
+ * - Deterministic cleanup of all buffers, textures, materials, and renderer
  */
 
 import * as THREE from 'three';
 import type { TopologySceneController, TopologySceneOptions } from '../types';
-
-interface ServerNode {
-  meshGroup: THREE.Group;
-  basePosition: THREE.Vector3;
-  currentPosition: THREE.Vector3;
-  baseScale: number;
-  targetScale: number;
-  tier: number;
-  color: THREE.Color;
-  wireframeLines: THREE.LineSegments;
-  boxMesh: THREE.Mesh;
-}
-
-interface TelemetryConduit {
-  startNode: ServerNode;
-  endNode: ServerNode;
-  pulseProgress: number;
-  pulseSpeed: number;
-  pulseMesh: THREE.Mesh;
-}
 
 export function createTopologyScene(
   container: HTMLElement,
@@ -42,375 +21,274 @@ export function createTopologyScene(
   const isMobile = Boolean(options?.isMobile);
   const targetDpr = Math.min(
     options?.dpr ?? (typeof window !== 'undefined' ? window.devicePixelRatio : 1),
-    1.75
+    2.0
   );
 
-  const width = container.clientWidth || 1000;
-  const height = container.clientHeight || 600;
+  let width = container.clientWidth || 800;
+  let height = container.clientHeight || 600;
 
-  // 1. Scene, Camera & Lighting
+  // Scene setup
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 1000);
-  camera.position.set(0, 0, 32);
+  const fov = 55;
+  const camera = new THREE.PerspectiveCamera(fov, width / height, 0.1, 1000);
+  camera.position.set(0, 0, 160);
 
-  // Canvas & WebGLRenderer Setup
-  const canvas = document.createElement('canvas');
-  canvas.className = 'w-full h-full block';
-  canvas.style.display = 'block';
-  canvas.setAttribute('aria-hidden', 'true');
-  container.appendChild(canvas);
-
+  // Renderer setup
   const renderer = new THREE.WebGLRenderer({
-    canvas,
+    antialias: true,
     alpha: true,
-    antialias: !isMobile,
-    powerPreference: 'high-performance',
+    powerPreference: 'low-power',
   });
-  renderer.setSize(width, height, false);
+  renderer.setSize(width, height);
   renderer.setPixelRatio(targetDpr);
   renderer.setClearColor(0x000000, 0);
 
-  // Dynamic Scene Lighting for real 3D depth
-  const ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
-  scene.add(ambientLight);
+  container.appendChild(renderer.domElement);
 
-  const coreLight = new THREE.PointLight(0x00f5d4, 3.5, 45);
-  coreLight.position.set(0, 0, 5);
-  scene.add(coreLight);
+  // Procedural circular soft-glow texture for round, radiant dots
+  function createCircleTexture(): THREE.CanvasTexture {
+    const canvas = document.createElement('canvas');
+    canvas.width = 64;
+    canvas.height = 64;
+    try {
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        const gradient = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+        gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
+        gradient.addColorStop(0.25, 'rgba(0, 255, 136, 0.95)');
+        gradient.addColorStop(0.55, 'rgba(16, 185, 129, 0.5)');
+        gradient.addColorStop(0.85, 'rgba(0, 245, 155, 0.15)');
+        gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, 64, 64);
+      }
+    } catch {
+      // Headless environments without 2D canvas support
+    }
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.generateMipmaps = false;
+    texture.minFilter = THREE.LinearFilter;
+    return texture;
+  }
 
-  const keyLight = new THREE.DirectionalLight(0x38bdf8, 1.5);
-  keyLight.position.set(15, 20, 25);
-  scene.add(keyLight);
+  const circleTexture = createCircleTexture();
 
-  // 2. Shared Geometries and Materials for performance
-  const boxGeo = new THREE.BoxGeometry(1.6, 1.2, 1.2);
-  const edgesGeo = new THREE.EdgesGeometry(boxGeo);
-  const sphereGeo = new THREE.SphereGeometry(0.32, 12, 12);
-  const pulseGeo = new THREE.SphereGeometry(0.22, 8, 8);
+  // Particle distribution parameters
+  const particleCount = isMobile ? 1200 : 2600;
+  const positions = new Float32Array(particleCount * 3);
+  const basePositions = new Float32Array(particleCount * 3);
+  const velocities = new Float32Array(particleCount * 3);
+  const colors = new Float32Array(particleCount * 3);
+  const seeds = new Float32Array(particleCount * 2);
 
-  const pulseMat = new THREE.MeshBasicMaterial({
-    color: 0x00f5d4,
-    transparent: true,
-    opacity: 0.95,
-  });
-
-  // Color Tiers:
-  // Tier 0: Gateway & Ingress (#00F5D4 cyan)
-  // Tier 1: Cloud & Cluster (#38BDF8 sky blue)
-  // Tier 2: Core Microservices (#34D399 emerald)
-  // Tier 3: Persistence & Database (#818CF8 indigo)
-  // Tier 4: Storage & Infrastructure (#F59E0B amber)
-  const tierColors = [
-    new THREE.Color(0x00f5d4),
-    new THREE.Color(0x38bdf8),
-    new THREE.Color(0x34d399),
-    new THREE.Color(0x818cf8),
-    new THREE.Color(0xf59e0b),
+  // Antigravity Green Palette
+  const greenPalette = [
+    new THREE.Color('#00FF88'), // Luminous vibrant green
+    new THREE.Color('#10B981'), // Emerald tech green
+    new THREE.Color('#00F59B'), // Bright terminal neon
+    new THREE.Color('#6EE7B7'), // High-energy pale mint
+    new THREE.Color('#059669'), // Deep ambient emerald
   ];
 
-  // 3. Build Solid 3D Architectural Nodes
-  const nodeCount = isMobile ? 12 : 26;
-  const serverNodes: ServerNode[] = [];
-  const raycastMeshes: THREE.Mesh[] = [];
+  const spreadX = 260;
+  const spreadY = 160;
+  const spreadZ = 70;
 
-  for (let i = 0; i < nodeCount; i++) {
-    const tier = i % 5;
-    const color = tierColors[tier] ?? tierColors[0]!;
+  const defaultColor = new THREE.Color('#00FF88');
 
-    // Distribute tiers along X-axis to communicate pipeline flow
-    let minX = -13;
-    let maxX = -8;
-    if (tier === 1) {
-      minX = -7;
-      maxX = -2;
-    } else if (tier === 2) {
-      minX = -1;
-      maxX = 4;
-    } else if (tier === 3) {
-      minX = 5;
-      maxX = 9;
-    } else if (tier === 4) {
-      minX = 10;
-      maxX = 14;
-    }
+  for (let i = 0; i < particleCount; i++) {
+    const i3 = i * 3;
+    const i2 = i * 2;
 
-    const x = minX + Math.random() * (maxX - minX);
-    const y = (Math.random() - 0.5) * 12;
-    const z = (Math.random() - 0.5) * 8;
+    // Structured geometric field with subtle random dispersion
+    const gridCols = Math.ceil(Math.sqrt(particleCount * (spreadX / spreadY)));
+    const gridRows = Math.ceil(particleCount / gridCols);
+    const col = i % gridCols;
+    const row = Math.floor(i / gridCols);
 
-    const basePosition = new THREE.Vector3(x, y, z);
-    const currentPosition = basePosition.clone();
+    const nx = (col / gridCols - 0.5) * spreadX + (Math.random() - 0.5) * 8;
+    const ny = (row / gridRows - 0.5) * spreadY + (Math.random() - 0.5) * 8;
+    const nz = (Math.random() - 0.5) * spreadZ;
 
-    // Group containing solid box, wireframe neon border, and glowing inner status sphere
-    const nodeGroup = new THREE.Group();
-    nodeGroup.position.copy(basePosition);
+    positions[i3] = nx;
+    positions[i3 + 1] = ny;
+    positions[i3 + 2] = nz;
 
-    // Solid dark translucent box body
-    const boxMat = new THREE.MeshStandardMaterial({
-      color: 0x080f1d,
-      roughness: 0.25,
-      metalness: 0.8,
-      transparent: true,
-      opacity: 0.88,
-    });
-    const boxMesh = new THREE.Mesh(boxGeo, boxMat);
-    boxMesh.userData = { nodeIndex: i, tier };
-    nodeGroup.add(boxMesh);
-    raycastMeshes.push(boxMesh);
+    basePositions[i3] = nx;
+    basePositions[i3 + 1] = ny;
+    basePositions[i3 + 2] = nz;
 
-    // Bright neon wireframe outline
-    const wireframeMat = new THREE.LineBasicMaterial({
-      color: color,
-      transparent: true,
-      opacity: 0.85,
-    });
-    const wireframeLines = new THREE.LineSegments(edgesGeo, wireframeMat);
-    nodeGroup.add(wireframeLines);
+    velocities[i3] = 0;
+    velocities[i3 + 1] = 0;
+    velocities[i3 + 2] = 0;
 
-    // Glowing inner telemetry core
-    const coreMat = new THREE.MeshBasicMaterial({
-      color: color,
-      transparent: true,
-      opacity: 0.9,
-    });
-    const coreMesh = new THREE.Mesh(sphereGeo, coreMat);
-    nodeGroup.add(coreMesh);
+    seeds[i2] = Math.random() * Math.PI * 2;
+    seeds[i2 + 1] = 0.4 + Math.random() * 0.8; // Drift speed factor
 
-    scene.add(nodeGroup);
+    // Color gradient based on depth & random variation
+    const paletteIndex = Math.floor(Math.random() * greenPalette.length);
+    const chosenColor = greenPalette[paletteIndex] ?? defaultColor;
+    const depthFactor = THREE.MathUtils.clamp((nz + spreadZ / 2) / spreadZ, 0.4, 1.0);
 
-    serverNodes.push({
-      meshGroup: nodeGroup,
-      basePosition,
-      currentPosition,
-      baseScale: 1.0,
-      targetScale: 1.0,
-      tier,
-      color,
-      wireframeLines,
-      boxMesh,
-    });
+    colors[i3] = chosenColor.r * depthFactor;
+    colors[i3 + 1] = chosenColor.g * depthFactor;
+    colors[i3 + 2] = chosenColor.b * depthFactor;
   }
 
-  // 4. Central Architecture Core Lattice (representing high-availability orchestrator)
-  const coreHubGroup = new THREE.Group();
-  const hubGeo = new THREE.IcosahedronGeometry(2.4, 0);
-  const hubEdgesGeo = new THREE.EdgesGeometry(hubGeo);
-  const hubMat = new THREE.MeshStandardMaterial({
-    color: 0x050c18,
-    roughness: 0.2,
-    metalness: 0.9,
-    transparent: true,
-    opacity: 0.75,
-  });
-  const hubMesh = new THREE.Mesh(hubGeo, hubMat);
-  const hubWireMat = new THREE.LineBasicMaterial({
-    color: 0x00f5d4,
-    transparent: true,
-    opacity: 0.9,
-  });
-  const hubWire = new THREE.LineSegments(hubEdgesGeo, hubWireMat);
-  coreHubGroup.add(hubMesh);
-  coreHubGroup.add(hubWire);
-  coreHubGroup.position.set(0, 0, -2);
-  scene.add(coreHubGroup);
+  const geometry = new THREE.BufferGeometry();
+  const positionAttribute = new THREE.BufferAttribute(positions, 3);
+  geometry.setAttribute('position', positionAttribute);
+  geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
-  // 5. Connective Network Conduits & Data Pulses
-  const conduits: TelemetryConduit[] = [];
-  const conduitLinesPositions: number[] = [];
-  const conduitLinesColors: number[] = [];
-
-  for (let i = 0; i < serverNodes.length; i++) {
-    const nodeA = serverNodes[i];
-    if (!nodeA) continue;
-
-    for (let j = i + 1; j < serverNodes.length; j++) {
-      const nodeB = serverNodes[j];
-      if (!nodeB) continue;
-
-      if (Math.abs(nodeA.tier - nodeB.tier) <= 1) {
-        const dist = nodeA.basePosition.distanceTo(nodeB.basePosition);
-        if (dist < (isMobile ? 7.5 : 8.5)) {
-          conduitLinesPositions.push(
-            nodeA.basePosition.x,
-            nodeA.basePosition.y,
-            nodeA.basePosition.z,
-            nodeB.basePosition.x,
-            nodeB.basePosition.y,
-            nodeB.basePosition.z
-          );
-
-          conduitLinesColors.push(
-            nodeA.color.r * 0.45,
-            nodeA.color.g * 0.45,
-            nodeA.color.b * 0.45,
-            nodeB.color.r * 0.45,
-            nodeB.color.g * 0.45,
-            nodeB.color.b * 0.45
-          );
-
-          // Add moving data pulse on active conduits
-          if (conduits.length < (isMobile ? 6 : 14)) {
-            const pulseMesh = new THREE.Mesh(pulseGeo, pulseMat);
-            scene.add(pulseMesh);
-            conduits.push({
-              startNode: nodeA,
-              endNode: nodeB,
-              pulseProgress: Math.random(),
-              pulseSpeed: 0.2 + Math.random() * 0.25,
-              pulseMesh,
-            });
-          }
-        }
-      }
-    }
-  }
-
-  const conduitGeo = new THREE.BufferGeometry();
-  conduitGeo.setAttribute(
-    'position',
-    new THREE.Float32BufferAttribute(conduitLinesPositions, 3)
-  );
-  conduitGeo.setAttribute(
-    'color',
-    new THREE.Float32BufferAttribute(conduitLinesColors, 3)
-  );
-
-  const conduitMat = new THREE.LineBasicMaterial({
+  const material = new THREE.PointsMaterial({
+    size: isMobile ? 3.8 : 4.8,
     vertexColors: true,
+    map: circleTexture,
     transparent: true,
-    opacity: 0.35,
+    opacity: 0.92,
+    blending: THREE.AdditiveBlending,
     depthWrite: false,
+    sizeAttenuation: true,
   });
 
-  const conduitSegments = new THREE.LineSegments(conduitGeo, conduitMat);
-  scene.add(conduitSegments);
+  const particleMesh = new THREE.Points(geometry, material);
+  scene.add(particleMesh);
 
-  // 6. Interaction, Raycasting & Scroll State
-  const raycaster = new THREE.Raycaster();
-  const pointerVec = new THREE.Vector2(-999, -999);
+  // Interaction State
   let targetPointerX = 0;
   let targetPointerY = 0;
-  let currentRotX = 0;
-  let currentRotY = 0;
+  let currentPointerX = 0;
+  let currentPointerY = 0;
   let targetScrollProgress = 0;
   let currentScrollProgress = 0;
+
   let isPaused = false;
   let animationFrameId: number | null = null;
-  let lastTime = typeof performance !== 'undefined' ? performance.now() : 0;
-  let hoveredNodeIndex: number | null = null;
 
-  function handleRaycast() {
-    if (isMobile || isReducedMotion) return;
-    raycaster.setFromCamera(pointerVec, camera);
-    const intersects = raycaster.intersectObjects(raycastMeshes);
-
-    if (intersects.length > 0 && intersects[0]?.object) {
-      const intersectedMesh = intersects[0].object as THREE.Mesh;
-      const idx = intersectedMesh.userData['nodeIndex'] as number;
-      if (typeof idx === 'number') {
-        const targetNode = serverNodes[idx];
-        if (targetNode) {
-          hoveredNodeIndex = idx;
-          targetNode.targetScale = 1.25;
-          (targetNode.wireframeLines.material as THREE.LineBasicMaterial).opacity = 1.0;
-        }
-      }
-    } else {
-      if (hoveredNodeIndex !== null) {
-        const prevHovered = serverNodes[hoveredNodeIndex];
-        if (prevHovered) {
-          prevHovered.targetScale = 1.0;
-          (prevHovered.wireframeLines.material as THREE.LineBasicMaterial).opacity = 0.85;
-        }
-        hoveredNodeIndex = null;
-      }
-    }
+  function calculateVisibleDimensions(distance: number) {
+    const vFov = (camera.fov * Math.PI) / 180;
+    const visHeight = 2 * Math.tan(vFov / 2) * distance;
+    const visWidth = visHeight * (width / height);
+    return { width: visWidth, height: visHeight };
   }
 
   function renderFrame(now: number) {
     if (isPaused) return;
 
-    const dt = Math.min((now - lastTime) / 1000, 0.1);
-    lastTime = now;
+    // Smooth cursor interpolation
+    currentPointerX += (targetPointerX - currentPointerX) * 0.08;
+    currentPointerY += (targetPointerY - currentPointerY) * 0.08;
 
+    // Smooth scroll interpolation
+    currentScrollProgress += (targetScrollProgress - currentScrollProgress) * 0.06;
+
+    // Parallax camera rotation & position
     if (!isReducedMotion) {
-      // 1. Mouse pointer parallax rotation (clamped to +/- 0.08 rad)
-      currentRotX += (targetPointerY * 0.08 - currentRotX) * 0.05;
-      currentRotY += (targetPointerX * 0.09 - currentRotY) * 0.05;
+      camera.position.x = currentPointerX * 12;
+      camera.position.y = currentPointerY * 8;
+      camera.position.z = 160 + currentScrollProgress * 90;
+      camera.lookAt(0, 0, 0);
+    }
 
-      // 2. Smooth scroll-driven camera translation & exploded architecture
-      currentScrollProgress += (targetScrollProgress - currentScrollProgress) * 0.08;
-      camera.position.z = 32 - currentScrollProgress * 12; // Camera travels forward on scroll
+    // World-space cursor position calculation
+    const cameraDist = camera.position.z;
+    const { width: visW, height: visH } = calculateVisibleDimensions(cameraDist);
+    const worldCursorX = (currentPointerX * visW) / 2;
+    const worldCursorY = (currentPointerY * visH) / 2;
 
-      // Nodes explode outward along their position vectors as user scrolls
-      const dispersalFactor = 1.0 + currentScrollProgress * 1.5;
-      serverNodes.forEach((node) => {
-        node.meshGroup.position.x = node.basePosition.x * dispersalFactor;
-        node.meshGroup.position.y = node.basePosition.y * dispersalFactor;
-        node.meshGroup.position.z = node.basePosition.z * dispersalFactor;
+    const repulseRadius = isMobile ? 55 : 85;
+    const repulseRadiusSq = repulseRadius * repulseRadius;
+    const time = now * 0.001;
 
-        // Smooth scale lerping for hover feedback
-        const currentScale = node.meshGroup.scale.x;
-        const newScale = currentScale + (node.targetScale - currentScale) * 0.15;
-        node.meshGroup.scale.set(newScale, newScale, newScale);
-      });
+    // Update particles physics
+    if (!isReducedMotion) {
+      const posArray = positionAttribute.array as Float32Array;
 
-      // 3. Central hub subtle rotation
-      coreHubGroup.rotation.x += 0.003;
-      coreHubGroup.rotation.y += 0.005;
+      for (let i = 0; i < particleCount; i++) {
+        const i3 = i * 3;
+        const i2 = i * 2;
 
-      // 4. Update live telemetry pulses
-      conduits.forEach((conduit) => {
-        conduit.pulseProgress += conduit.pulseSpeed * dt;
-        if (conduit.pulseProgress >= 1.0) {
-          conduit.pulseProgress = 0;
+        let px = posArray[i3] ?? 0;
+        let py = posArray[i3 + 1] ?? 0;
+        const pz = posArray[i3 + 2] ?? 0;
+
+        const bx = basePositions[i3] ?? 0;
+        const by = basePositions[i3 + 1] ?? 0;
+
+        let vx = velocities[i3] ?? 0;
+        let vy = velocities[i3 + 1] ?? 0;
+
+        const seedPhase = seeds[i2] ?? 0;
+        const seedSpeed = seeds[i2 + 1] ?? 1.0;
+
+        // 1. Antigravity weightless drift (harmonic floating oscillation)
+        const idleX = Math.sin(time * 0.7 * seedSpeed + seedPhase) * 2.2;
+        const idleY = Math.cos(time * 0.6 * seedSpeed + seedPhase) * 2.2;
+
+        // 2. Scroll dispersal expansion
+        const scrollExpandX = bx * currentScrollProgress * 0.35;
+        const scrollExpandY = by * currentScrollProgress * 0.35;
+
+        const targetAnchorX = bx + idleX + scrollExpandX;
+        const targetAnchorY = by + idleY + scrollExpandY;
+
+        // 3. Interactive Cursor Repulsion Wave
+        const dx = px - worldCursorX;
+        const dy = py - worldCursorY;
+        const distSq = dx * dx + dy * dy;
+
+        if (distSq < repulseRadiusSq && distSq > 0.001) {
+          const dist = Math.sqrt(distSq);
+          const normDist = dist / repulseRadius;
+          // Smooth non-linear repulsion force falloff
+          const force = (1.0 - normDist) * (1.0 - normDist) * 16.0;
+          vx += (dx / dist) * force;
+          vy += (dy / dist) * force;
         }
 
-        const startPos = conduit.startNode.meshGroup.position;
-        const endPos = conduit.endNode.meshGroup.position;
+        // 4. Spring-damper physics returning particle to anchor
+        const springX = (targetAnchorX - px) * 0.085;
+        const springY = (targetAnchorY - py) * 0.085;
 
-        conduit.pulseMesh.position.lerpVectors(
-          startPos,
-          endPos,
-          conduit.pulseProgress
-        );
-      });
+        vx = (vx + springX) * 0.82; // 0.82 damping factor
+        vy = (vy + springY) * 0.82;
 
-      // 5. Ambient group drift
-      scene.rotation.x = currentRotX + Math.sin(now * 0.0004) * 0.02;
-      scene.rotation.y = currentRotY + Math.cos(now * 0.0003) * 0.025;
+        px += vx;
+        py += vy;
 
-      handleRaycast();
+        posArray[i3] = px;
+        posArray[i3 + 1] = py;
+        posArray[i3 + 2] = pz;
+
+        velocities[i3] = vx;
+        velocities[i3 + 1] = vy;
+      }
+
+      positionAttribute.needsUpdate = true;
     }
 
     renderer.render(scene, camera);
-
-    if (!isReducedMotion) {
-      animationFrameId = requestAnimationFrame(renderFrame);
-    }
-  }
-
-  // Initial render
-  renderer.render(scene, camera);
-  if (!isReducedMotion) {
     animationFrameId = requestAnimationFrame(renderFrame);
   }
 
+  // Start animation loop
+  animationFrameId = requestAnimationFrame(renderFrame);
+
+  // Return controller
   return {
-    domElement: canvas,
+    domElement: renderer.domElement,
 
     setPointer(x: number, y: number) {
-      targetPointerX = Math.max(-1, Math.min(1, x));
-      targetPointerY = Math.max(-1, Math.min(1, y));
-      pointerVec.x = targetPointerX;
-      pointerVec.y = targetPointerY;
+      targetPointerX = THREE.MathUtils.clamp(x, -1, 1);
+      targetPointerY = THREE.MathUtils.clamp(y, -1, 1);
     },
 
     setScrollProgress(progress: number) {
-      targetScrollProgress = Math.max(0, Math.min(1, progress));
+      targetScrollProgress = THREE.MathUtils.clamp(progress, 0, 1);
     },
 
     pause() {
+      if (isPaused) return;
       isPaused = true;
       if (animationFrameId !== null) {
         cancelAnimationFrame(animationFrameId);
@@ -419,60 +297,39 @@ export function createTopologyScene(
     },
 
     resume() {
-      if (!isPaused && animationFrameId !== null) return;
+      if (!isPaused) return;
       isPaused = false;
-      lastTime = typeof performance !== 'undefined' ? performance.now() : 0;
-      if (!isReducedMotion) {
+      if (animationFrameId === null) {
         animationFrameId = requestAnimationFrame(renderFrame);
-      } else {
-        renderer.render(scene, camera);
       }
     },
 
     resize(newWidth: number, newHeight: number) {
-      if (!newWidth || !newHeight) return;
-      camera.aspect = newWidth / newHeight;
+      if (newWidth <= 0 || newHeight <= 0) return;
+      width = newWidth;
+      height = newHeight;
+      camera.aspect = width / height;
       camera.updateProjectionMatrix();
-      renderer.setSize(newWidth, newHeight, false);
-      renderer.render(scene, camera);
+      renderer.setSize(width, height);
+      renderer.setPixelRatio(targetDpr);
     },
 
     dispose() {
-      isPaused = true;
       if (animationFrameId !== null) {
         cancelAnimationFrame(animationFrameId);
         animationFrameId = null;
       }
 
-      // Dispose shared geometries
-      boxGeo.dispose();
-      edgesGeo.dispose();
-      sphereGeo.dispose();
-      pulseGeo.dispose();
-      hubGeo.dispose();
-      hubEdgesGeo.dispose();
-      conduitGeo.dispose();
-
-      // Dispose materials
-      pulseMat.dispose();
-      hubMat.dispose();
-      hubWireMat.dispose();
-      conduitMat.dispose();
-
-      serverNodes.forEach((node) => {
-        (node.boxMesh.material as THREE.Material).dispose();
-        (node.wireframeLines.material as THREE.Material).dispose();
-      });
-
-      // Detach canvas
-      if (canvas.parentElement) {
-        canvas.parentElement.removeChild(canvas);
-      }
-
+      geometry.dispose();
+      material.dispose();
+      circleTexture.dispose();
       renderer.dispose();
-      if (typeof renderer.forceContextLoss === 'function') {
-        renderer.forceContextLoss();
+
+      if (renderer.domElement.parentElement === container) {
+        container.removeChild(renderer.domElement);
       }
     },
   };
 }
+
+export default createTopologyScene;
