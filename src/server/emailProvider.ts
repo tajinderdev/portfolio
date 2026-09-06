@@ -6,7 +6,7 @@
  * Keeps all API keys strictly on the server-side.
  */
 
-import type { ValidatedContactData } from './validator';
+import type { ValidatedContactData } from './validator.js';
 
 export interface EmailDispatchResult {
   readonly success: boolean;

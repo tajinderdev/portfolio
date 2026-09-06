@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { handleContactRequest, type ServerRequest } from './contactHandler';
-import { RateLimiter } from './rateLimiter';
-import type { EmailProvider } from './emailProvider';
+import { handleContactRequest, type ServerRequest } from './contactHandler.js';
+import { RateLimiter } from './rateLimiter.js';
+import type { EmailProvider } from './emailProvider.js';
 
 describe('handleContactRequest', () => {
   let mockEmailProvider: EmailProvider;

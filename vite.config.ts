@@ -8,7 +8,7 @@ import path from 'node:path';
 const loadedEnv = loadEnv(process.env.NODE_ENV || 'development', process.cwd(), '');
 Object.assign(process.env, loadedEnv);
 
-import { handleContactRequest } from './src/server/contactHandler';
+import { handleContactRequest } from './src/server/contactHandler.js';
 
 function contactDevPlugin(): Plugin {
   return {

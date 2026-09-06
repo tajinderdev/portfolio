@@ -1,5 +1,5 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
-import { handleContactRequest } from '../src/server/contactHandler';
+import { handleContactRequest } from '../src/server/contactHandler.js';
 
 interface VercelRequest extends IncomingMessage {
   body?: unknown;
@@ -58,7 +58,9 @@ export default async function handler(
 
   if (result.headers) {
     for (const [key, value] of Object.entries(result.headers)) {
-      res.setHeader(key, value);
+      if (typeof value === 'string') {
+        res.setHeader(key, value);
+      }
     }
   }
 

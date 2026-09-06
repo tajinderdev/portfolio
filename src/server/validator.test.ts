@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
   validateAndSanitizeContactInput,
   type RawContactInput,
-} from './validator';
+} from './validator.js';
 
 describe('validateAndSanitizeContactInput', () => {
   const validPayload: RawContactInput = {

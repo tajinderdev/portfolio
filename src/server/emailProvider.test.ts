@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { ResendEmailProvider } from './emailProvider';
-import type { ValidatedContactData } from './validator';
+import { ResendEmailProvider } from './emailProvider.js';
+import type { ValidatedContactData } from './validator.js';
 
 describe('ResendEmailProvider', () => {
   const mockContactData: ValidatedContactData = {
