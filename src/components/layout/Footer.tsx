@@ -68,20 +68,23 @@ export function Footer(): ReactElement {
                   >
                     <span>{link.label}</span>
                     {link.isExternal && (
-                      <svg
-                        className="w-3.5 h-3.5 text-text-muted"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        aria-hidden="true"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M7 17L17 7M17 7H7M17 7V17"
-                        />
-                      </svg>
+                      <>
+                        <span className="sr-only"> (opens in a new tab)</span>
+                        <svg
+                          className="w-3.5 h-3.5 text-text-muted"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          aria-hidden="true"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M7 17L17 7M17 7H7M17 7V17"
+                          />
+                        </svg>
+                      </>
                     )}
                   </a>
                 </li>

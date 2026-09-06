@@ -14,6 +14,32 @@ export function DomainSelector({
   onSelect,
   className = '',
 }: DomainSelectorProps): ReactElement {
+  const handleKeyDown = (e: React.KeyboardEvent, currentIndex: number) => {
+    let nextIndex: number | null = null;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      nextIndex = (currentIndex + 1) % domains.length;
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      nextIndex = (currentIndex - 1 + domains.length) % domains.length;
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      nextIndex = 0;
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      nextIndex = domains.length - 1;
+    }
+
+    if (nextIndex !== null) {
+      const nextDomain = domains[nextIndex];
+      if (nextDomain) {
+        onSelect(nextDomain.id);
+        const nextButton = document.getElementById(`domain-tab-${nextDomain.id}`);
+        nextButton?.focus();
+      }
+    }
+  };
+
   return (
     <div
       role="tablist"
@@ -34,6 +60,7 @@ export function DomainSelector({
             aria-selected={isSelected}
             tabIndex={isSelected ? 0 : -1}
             onClick={() => onSelect(domain.id)}
+            onKeyDown={(e) => handleKeyDown(e, index)}
             className={`group flex flex-col justify-between rounded-lg border p-4 text-left transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background ${
               isSelected
                 ? 'border-accent bg-accent-muted/20 ring-1 ring-accent'

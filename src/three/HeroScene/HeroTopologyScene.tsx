@@ -32,11 +32,23 @@ export function HeroTopologyScene({
     controllerRef.current = controller;
 
     // 1. Mouse movement / pointer parallax (desktop only)
+    let pointerRafId: number | null = null;
+    let isVisible = true;
+
     const handlePointerMove = (event: MouseEvent) => {
-      if (isMobile || prefersReducedMotion) return;
-      const x = (event.clientX / window.innerWidth) * 2 - 1;
-      const y = -(event.clientY / window.innerHeight) * 2 + 1;
-      controller.setPointer(x, y);
+      if (isMobile || prefersReducedMotion || !isVisible) return;
+      if (pointerRafId !== null) return;
+
+      const clientX = event.clientX;
+      const clientY = event.clientY;
+
+      pointerRafId = window.requestAnimationFrame(() => {
+        pointerRafId = null;
+        if (!isVisible) return;
+        const x = (clientX / window.innerWidth) * 2 - 1;
+        const y = -(clientY / window.innerHeight) * 2 + 1;
+        controller.setPointer(x, y);
+      });
     };
 
     if (!isMobile && !prefersReducedMotion) {
@@ -81,8 +93,10 @@ export function HeroTopologyScene({
         (entries) => {
           for (const entry of entries) {
             if (entry.isIntersecting && entry.intersectionRatio > 0.02) {
+              isVisible = true;
               controller.resume();
             } else {
+              isVisible = false;
               controller.pause();
             }
           }
@@ -96,6 +110,9 @@ export function HeroTopologyScene({
     return () => {
       if (!isMobile && !prefersReducedMotion) {
         window.removeEventListener('mousemove', handlePointerMove);
+      }
+      if (pointerRafId !== null) {
+        window.cancelAnimationFrame(pointerRafId);
       }
       window.removeEventListener('scroll', handleScroll);
       if (scrollRafId !== null) {

@@ -54,6 +54,7 @@ describe('ContactForm Component', () => {
       screen.getByText('Please provide a valid email address.')
     ).toBeInTheDocument();
     expect(screen.getByText('Please provide a message.')).toBeInTheDocument();
+    expect(nameInput).toHaveFocus();
   });
 
   it('submits successfully and shows confirmation with reset button', async () => {

@@ -67,4 +67,35 @@ describe('CaseStudySelector Component', () => {
 
     expect(onSelect).toHaveBeenCalledWith('project-subscription-platform');
   });
+
+  it('navigates tabs using ArrowRight, ArrowLeft, Home, and End keys', () => {
+    const onSelect = vi.fn();
+    render(
+      <CaseStudySelector
+        projects={content.projects}
+        activeId="project-content-platform"
+        onSelect={onSelect}
+      />,
+    );
+
+    const firstTab = screen.getByRole('tab', {
+      name: /Enterprise Content Publishing Platform/i,
+    });
+
+    // ArrowRight moves to next tab
+    fireEvent.keyDown(firstTab, { key: 'ArrowRight' });
+    expect(onSelect).toHaveBeenCalledWith(content.projects[1]?.id);
+
+    // End key moves to last tab
+    fireEvent.keyDown(firstTab, { key: 'End' });
+    expect(onSelect).toHaveBeenCalledWith(content.projects[content.projects.length - 1]?.id);
+
+    // ArrowLeft wraps from first to last
+    fireEvent.keyDown(firstTab, { key: 'ArrowLeft' });
+    expect(onSelect).toHaveBeenCalledWith(content.projects[content.projects.length - 1]?.id);
+
+    // Home key moves to first tab
+    fireEvent.keyDown(firstTab, { key: 'Home' });
+    expect(onSelect).toHaveBeenCalledWith(content.projects[0]?.id);
+  });
 });

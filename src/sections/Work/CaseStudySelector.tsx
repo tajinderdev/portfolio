@@ -15,6 +15,32 @@ export function CaseStudySelector({
   onSelect,
   className = '',
 }: CaseStudySelectorProps): ReactElement {
+  const handleKeyDown = (e: React.KeyboardEvent, currentIndex: number) => {
+    let nextIndex: number | null = null;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      nextIndex = (currentIndex + 1) % projects.length;
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      nextIndex = (currentIndex - 1 + projects.length) % projects.length;
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      nextIndex = 0;
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      nextIndex = projects.length - 1;
+    }
+
+    if (nextIndex !== null) {
+      const nextProject = projects[nextIndex];
+      if (nextProject) {
+        onSelect(nextProject.id);
+        const nextButton = document.getElementById(`casestudy-tab-${nextProject.id}`);
+        nextButton?.focus();
+      }
+    }
+  };
+
   return (
     <div
       role="tablist"
@@ -45,6 +71,7 @@ export function CaseStudySelector({
               aria-selected={isSelected}
               tabIndex={isSelected ? 0 : -1}
               onClick={() => onSelect(project.id)}
+              onKeyDown={(e) => handleKeyDown(e, index)}
               className="group flex h-full w-full flex-col justify-between p-4 text-left focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
             >
               <div>

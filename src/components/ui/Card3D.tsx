@@ -1,5 +1,4 @@
 import {
-  useState,
   useRef,
   useCallback,
   type ReactNode,
@@ -28,14 +27,8 @@ export function Card3D({
   'aria-label': ariaLabel,
 }: Card3DProps): ReactElement {
   const cardRef = useRef<HTMLDivElement>(null);
-  const [transformStyle, setTransformStyle] = useState<string>(
-    'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)'
-  );
-  const [glareState, setGlareState] = useState<{ x: number; y: number; opacity: number }>({
-    x: 50,
-    y: 50,
-    opacity: 0,
-  });
+  const innerRef = useRef<HTMLDivElement>(null);
+  const glareRef = useRef<HTMLDivElement>(null);
 
   const isReducedMotion = useCallback(() => {
     return (
@@ -46,7 +39,7 @@ export function Card3D({
   }, []);
 
   const handleMouseMove = (event: MouseEvent<HTMLDivElement>) => {
-    if (isReducedMotion() || !cardRef.current) return;
+    if (isReducedMotion() || !cardRef.current || !innerRef.current) return;
 
     const rect = cardRef.current.getBoundingClientRect();
     if (!rect.width || !rect.height) return;
@@ -57,25 +50,21 @@ export function Card3D({
     const rotX = (0.5 - y) * maxTilt * 2;
     const rotY = (x - 0.5) * maxTilt * 2;
 
-    setTransformStyle(
-      `perspective(1000px) rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg) scale3d(1.02, 1.02, 1.02)`
-    );
+    innerRef.current.style.transform = `perspective(1000px) rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg) scale3d(1.02, 1.02, 1.02)`;
 
-    if (glare) {
-      setGlareState({
-        x: Math.round(x * 100),
-        y: Math.round(y * 100),
-        opacity: 0.25,
-      });
+    if (glare && glareRef.current) {
+      glareRef.current.style.opacity = '0.25';
+      glareRef.current.style.background = `radial-gradient(circle at ${Math.round(x * 100)}% ${Math.round(y * 100)}%, rgba(0, 245, 212, 0.22), transparent 60%)`;
     }
   };
 
   const handleMouseLeave = () => {
-    setTransformStyle(
-      'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)'
-    );
-    if (glare) {
-      setGlareState((prev) => ({ ...prev, opacity: 0 }));
+    if (innerRef.current) {
+      innerRef.current.style.transform =
+        'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+    }
+    if (glare && glareRef.current) {
+      glareRef.current.style.opacity = '0';
     }
   };
 
@@ -89,9 +78,10 @@ export function Card3D({
       aria-label={ariaLabel}
     >
       <div
+        ref={innerRef}
         data-card3d-inner="true"
         style={{
-          transform: transformStyle,
+          transform: 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)',
           transformStyle: 'preserve-3d',
           transition: 'transform 200ms cubic-bezier(0.16, 1, 0.3, 1)',
         }}
@@ -104,11 +94,11 @@ export function Card3D({
         {/* Holographic Specular Glare Overlay */}
         {glare && (
           <div
+            ref={glareRef}
             aria-hidden="true"
             className="absolute inset-0 rounded-xl pointer-events-none transition-opacity duration-300 z-30 overflow-hidden"
             style={{
-              opacity: glareState.opacity,
-              background: `radial-gradient(circle at ${glareState.x}% ${glareState.y}%, rgba(0, 245, 212, 0.22), transparent 60%)`,
+              opacity: 0,
             }}
           />
         )}

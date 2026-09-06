@@ -58,6 +58,32 @@ export function CareerProgressionTracker({
   onSelectStage,
   className = '',
 }: CareerProgressionTrackerProps): ReactElement {
+  const handleKeyDown = (e: React.KeyboardEvent, currentIndex: number) => {
+    let nextIndex: number | null = null;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      nextIndex = (currentIndex + 1) % milestones.length;
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      nextIndex = (currentIndex - 1 + milestones.length) % milestones.length;
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      nextIndex = 0;
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      nextIndex = milestones.length - 1;
+    }
+
+    if (nextIndex !== null) {
+      const nextMilestone = milestones[nextIndex];
+      if (nextMilestone) {
+        onSelectStage?.(nextMilestone.id);
+        const nextButton = document.getElementById(`milestone-tab-${nextMilestone.id}`);
+        nextButton?.focus();
+      }
+    }
+  };
+
   return (
     <div
       className={`rounded-lg border border-border-subtle bg-surface/40 p-5 backdrop-blur-sm sm:p-6 ${className}`}
@@ -82,15 +108,18 @@ export function CareerProgressionTracker({
         aria-label="Career progression milestones"
         className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-5"
       >
-        {milestones.map((m) => {
+        {milestones.map((m, index) => {
           const isCurrent = activeId === m.id;
           return (
             <button
               key={m.id}
+              id={`milestone-tab-${m.id}`}
               type="button"
               role="tab"
               aria-selected={isCurrent}
+              tabIndex={isCurrent ? 0 : -1}
               onClick={() => onSelectStage?.(m.id)}
+              onKeyDown={(e) => handleKeyDown(e, index)}
               className={`group flex flex-col items-start rounded-md border p-3 text-left transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background ${
                 isCurrent
                   ? 'border-accent bg-accent-muted/20 ring-1 ring-accent'

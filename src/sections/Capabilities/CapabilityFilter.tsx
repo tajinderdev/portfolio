@@ -85,9 +85,14 @@ export function CapabilityFilter({
           )}
         </div>
 
-        <MonoText size="xs" color="muted" className="hidden sm:inline-block font-mono text-[11px] whitespace-nowrap">
-          {resultCount} {resultCount === 1 ? 'area' : 'areas'}
-        </MonoText>
+        <span aria-live="polite" aria-atomic="true">
+          <MonoText size="xs" color="muted" className="hidden sm:inline-block font-mono text-[11px] whitespace-nowrap">
+            {resultCount} {resultCount === 1 ? 'area' : 'areas'}
+          </MonoText>
+          <span className="sr-only">
+            {resultCount} {resultCount === 1 ? 'capability area' : 'capability areas'} available
+          </span>
+        </span>
       </div>
     </div>
   );

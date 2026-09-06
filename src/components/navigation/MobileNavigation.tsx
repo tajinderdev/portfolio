@@ -19,7 +19,7 @@ export function MobileNavigation({
   useScrollLock(isOpen);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Close on Escape key press
+  // Focus management and keyboard trap inside modal dialog
   useEffect(() => {
     if (!isOpen) return;
 
@@ -27,6 +27,30 @@ export function MobileNavigation({
       if (e.key === 'Escape') {
         e.preventDefault();
         onClose();
+        return;
+      }
+
+      if (e.key === 'Tab') {
+        if (!containerRef.current) return;
+        const focusableElements = containerRef.current.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusableElements.length === 0) return;
+
+        const first = focusableElements[0];
+        const last = focusableElements[focusableElements.length - 1];
+
+        if (e.shiftKey) {
+          if (document.activeElement === first) {
+            e.preventDefault();
+            last?.focus();
+          }
+        } else {
+          if (document.activeElement === last) {
+            e.preventDefault();
+            first?.focus();
+          }
+        }
       }
     };
 
@@ -34,7 +58,7 @@ export function MobileNavigation({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose]);
 
-  // Focus trap / focus first link when opened
+  // Focus first link when opened
   useEffect(() => {
     if (isOpen && containerRef.current) {
       const firstLink = containerRef.current.querySelector<HTMLAnchorElement>('a');
@@ -71,6 +95,7 @@ export function MobileNavigation({
                 <a
                   href={item.href}
                   onClick={onClose}
+                  aria-current={isActive ? 'page' : undefined}
                   className={cn(
                     'flex items-center justify-between py-3 text-2xl font-heading font-medium tracking-tight transition-colors duration-150',
                     isActive

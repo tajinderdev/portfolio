@@ -103,4 +103,42 @@ describe('HeroTopologyScene Component', () => {
     window.dispatchEvent(new Event('scroll'));
     expect(mockController.setScrollProgress).toHaveBeenCalled();
   });
+
+  it('throttles mousemove parallax and suppresses pointer updates when offscreen', () => {
+    let observerCallback: IntersectionObserverCallback | null = null;
+    class CapturingIntersectionObserver {
+      constructor(cb: IntersectionObserverCallback) {
+        observerCallback = cb;
+      }
+      observe = vi.fn();
+      unobserve = vi.fn();
+      disconnect = vi.fn();
+    }
+    window.IntersectionObserver = CapturingIntersectionObserver as unknown as typeof IntersectionObserver;
+
+    vi.spyOn(window, 'requestAnimationFrame').mockImplementation((cb) => {
+      cb(0);
+      return 1;
+    });
+
+    render(<HeroTopologyScene />);
+
+    // Trigger mousemove while visible
+    window.dispatchEvent(new MouseEvent('mousemove', { clientX: 200, clientY: 150 }));
+    expect(mockController.setPointer).toHaveBeenCalled();
+
+    mockController.setPointer.mockClear();
+
+    // Mark offscreen
+    if (observerCallback) {
+      (observerCallback as IntersectionObserverCallback)(
+        [{ isIntersecting: false, intersectionRatio: 0 } as IntersectionObserverEntry],
+        {} as IntersectionObserver
+      );
+    }
+
+    // Trigger mousemove while offscreen
+    window.dispatchEvent(new MouseEvent('mousemove', { clientX: 300, clientY: 250 }));
+    expect(mockController.setPointer).not.toHaveBeenCalled();
+  });
 });

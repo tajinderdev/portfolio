@@ -34,4 +34,26 @@ describe('Responsive Navigation & Viewport Behavior', () => {
     fireEvent.click(mobileWorkLink);
     expect(screen.queryByRole('dialog', { name: /mobile navigation/i })).not.toBeInTheDocument();
   });
+
+  it('traps Tab key focus within the mobile navigation drawer', () => {
+    render(<Header />);
+    const toggleBtn = screen.getByRole('button', { name: /open navigation menu/i });
+    fireEvent.click(toggleBtn);
+
+    const dialog = screen.getByRole('dialog', { name: /mobile navigation/i });
+    const focusableElements = dialog.querySelectorAll<HTMLElement>('a[href], button');
+    const firstElement = focusableElements[0]!;
+    const lastElement = focusableElements[focusableElements.length - 1]!;
+
+    firstElement.focus();
+    expect(document.activeElement).toBe(firstElement);
+
+    // Shift+Tab on first element wraps to last element
+    fireEvent.keyDown(window, { key: 'Tab', shiftKey: true });
+    expect(document.activeElement).toBe(lastElement);
+
+    // Tab on last element wraps to first element
+    fireEvent.keyDown(window, { key: 'Tab', shiftKey: false });
+    expect(document.activeElement).toBe(firstElement);
+  });
 });

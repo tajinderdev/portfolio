@@ -84,7 +84,8 @@ export function Contact({ client, className = '' }: ContactProps): ReactElement 
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                GitHub ↗
+                <span>GitHub ↗</span>
+                <span className="sr-only"> (opens in a new tab)</span>
               </Button>
               <Button
                 as="a"
@@ -94,7 +95,8 @@ export function Contact({ client, className = '' }: ContactProps): ReactElement 
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                LinkedIn ↗
+                <span>LinkedIn ↗</span>
+                <span className="sr-only"> (opens in a new tab)</span>
               </Button>
             </div>
           </div>

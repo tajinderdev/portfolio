@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { ScrollProgressBar } from './ScrollProgressBar';
 
 describe('ScrollProgressBar Component', () => {
@@ -16,7 +16,7 @@ describe('ScrollProgressBar Component', () => {
     expect(bar).toHaveAttribute('aria-valuemax', '100');
   });
 
-  it('updates scaleX and aria-valuenow on window scroll', () => {
+  it('updates scaleX and aria-valuenow on window scroll', async () => {
     render(<ScrollProgressBar />);
 
     const bar = screen.getByRole('progressbar', { name: /reading progress/i });
@@ -39,8 +39,10 @@ describe('ScrollProgressBar Component', () => {
 
     fireEvent.scroll(window);
 
-    expect(indicator.style.transform).toBe('scaleX(0.5)');
-    expect(bar).toHaveAttribute('aria-valuenow', '50');
+    await waitFor(() => {
+      expect(indicator.style.transform).toBe('scaleX(0.5)');
+      expect(bar).toHaveAttribute('aria-valuenow', '50');
+    });
   });
 
   it('handles zero scrollable height safely without throwing', () => {

@@ -17,6 +17,32 @@ export function WorkflowPipeline({
 }: WorkflowPipelineProps): ReactElement {
   const activeStep = steps.find((s) => s.id === activeStepId) ?? steps[0];
 
+  const handleKeyDown = (e: React.KeyboardEvent, currentIndex: number) => {
+    let nextIndex: number | null = null;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      nextIndex = (currentIndex + 1) % steps.length;
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      nextIndex = (currentIndex - 1 + steps.length) % steps.length;
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      nextIndex = 0;
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      nextIndex = steps.length - 1;
+    }
+
+    if (nextIndex !== null) {
+      const nextStep = steps[nextIndex];
+      if (nextStep) {
+        onSelectStep(nextStep.id);
+        const nextButton = document.getElementById(`workflow-tab-${nextStep.id}`);
+        nextButton?.focus();
+      }
+    }
+  };
+
   return (
     <div className={`space-y-6 ${className}`}>
       {/* 6-Stage Stepper Bar */}
@@ -38,6 +64,7 @@ export function WorkflowPipeline({
               aria-selected={isSelected}
               tabIndex={isSelected ? 0 : -1}
               onClick={() => onSelectStep(step.id)}
+              onKeyDown={(e) => handleKeyDown(e, index)}
               className={`group relative flex flex-col justify-between rounded-lg border p-3.5 text-left transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background ${
                 isSelected
                   ? 'border-accent bg-accent-muted/20 ring-1 ring-accent'

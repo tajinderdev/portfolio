@@ -23,11 +23,13 @@ export function ScrollProgressBar(): ReactElement {
       ticking = false;
     };
 
+    let rafId: number | null = null;
+
     const handleScroll = () => {
       if (!ticking) {
-        updateScrollProgress();
         ticking = true;
-        window.requestAnimationFrame(() => {
+        rafId = window.requestAnimationFrame(() => {
+          updateScrollProgress();
           ticking = false;
         });
       }
@@ -42,6 +44,9 @@ export function ScrollProgressBar(): ReactElement {
     return () => {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleScroll);
+      if (rafId !== null) {
+        window.cancelAnimationFrame(rafId);
+      }
     };
   }, []);
 

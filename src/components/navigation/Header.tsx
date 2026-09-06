@@ -6,12 +6,13 @@ import { MonoText } from '@/components/typography';
 import { MobileNavigation } from './MobileNavigation';
 import { cn } from '@/lib/utils';
 
+const SECTION_IDS = navigationItems.map((item) => item.id);
+
 export function Header(): ReactElement {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const toggleButtonRef = useRef<HTMLButtonElement>(null);
 
-  const sectionIds = navigationItems.map((item) => item.id);
-  const activeSection = useActiveSection(sectionIds);
+  const activeSection = useActiveSection(SECTION_IDS);
 
   const handleCloseMobileMenu = () => {
     setIsMobileMenuOpen(false);

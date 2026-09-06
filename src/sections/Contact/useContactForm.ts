@@ -141,6 +141,11 @@ export function useContactForm(
       if (Object.keys(newErrors).length > 0) {
         setErrors(newErrors);
         setStatus('idle');
+        const firstField = Object.keys(newErrors)[0];
+        if (typeof document !== 'undefined' && firstField) {
+          const el = document.getElementById(`contact-${firstField}`);
+          el?.focus();
+        }
         return;
       }
 

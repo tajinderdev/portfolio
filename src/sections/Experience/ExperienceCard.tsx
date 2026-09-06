@@ -92,6 +92,7 @@ export function ExperienceCard({
               ? 'Hide Architectural & Delivery Details'
               : 'View Architectural & Delivery Details'}
           </span>
+          <span className="sr-only"> for {experience.role} ({experience.period})</span>
           <span
             aria-hidden="true"
             className={`transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}

@@ -17,6 +17,32 @@ export function SystemThinkingTrace({
 
   const activeNode = nodes[activeNodeIndex] ?? nodes[0];
 
+  const handleKeyDown = (e: React.KeyboardEvent, currentIndex: number) => {
+    let nextIndex: number | null = null;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      nextIndex = (currentIndex + 1) % nodes.length;
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      nextIndex = (currentIndex - 1 + nodes.length) % nodes.length;
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      nextIndex = 0;
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      nextIndex = nodes.length - 1;
+    }
+
+    if (nextIndex !== null) {
+      setActiveNodeIndex(nextIndex);
+      const nextNode = nodes[nextIndex];
+      if (nextNode) {
+        const nextButton = document.getElementById(`tab-${nextNode.id}`);
+        nextButton?.focus();
+      }
+    }
+  };
+
   return (
     <div
       className={`rounded-lg border border-border-subtle bg-surface/50 p-6 backdrop-blur-sm sm:p-8 ${className}`}
@@ -60,6 +86,7 @@ export function SystemThinkingTrace({
                   aria-selected={isActive}
                   tabIndex={isActive ? 0 : -1}
                   onClick={() => setActiveNodeIndex(index)}
+                  onKeyDown={(e) => handleKeyDown(e, index)}
                   className={`group relative flex flex-col items-start rounded-md border px-3 py-2 text-left transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background ${
                     isActive
                       ? 'border-accent bg-accent-muted/20 text-accent ring-1 ring-accent'

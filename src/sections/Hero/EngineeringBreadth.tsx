@@ -38,7 +38,7 @@ export function EngineeringBreadth({
       </div>
 
       {/* Interactive 2x3 Positioning Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2" role="list">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2" aria-label="Engineering breadth categories">
         {items.map((item) => {
           const isSelected = activeCategory === item.category;
           return (

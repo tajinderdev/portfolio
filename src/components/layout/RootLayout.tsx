@@ -24,7 +24,7 @@ export function RootLayout({ children }: RootLayoutProps): ReactElement {
       <Header />
 
       {/* Main Content Area */}
-      <main id="main-content" className="flex-1 w-full focus:outline-none">
+      <main id="main-content" tabIndex={-1} className="flex-1 w-full focus:outline-none">
         {children}
       </main>
 

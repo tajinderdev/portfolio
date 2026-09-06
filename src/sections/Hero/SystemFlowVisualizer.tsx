@@ -100,7 +100,7 @@ export function SystemFlowVisualizer({
       </div>
 
       {/* Interactive System Flow Stack */}
-      <div className="space-y-2 relative" role="list">
+      <div className="space-y-2 relative" aria-label="System architecture tiers">
         {systemTiers.map((tier, index) => {
           const isSelected = tier.id === selectedTierId;
           return (
