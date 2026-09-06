@@ -1,11 +1,15 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen, fireEvent, within } from '@testing-library/react';
 import { Header } from './Header';
-import { App } from '@/app/App';
+import { RootLayout } from '@/components/layout';
 
 describe('Responsive Navigation & Viewport Behavior', () => {
   it('provides accessible landmark structures on desktop and mobile', () => {
-    render(<App />);
+    render(
+      <RootLayout>
+        <div>Test Content</div>
+      </RootLayout>,
+    );
     expect(screen.getByRole('banner')).toBeInTheDocument();
     expect(screen.getByRole('main')).toBeInTheDocument();
     expect(screen.getByRole('contentinfo')).toBeInTheDocument();

@@ -1,0 +1,6 @@
+# robots.txt for https://tajinder.dev
+User-agent: *
+Allow: /
+
+# Canonical XML Sitemap
+Sitemap: https://tajinder.dev/sitemap.xml
