@@ -10,9 +10,18 @@ export interface HomepagePromise {
   readonly supportingMessage: string;
 }
 
+export interface TraceNode {
+  readonly id: string;
+  readonly label: string;
+  readonly layer: string;
+  readonly diagnosticFocus: string;
+  readonly keyConsiderations: readonly string[];
+}
+
 export interface SystemThinkingModel {
   readonly summary: string;
   readonly tracePath: readonly string[];
+  readonly traceNodes: readonly TraceNode[];
   readonly focus: string;
 }
 
@@ -29,6 +38,14 @@ export interface EngineeringBreadthItem {
   readonly description: string;
 }
 
+export interface PhilosophyTheme {
+  readonly id: string;
+  readonly title: string;
+  readonly summary: string;
+  readonly keyDecisions: readonly string[];
+  readonly iconLabel: string;
+}
+
 export interface ProfileContent {
   readonly name: string;
   readonly title: string;
@@ -41,6 +58,7 @@ export interface ProfileContent {
   readonly systemThinking: SystemThinkingModel;
   readonly collaboration: CollaborationModel;
   readonly engineeringBreadth: readonly EngineeringBreadthItem[];
+  readonly philosophyThemes: readonly PhilosophyTheme[];
 }
 
 export type SkillPillar = 'BUILD' | 'SCALE' | 'INTEGRATE' | 'MODERNIZE' | 'INTELLIGENCE';

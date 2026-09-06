@@ -1,12 +1,13 @@
 import { type ReactElement } from 'react';
-import { RootLayout, Section, Container } from '@/components/layout';
+import { RootLayout, Section } from '@/components/layout';
 import {
   Heading,
   Text,
   MonoText,
   SectionHeader,
 } from '@/components/typography';
-import { Button, Link, Card, Badge, StatusDot } from '@/components/ui';
+import { Button, Link, Card, Badge } from '@/components/ui';
+import { Hero, About } from '@/sections';
 import { getPortfolioContent } from '@/content';
 
 export function App(): ReactElement {
@@ -14,31 +15,8 @@ export function App(): ReactElement {
 
   return (
     <RootLayout>
-      {/* Intro Overview Area (Validates Header offset & Container) */}
-      <div className="border-b border-border-subtle bg-surface/30 py-16 sm:py-20">
-        <Container size="default" className="space-y-6">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <StatusDot status="active" label="Stage 3: Global Navigation & Layout Active" />
-            <MonoText size="xs" color="muted">
-              Viewport Anchors: #work · #experience · #engineering · #about · #contact
-            </MonoText>
-          </div>
-
-          <div className="max-w-3xl space-y-4">
-            <Heading as="h1" variant="section">
-              Global Navigation & Page Architecture
-            </Heading>
-            <Text variant="lead">
-              {content.profile.promise.headline}
-            </Text>
-            <Text variant="body" color="muted">
-              The navigation bar above supports full keyboard accessibility, mobile drawer focus
-              trapping, scroll-lock, and active viewport intersection tracking across all portfolio
-              sections.
-            </Text>
-          </div>
-        </Container>
-      </div>
+      {/* Primary Hero Section */}
+      <Hero profile={content.profile} />
 
       {/* Section Anchor 1: Selected Work (#work) */}
       <Section id="work" spacing="default" className="border-b border-border-subtle">
@@ -113,25 +91,8 @@ export function App(): ReactElement {
         </div>
       </Section>
 
-      {/* Section Anchor 4: About & Achievements (#about) */}
-      <Section id="about" spacing="default" className="border-b border-border-subtle bg-surface/20">
-        <div className="space-y-6">
-          <SectionHeader
-            kicker="04 / BACKGROUND"
-            title="About Tajinder Singh"
-            description="Anchored section shell ready for Stage 11 (About section & background)."
-          />
-
-          <div className="p-6 rounded-lg bg-surface border border-border-subtle max-w-2xl space-y-4">
-            <Text variant="body">{content.profile.summary}</Text>
-            <div className="flex flex-wrap gap-2 pt-2">
-              <Badge variant="accent">Employee of the Year</Badge>
-              <Badge variant="mono">Team Growth 4 → 20+</Badge>
-              <Badge variant="outline">International Delivery</Badge>
-            </div>
-          </div>
-        </div>
-      </Section>
+      {/* Section Anchor 4: About / Engineering Philosophy (#about) */}
+      <About profile={content.profile} />
 
       {/* Section Anchor 5: Contact (#contact) */}
       <Section id="contact" spacing="default">

@@ -36,6 +36,80 @@ export const profileData: ProfileContent = {
       'External Services',
       'Infrastructure',
     ],
+    traceNodes: [
+      {
+        id: 'node-frontend',
+        label: 'Frontend',
+        layer: 'Client & UI Layer',
+        diagnosticFocus:
+          'State synchronization, render lifecycle, network latency perception, and contract compliance.',
+        keyConsiderations: [
+          'Unidirectional state flow',
+          'Defensive UI error boundaries',
+          'Optimistic updates with rollback',
+        ],
+      },
+      {
+        id: 'node-api',
+        label: 'API Gateway',
+        layer: 'Interface & Contract Layer',
+        diagnosticFocus:
+          'Request payload validation, authentication verification, rate limiting, and contract consistency.',
+        keyConsiderations: [
+          'Strict input schema validation',
+          'JWT / session authentication',
+          'Consistent HTTP status semantics',
+        ],
+      },
+      {
+        id: 'node-backend',
+        label: 'Backend',
+        layer: 'Application & Domain Logic',
+        diagnosticFocus:
+          'Business rule integrity, concurrency handling, idempotency, and asynchronous job processing.',
+        keyConsiderations: [
+          'Idempotent transaction handling',
+          'Asynchronous queue dispatching',
+          'Layered fault isolation',
+        ],
+      },
+      {
+        id: 'node-database',
+        label: 'Database',
+        layer: 'Persistence & Data Integrity',
+        diagnosticFocus:
+          'Query efficiency, index utilization, connection pool saturation, and schema constraints.',
+        keyConsiderations: [
+          'Targeted composite indexing',
+          'Atomic transaction boundaries',
+          'N+1 query prevention',
+        ],
+      },
+      {
+        id: 'node-external',
+        label: 'External Services',
+        layer: 'Third-Party Integration Layer',
+        diagnosticFocus:
+          'External API timeouts, webhook delivery reliability, rate limit management, and data drift.',
+        keyConsiderations: [
+          'Idempotent webhook receivers',
+          'Exponential backoff & retries',
+          'Fallback states on third-party outage',
+        ],
+      },
+      {
+        id: 'node-infrastructure',
+        label: 'Infrastructure',
+        layer: 'Runtime, Cloud & DevOps',
+        diagnosticFocus:
+          'Container health, memory/CPU saturation, reverse proxy routing, and deployment consistency.',
+        keyConsiderations: [
+          'Dockerized environments',
+          'Automated CI/CD validation pipelines',
+          'Nginx reverse proxy & SSL termination',
+        ],
+      },
+    ],
     focus: 'Identify the root cause before choosing a solution.',
   },
   engineeringBreadth: [
@@ -62,6 +136,92 @@ export const profileData: ProfileContent = {
     {
       category: 'Leadership',
       description: 'Technical ownership, international client collaboration, and engineer mentoring.',
+    },
+  ],
+  philosophyThemes: [
+    {
+      id: 'theme-understanding',
+      title: 'Problem Understanding Before Implementation',
+      summary:
+        'Thorough analysis of unfamiliar business domains and workflows precedes coding. Defining boundaries early avoids premature abstraction.',
+      keyDecisions: [
+        'Domain requirement mapping',
+        'State transition blueprints',
+        'Root-cause diagnostics over superficial patching',
+      ],
+      iconLabel: 'DIAGNOSE',
+    },
+    {
+      id: 'theme-system-thinking',
+      title: 'Architecture & System-Level Thinking',
+      summary:
+        'Applications are complete ecosystems. Engineering decisions balance immediate delivery with modular maintainability and long-term stability.',
+      keyDecisions: [
+        'End-to-end tracing (Frontend to Cloud)',
+        'Decoupled presentation & data layers',
+        'Layered fault isolation',
+      ],
+      iconLabel: 'ARCHITECT',
+    },
+    {
+      id: 'theme-ownership',
+      title: 'Full-Stack Ownership & Reliability',
+      summary:
+        'Accountability from initial blueprint through deployment and production monitoring. Software must be dependable in live environments.',
+      keyDecisions: [
+        'Complete SDLC ownership',
+        'Automated CI/CD validation',
+        'Production issue investigation',
+      ],
+      iconLabel: 'DELIVER',
+    },
+    {
+      id: 'theme-integrations',
+      title: 'Resilient Third-Party Integrations',
+      summary:
+        'Connecting enterprise platforms, payment gateways, and CRMs with robust webhook handling and idempotent data synchronization.',
+      keyDecisions: [
+        'CRM data sync (Zoho & HubSpot)',
+        'Payment workflows (Stripe & PayPal)',
+        'Graceful recovery on external API failures',
+      ],
+      iconLabel: 'INTEGRATE',
+    },
+    {
+      id: 'theme-modernization',
+      title: 'Security & Pragmatic Modernization',
+      summary:
+        'Protecting data exposure with strict RBAC while incrementally modernizing legacy applications without risky, expensive rewrites.',
+      keyDecisions: [
+        'Role-Based Access Control (RBAC)',
+        'Technical debt reduction',
+        'Aging dependency and security remediation',
+      ],
+      iconLabel: 'SECURE',
+    },
+    {
+      id: 'theme-collaboration',
+      title: 'Cross-Functional & Agile Delivery',
+      summary:
+        'Bridging engineering with UI/UX design (Figma), QA/SDETs, and international stakeholders across the US, UK, and Europe.',
+      keyDecisions: [
+        'Iterative Agile / Scrum / Kanban',
+        'Clear risk and dependency communication',
+        'Mentoring and engineering best practices',
+      ],
+      iconLabel: 'COLLABORATE',
+    },
+    {
+      id: 'theme-ai',
+      title: 'AI-Augmented Engineering',
+      summary:
+        'Leveraging Generative AI and LLMs to accelerate code synthesis, testing, and exploration—while architectural correctness remains a human engineering responsibility.',
+      keyDecisions: [
+        'Engineering quality remains human',
+        'AI-accelerated testing & refactoring',
+        'Continuous technical evolution',
+      ],
+      iconLabel: 'AUGMENT',
     },
   ],
   collaboration: {

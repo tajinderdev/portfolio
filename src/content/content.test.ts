@@ -46,4 +46,20 @@ describe('Portfolio Content Model & Data Integrity', () => {
     expect(content.achievements.length).toBe(4);
     expect(content.education.length).toBe(2);
   });
+
+  it('contains verified engineering philosophy themes and trace nodes', () => {
+    expect(content.profile.philosophyThemes.length).toBe(7);
+    expect(content.profile.principles.length).toBe(8);
+    expect(content.profile.systemThinking.tracePath.length).toBe(6);
+    expect(content.profile.systemThinking.traceNodes.length).toBe(6);
+
+    const themeIds = content.profile.philosophyThemes.map((t) => t.id);
+    expect(themeIds).toContain('theme-understanding');
+    expect(themeIds).toContain('theme-system-thinking');
+    expect(themeIds).toContain('theme-ownership');
+    expect(themeIds).toContain('theme-integrations');
+    expect(themeIds).toContain('theme-modernization');
+    expect(themeIds).toContain('theme-collaboration');
+    expect(themeIds).toContain('theme-ai');
+  });
 });
