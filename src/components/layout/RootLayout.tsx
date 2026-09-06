@@ -1,4 +1,6 @@
 import type { ReactNode, ReactElement } from 'react';
+import { Header } from '@/components/navigation';
+import { Footer } from './Footer';
 
 interface RootLayoutProps {
   readonly children: ReactNode;
@@ -6,26 +8,25 @@ interface RootLayoutProps {
 
 export function RootLayout({ children }: RootLayoutProps): ReactElement {
   return (
-    <div className="min-h-screen flex flex-col bg-[#0a0a0a] text-[#f5f5f5] selection:bg-[#7cff6b]/20 selection:text-[#7cff6b]">
+    <div className="min-h-screen flex flex-col bg-background text-text-primary selection:bg-accent/20 selection:text-accent">
       {/* Accessible skip link */}
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-[#111111] focus:text-[#7cff6b] focus:border focus:border-[#7cff6b] focus:rounded-sm text-sm"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-surface focus:text-accent focus:border focus:border-accent focus:rounded-sm text-sm font-mono shadow-md"
       >
         Skip to main content
       </a>
 
+      {/* Global Header & Navigation */}
+      <Header />
+
       {/* Main Content Area */}
-      <main id="main-content" className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main id="main-content" className="flex-1 w-full focus:outline-none">
         {children}
       </main>
 
-      {/* Minimal Footer Boundary */}
-      <footer className="w-full border-t border-white/10 py-6 text-center text-xs text-[#737373]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <p>© {new Date().getFullYear()} Tajinder Singh. Built with React & TypeScript.</p>
-        </div>
-      </footer>
+      {/* Global Technical Footer */}
+      <Footer />
     </div>
   );
 }
