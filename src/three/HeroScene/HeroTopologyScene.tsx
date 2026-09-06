@@ -43,7 +43,24 @@ export function HeroTopologyScene({
       window.addEventListener('mousemove', handlePointerMove, { passive: true });
     }
 
-    // 2. Responsive resize observer
+    // 2. Scroll-driven 3D dispersal and perspective translation
+    let scrollRafId: number | null = null;
+    const handleScroll = () => {
+      if (scrollRafId !== null) return;
+      scrollRafId = window.requestAnimationFrame(() => {
+        scrollRafId = null;
+        if (!container) return;
+        const rect = container.getBoundingClientRect();
+        const height = rect.height || 600;
+        const progress = Math.min(1, Math.max(0, -rect.top / height));
+        controller.setScrollProgress(progress);
+      });
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+
+    // 3. Responsive resize observer
     let resizeObserver: ResizeObserver | null = null;
     if (typeof ResizeObserver !== 'undefined') {
       resizeObserver = new ResizeObserver((entries) => {
@@ -57,7 +74,7 @@ export function HeroTopologyScene({
       resizeObserver.observe(container);
     }
 
-    // 3. Viewport IntersectionObserver to achieve 0% GPU usage offscreen
+    // 4. Viewport IntersectionObserver to achieve 0% GPU usage offscreen
     let intersectionObserver: IntersectionObserver | null = null;
     if (typeof IntersectionObserver !== 'undefined') {
       intersectionObserver = new IntersectionObserver(
@@ -75,10 +92,14 @@ export function HeroTopologyScene({
       intersectionObserver.observe(container);
     }
 
-    // 4. Deterministic cleanup
+    // 5. Deterministic cleanup
     return () => {
       if (!isMobile && !prefersReducedMotion) {
         window.removeEventListener('mousemove', handlePointerMove);
+      }
+      window.removeEventListener('scroll', handleScroll);
+      if (scrollRafId !== null) {
+        window.cancelAnimationFrame(scrollRafId);
       }
       if (resizeObserver) {
         resizeObserver.disconnect();

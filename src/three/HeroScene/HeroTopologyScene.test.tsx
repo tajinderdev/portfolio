@@ -7,6 +7,7 @@ describe('HeroTopologyScene Component', () => {
   const mockController = {
     domElement: document.createElement('canvas'),
     setPointer: vi.fn(),
+    setScrollProgress: vi.fn(),
     pause: vi.fn(),
     resume: vi.fn(),
     resize: vi.fn(),
@@ -87,5 +88,19 @@ describe('HeroTopologyScene Component', () => {
       );
       expect(mockController.resume).toHaveBeenCalled();
     }
+  });
+
+  it('registers scroll listener and forwards progress to setScrollProgress', () => {
+    vi.spyOn(window, 'requestAnimationFrame').mockImplementation((cb) => {
+      cb(0);
+      return 1;
+    });
+
+    render(<HeroTopologyScene />);
+
+    expect(mockController.setScrollProgress).toHaveBeenCalled();
+
+    window.dispatchEvent(new Event('scroll'));
+    expect(mockController.setScrollProgress).toHaveBeenCalled();
   });
 });

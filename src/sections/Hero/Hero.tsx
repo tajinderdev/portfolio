@@ -22,17 +22,17 @@ export function Hero({ profile }: HeroProps): ReactElement {
     >
       {/* Atmospheric Background Layer with 3D Topology Mesh */}
       <div
-        className="absolute inset-0 pointer-events-none select-none overflow-hidden"
+        className="absolute inset-0 select-none overflow-hidden"
         aria-hidden="true"
       >
-        {/* Subtle hero image backdrop */}
+        {/* Subtle hero backdrop texture */}
         <div
-          className="absolute inset-0 bg-cover bg-center opacity-10 mix-blend-luminosity scale-105 filter blur-[1px]"
+          className="absolute inset-0 bg-cover bg-center opacity-5 mix-blend-luminosity filter blur-[2px] pointer-events-none"
           style={{ backgroundImage: "url('/images/hero.webp')" }}
         />
 
         {/* 3D WebGL Distributed System Topology (Lazy-Loaded with Fallback) */}
-        <div className="absolute inset-0 opacity-40 mix-blend-screen">
+        <div className="absolute inset-0 opacity-90">
           <ThreeBoundary
             fallback={
               <div className="absolute inset-0 bg-gradient-to-b from-background via-background/95 to-background" />
@@ -44,9 +44,9 @@ export function Hero({ profile }: HeroProps): ReactElement {
           </ThreeBoundary>
         </div>
 
-        {/* Dark radial glow and gradient mask to protect text contrast */}
-        <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/90 to-background" />
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/5 rounded-full filter blur-3xl" />
+        {/* Soft radial vignette to preserve text contrast while letting 3D nodes shine through */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_transparent_35%,_var(--color-background)_95%)] pointer-events-none" />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/5 rounded-full filter blur-3xl pointer-events-none" />
       </div>
 
       {/* Hero Content Container: 12-Column Responsive Layout */}
