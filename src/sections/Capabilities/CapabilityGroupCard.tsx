@@ -1,6 +1,6 @@
 import { type ReactElement } from 'react';
 import { Heading, Text, MonoText } from '@/components/typography';
-import { Card } from '@/components/ui';
+import { Card, Card3D } from '@/components/ui';
 import type { SkillPillarGroup } from '@/content/models';
 
 export interface CapabilityGroupCardProps {
@@ -17,12 +17,14 @@ export function CapabilityGroupCard({
   const normalizedQuery = searchQuery.trim().toLowerCase();
 
   return (
-    <Card
-      as="article"
-      variant="interactive"
-      className={`flex flex-col justify-between p-6 transition-all duration-200 sm:p-7 ${className}`}
-      aria-labelledby={`cap-group-${group.pillar.toLowerCase()}`}
-    >
+    <Card3D maxTilt={6} glare={true} className={`h-full ${className}`} innerClassName="h-full">
+      <Card
+        as="article"
+        variant="interactive"
+        padding="none"
+        className="flex h-full flex-col justify-between p-6 transition-all duration-200 sm:p-7 bg-transparent border-none hover:bg-transparent"
+        aria-labelledby={`cap-group-${group.pillar.toLowerCase()}`}
+      >
       <div>
         {/* Header: Pillar Tag & Architectural Role */}
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2 border-b border-border-subtle/70 pb-3">
@@ -95,5 +97,6 @@ export function CapabilityGroupCard({
         </div>
       </div>
     </Card>
+  </Card3D>
   );
 }
