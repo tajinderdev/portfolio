@@ -53,14 +53,16 @@ export function createTopologyScene(
     try {
       const ctx = canvas.getContext('2d');
       if (ctx) {
-        const gradient = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+        // High-contrast, pinpoint crisp circular disc with subtle subpixel antialiasing
+        const gradient = ctx.createRadialGradient(32, 32, 0, 32, 32, 28);
         gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
-        gradient.addColorStop(0.25, 'rgba(0, 255, 136, 0.95)');
-        gradient.addColorStop(0.55, 'rgba(16, 185, 129, 0.5)');
-        gradient.addColorStop(0.85, 'rgba(0, 245, 155, 0.15)');
-        gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        gradient.addColorStop(0.55, 'rgba(0, 255, 136, 1)');
+        gradient.addColorStop(0.92, 'rgba(0, 255, 136, 0.95)');
+        gradient.addColorStop(1, 'rgba(0, 255, 136, 0)');
         ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, 64, 64);
+        ctx.beginPath();
+        ctx.arc(32, 32, 28, 0, Math.PI * 2);
+        ctx.fill();
       }
     } catch {
       // Headless environments without 2D canvas support
@@ -73,21 +75,21 @@ export function createTopologyScene(
 
   const circleTexture = createCircleTexture();
 
-  // Particle distribution parameters (decreased 50% for optimal breathing room and clarity)
-  const particleCount = isMobile ? 600 : 1300;
+  // Particle distribution parameters: 650 desktop / 300 mobile (refined 50% reduction for elegant minimalism)
+  const particleCount = isMobile ? 300 : 650;
   const positions = new Float32Array(particleCount * 3);
   const basePositions = new Float32Array(particleCount * 3);
   const velocities = new Float32Array(particleCount * 3);
   const colors = new Float32Array(particleCount * 3);
   const seeds = new Float32Array(particleCount * 2);
 
-  // Antigravity Green Palette
+  // High-contrast vibrant Antigravity Green Palette
   const greenPalette = [
-    new THREE.Color('#00FF88'), // Luminous vibrant green
-    new THREE.Color('#10B981'), // Emerald tech green
+    new THREE.Color('#00FF88'), // Luminous vibrant electric green
     new THREE.Color('#00F59B'), // Bright terminal neon
-    new THREE.Color('#6EE7B7'), // High-energy pale mint
-    new THREE.Color('#059669'), // Deep ambient emerald
+    new THREE.Color('#10B981'), // Crisp tech emerald
+    new THREE.Color('#34D399'), // Vivid mint green
+    new THREE.Color('#6EE7B7'), // White-mint apex highlight
   ];
 
   const spreadX = 260;
@@ -125,10 +127,10 @@ export function createTopologyScene(
     seeds[i2] = Math.random() * Math.PI * 2;
     seeds[i2 + 1] = 0.4 + Math.random() * 0.8; // Drift speed factor
 
-    // Color gradient based on depth & random variation
+    // High-contrast color gradient maintaining vivid brightness across all depths
     const paletteIndex = Math.floor(Math.random() * greenPalette.length);
     const chosenColor = greenPalette[paletteIndex] ?? defaultColor;
-    const depthFactor = THREE.MathUtils.clamp((nz + spreadZ / 2) / spreadZ, 0.4, 1.0);
+    const depthFactor = THREE.MathUtils.clamp((nz + spreadZ / 2) / spreadZ, 0.75, 1.0);
 
     colors[i3] = chosenColor.r * depthFactor;
     colors[i3 + 1] = chosenColor.g * depthFactor;
@@ -140,12 +142,13 @@ export function createTopologyScene(
   geometry.setAttribute('position', positionAttribute);
   geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
+  // Small, high-contrast, pinpoint size (matching Antigravity's scale)
   const material = new THREE.PointsMaterial({
-    size: isMobile ? 4.0 : 5.0,
+    size: isMobile ? 2.2 : 2.8,
     vertexColors: true,
     map: circleTexture,
     transparent: true,
-    opacity: 0.92,
+    opacity: 1.0,
     blending: THREE.AdditiveBlending,
     depthWrite: false,
     sizeAttenuation: true,
