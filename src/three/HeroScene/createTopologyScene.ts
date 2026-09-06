@@ -73,8 +73,8 @@ export function createTopologyScene(
 
   const circleTexture = createCircleTexture();
 
-  // Particle distribution parameters
-  const particleCount = isMobile ? 1200 : 2600;
+  // Particle distribution parameters (decreased 50% for optimal breathing room and clarity)
+  const particleCount = isMobile ? 600 : 1300;
   const positions = new Float32Array(particleCount * 3);
   const basePositions = new Float32Array(particleCount * 3);
   const velocities = new Float32Array(particleCount * 3);
@@ -141,7 +141,7 @@ export function createTopologyScene(
   geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
   const material = new THREE.PointsMaterial({
-    size: isMobile ? 3.8 : 4.8,
+    size: isMobile ? 4.0 : 5.0,
     vertexColors: true,
     map: circleTexture,
     transparent: true,
