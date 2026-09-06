@@ -75,8 +75,8 @@ export function createTopologyScene(
 
   const circleTexture = createCircleTexture();
 
-  // Particle distribution parameters: 650 desktop / 300 mobile (refined 50% reduction for elegant minimalism)
-  const particleCount = isMobile ? 300 : 650;
+  // Particle distribution parameters: 325 desktop / 150 mobile (50% reduction for spacious minimalist aesthetic)
+  const particleCount = isMobile ? 150 : 325;
   const positions = new Float32Array(particleCount * 3);
   const basePositions = new Float32Array(particleCount * 3);
   const velocities = new Float32Array(particleCount * 3);
