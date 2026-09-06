@@ -2,6 +2,7 @@ import type { ReactElement } from 'react';
 import type { ProfileContent } from '@/content/models';
 import { Heading, Text, MonoText } from '@/components/typography';
 import { Button, StatusDot } from '@/components/ui';
+import { handleSmoothScrollClick } from '@/lib/smoothScroll';
 
 export interface HeroContentProps {
   profile: ProfileContent;
@@ -38,7 +39,13 @@ export function HeroContent({ profile }: HeroContentProps): ReactElement {
 
       {/* Primary & Secondary Action CTAs */}
       <div className="flex flex-wrap items-center gap-4 pt-2">
-        <Button as="a" href="#work" variant="primary" size="lg">
+        <Button
+          as="a"
+          href="#work"
+          onClick={(e) => handleSmoothScrollClick(e, '#work')}
+          variant="primary"
+          size="lg"
+        >
           <span>Explore Selected Work</span>
           <svg
             className="w-4 h-4 ml-1"
@@ -52,7 +59,13 @@ export function HeroContent({ profile }: HeroContentProps): ReactElement {
           </svg>
         </Button>
 
-        <Button as="a" href="#contact" variant="secondary" size="lg">
+        <Button
+          as="a"
+          href="#contact"
+          onClick={(e) => handleSmoothScrollClick(e, '#contact')}
+          variant="secondary"
+          size="lg"
+        >
           Get in Touch
         </Button>
       </div>

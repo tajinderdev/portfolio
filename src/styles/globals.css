@@ -94,3 +94,10 @@ main section:not(#hero) {
   contain-intrinsic-size: 1px 800px;
 }
 
+/* Scroll offset for sticky navigation header */
+section[id],
+main[id] {
+  scroll-margin-top: 5rem;
+}
+
+

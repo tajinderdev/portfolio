@@ -2,6 +2,7 @@ import type { ReactElement } from 'react';
 import { navigationItems, socialLinks, type NavigationItem, type SocialLink } from '@/config/navigation';
 import { StatusDot } from '@/components/ui';
 import { MonoText } from '@/components/typography';
+import { handleSmoothScrollClick } from '@/lib/smoothScroll';
 
 export function Footer(): ReactElement {
   const currentYear = new Date().getFullYear();
@@ -43,6 +44,7 @@ export function Footer(): ReactElement {
                 <li key={item.id}>
                   <a
                     href={item.href}
+                    onClick={(e) => handleSmoothScrollClick(e, item.href)}
                     className="text-text-secondary hover:text-text-primary hover:underline underline-offset-4 transition-colors duration-150"
                   >
                     {item.label}
@@ -62,6 +64,7 @@ export function Footer(): ReactElement {
                 <li key={link.id}>
                   <a
                     href={link.href}
+                    onClick={!link.isExternal ? (e) => handleSmoothScrollClick(e, link.href) : undefined}
                     target={link.isExternal ? '_blank' : undefined}
                     rel={link.isExternal ? 'noopener noreferrer' : undefined}
                     className="inline-flex items-center gap-1.5 text-text-secondary hover:text-accent transition-colors duration-150"
@@ -103,6 +106,7 @@ export function Footer(): ReactElement {
             <span>React 19 · TS · Tailwind v4</span>
             <a
               href="#main-content"
+              onClick={(e) => handleSmoothScrollClick(e, '#')}
               className="hover:text-accent transition-colors duration-150"
               aria-label="Back to top of page"
             >

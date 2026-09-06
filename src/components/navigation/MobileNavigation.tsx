@@ -3,6 +3,7 @@ import { navigationItems, type NavigationItem } from '@/config/navigation';
 import { useScrollLock } from '@/hooks';
 import { Button, StatusDot } from '@/components/ui';
 import { MonoText } from '@/components/typography';
+import { smoothScrollTo } from '@/lib/smoothScroll';
 import { cn } from '@/lib/utils';
 
 export interface MobileNavigationProps {
@@ -18,6 +19,14 @@ export function MobileNavigation({
 }: MobileNavigationProps): ReactElement | null {
   useScrollLock(isOpen);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const handleItemClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    onClose();
+    requestAnimationFrame(() => {
+      smoothScrollTo(href);
+    });
+  };
 
   // Focus management and keyboard trap inside modal dialog
   useEffect(() => {
@@ -94,7 +103,7 @@ export function MobileNavigation({
               <li key={item.id}>
                 <a
                   href={item.href}
-                  onClick={onClose}
+                  onClick={(e) => handleItemClick(e, item.href)}
                   aria-current={isActive ? 'page' : undefined}
                   className={cn(
                     'flex items-center justify-between py-3 text-2xl font-heading font-medium tracking-tight transition-colors duration-150',
@@ -122,7 +131,7 @@ export function MobileNavigation({
           variant="primary"
           size="lg"
           className="w-full"
-          onClick={onClose}
+          onClick={(e) => handleItemClick(e, '#contact')}
         >
           Get in Touch
         </Button>

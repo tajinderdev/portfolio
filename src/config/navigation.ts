@@ -40,6 +40,12 @@ export const socialLinks: readonly SocialLink[] = [
     isExternal: true,
   },
   {
+    id: 'instagram',
+    label: 'Instagram',
+    href: 'https://www.instagram.com/tajindr_singh_',
+    isExternal: true,
+  },
+  {
     id: 'email',
     label: 'Email',
     href: '#contact',

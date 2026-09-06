@@ -73,6 +73,7 @@ describe('Portfolio SEO Layer & Metadata Validation', () => {
     expect(person.url).toBe('https://tajinder.dev/');
     expect(person.sameAs).toContain('https://github.com/tajinderdev');
     expect(person.sameAs).toContain('https://linkedin.com/in/tajinderdev');
+    expect(person.sameAs).toContain('https://www.instagram.com/tajindr_singh_');
     expect(person.knowsAbout).toContain('Full-Stack Web Development');
     expect(person.knowsAbout).toContain('System Architecture');
 

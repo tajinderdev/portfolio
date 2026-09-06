@@ -1,12 +1,16 @@
 import type { ReactNode, ReactElement } from 'react';
 import { Header, ScrollProgressBar } from '@/components/navigation';
 import { Footer } from './Footer';
+import { useSmoothScroll } from '@/hooks';
 
 interface RootLayoutProps {
   readonly children: ReactNode;
 }
 
 export function RootLayout({ children }: RootLayoutProps): ReactElement {
+  // Global smooth scroll interceptor for all in-page anchors
+  useSmoothScroll();
+
   return (
     <div className="min-h-screen flex flex-col bg-background text-text-primary selection:bg-accent/20 selection:text-accent">
       {/* Top Precision Scroll Progress Bar */}

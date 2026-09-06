@@ -37,3 +37,10 @@ if (typeof window !== 'undefined' && !window.IntersectionObserver) {
     value: MockIntersectionObserver,
   });
 }
+
+// Mock window.scrollTo for JSDOM
+if (typeof window !== 'undefined' && !window.scrollTo) {
+  window.scrollTo = () => {};
+}
+
+

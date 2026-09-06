@@ -4,6 +4,7 @@ import { useActiveSection } from '@/hooks';
 import { Button, StatusDot } from '@/components/ui';
 import { MonoText } from '@/components/typography';
 import { MobileNavigation } from './MobileNavigation';
+import { handleSmoothScrollClick } from '@/lib/smoothScroll';
 import { cn } from '@/lib/utils';
 
 const SECTION_IDS = navigationItems.map((item) => item.id);
@@ -25,6 +26,7 @@ export function Header(): ReactElement {
         {/* Brand / Professional Identity */}
         <a
           href="#"
+          onClick={(e) => handleSmoothScrollClick(e, '#')}
           className="group flex items-center gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-sm py-1"
           aria-label="Tajinder Singh - Home"
         >
@@ -56,6 +58,7 @@ export function Header(): ReactElement {
                 <li key={item.id}>
                   <a
                     href={item.href}
+                    onClick={(e) => handleSmoothScrollClick(e, item.href)}
                     className={cn(
                       'relative px-3 py-2 text-sm font-sans rounded-md transition-colors duration-150',
                       isActive
@@ -81,6 +84,7 @@ export function Header(): ReactElement {
             <Button
               as="a"
               href="#contact"
+              onClick={(e) => handleSmoothScrollClick(e, '#contact')}
               variant="outline"
               size="sm"
               className="text-xs"
