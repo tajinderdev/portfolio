@@ -1,13 +1,11 @@
 import { type ReactElement } from 'react';
 import { RootLayout, Section } from '@/components/layout';
 import {
-  Heading,
   Text,
-  MonoText,
   SectionHeader,
 } from '@/components/typography';
-import { Button, Link, Card, Badge } from '@/components/ui';
-import { Hero, About, Experience, Capabilities, Domains } from '@/sections';
+import { Button, Link, Card } from '@/components/ui';
+import { Hero, CaseStudies, About, Experience, Capabilities, Domains, AIEngineering } from '@/sections';
 import { getPortfolioContent } from '@/content';
 
 export function App(): ReactElement {
@@ -18,33 +16,8 @@ export function App(): ReactElement {
       {/* Primary Hero Section */}
       <Hero profile={content.profile} />
 
-      {/* Section Anchor 1: Selected Work (#work) */}
-      <Section id="work" spacing="default" className="border-b border-border-subtle">
-        <div className="space-y-6">
-          <SectionHeader
-            kicker="01 / SELECTED WORK"
-            title="Work & System Case Studies"
-            description="Anchored section shell ready for Stage 5 (Selected Work showcase). Demonstrates navigation state tracking."
-          />
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {content.projects.slice(0, 2).map((project) => (
-              <Card key={project.id} variant="default" padding="md" className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <Badge variant="mono">{project.type}</Badge>
-                  <MonoText size="xs" color="accent">
-                    CONFIDENTIAL
-                  </MonoText>
-                </div>
-                <Heading as="h3" variant="project">
-                  {project.title}
-                </Heading>
-                <Text variant="small">{project.description}</Text>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </Section>
+      {/* Section Anchor 1: Selected Work & Case Studies (#work) */}
+      <CaseStudies projects={content.projects} />
 
       {/* Section Anchor 2: Professional Experience (#experience) */}
       <Experience experiences={content.experiences} />
@@ -54,6 +27,9 @@ export function App(): ReactElement {
 
       {/* Section Anchor: Domain Experience (#domains) */}
       <Domains domains={content.domains} />
+
+      {/* Section Anchor: AI-Augmented Engineering (#ai) */}
+      <AIEngineering data={content.aiEngineering} />
 
       {/* Section Anchor 4: About / Engineering Philosophy (#about) */}
       <About profile={content.profile} />

@@ -4,6 +4,7 @@ import { skillPillarsData } from './data/skills';
 import { experienceData } from './data/experience';
 import { projectsData, publicReferencesData } from './data/projects';
 import { domainsData } from './data/domains';
+import { aiEngineeringData } from './data/aiEngineering';
 import { achievementsData } from './data/achievements';
 import { educationData } from './data/education';
 
@@ -15,6 +16,7 @@ export {
   projectsData,
   publicReferencesData,
   domainsData,
+  aiEngineeringData,
   achievementsData,
   educationData,
 };
@@ -26,6 +28,7 @@ export const portfolioContent: PortfolioData = {
   projects: projectsData,
   publicReferences: publicReferencesData,
   domains: domainsData,
+  aiEngineering: aiEngineeringData,
   achievements: achievementsData,
   education: educationData,
 };

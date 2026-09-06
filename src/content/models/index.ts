@@ -105,17 +105,55 @@ export interface ExperienceItem {
   readonly technologies: readonly string[];
 }
 
+export type ArchitectureTier =
+  | 'client'
+  | 'gateway'
+  | 'app'
+  | 'data'
+  | 'external'
+  | 'worker';
+
+export interface CaseStudyArchitectureNode {
+  readonly id: string;
+  readonly label: string;
+  readonly role: string;
+  readonly tier: ArchitectureTier;
+}
+
+export interface CaseStudyArchitectureDiagram {
+  readonly title: string;
+  readonly nodes: readonly CaseStudyArchitectureNode[];
+  readonly dataFlow: readonly string[];
+}
+
+export interface CaseStudyReasoning {
+  readonly context: string;
+  readonly problem: string;
+  readonly constraints: readonly string[];
+  readonly engineeringApproach: string;
+  readonly architectureThinking: string;
+  readonly architectureDiagram: CaseStudyArchitectureDiagram;
+  readonly integrations: readonly string[];
+  readonly securityConsiderations: readonly string[];
+  readonly performanceConsiderations: readonly string[];
+  readonly deliveryCollaboration: string;
+  readonly outcome: string;
+  readonly engineeringInsight: string;
+}
+
 export interface ProjectCaseStudy {
   readonly id: string;
   readonly title: string;
+  readonly subtitle?: string;
   readonly type: string;
+  readonly domainTag: string;
   readonly description: string;
   readonly focus: readonly string[];
   readonly capabilities?: readonly string[];
   readonly isConfidential: boolean;
   readonly publicReferenceUrl?: string;
-  readonly technologies?: readonly string[];
-  readonly architecturalHighlights?: readonly string[];
+  readonly technologies: readonly string[];
+  readonly reasoning: CaseStudyReasoning;
 }
 
 export interface PublicReference {
@@ -149,6 +187,37 @@ export interface EducationItem {
   readonly period: string;
 }
 
+export interface AIWorkflowStep {
+  readonly id: string;
+  readonly stepNumber: string;
+  readonly name: string;
+  readonly tag: string;
+  readonly summary: string;
+  readonly aiRole: string;
+  readonly humanControl: string;
+  readonly technologies: readonly string[];
+}
+
+export interface AICapabilitySphere {
+  readonly id: string;
+  readonly title: string;
+  readonly kicker: string;
+  readonly description: string;
+  readonly capabilities: readonly string[];
+}
+
+export interface AIEngineeringModel {
+  readonly kicker: string;
+  readonly headline: string;
+  readonly positioning: string;
+  readonly philosophy: {
+    readonly multiplier: string;
+    readonly control: string;
+  };
+  readonly workflowSteps: readonly AIWorkflowStep[];
+  readonly capabilitySpheres: readonly AICapabilitySphere[];
+}
+
 export interface PortfolioData {
   readonly profile: ProfileContent;
   readonly skillPillars: readonly SkillPillarGroup[];
@@ -156,6 +225,7 @@ export interface PortfolioData {
   readonly projects: readonly ProjectCaseStudy[];
   readonly publicReferences: readonly PublicReference[];
   readonly domains: readonly DomainItem[];
+  readonly aiEngineering: AIEngineeringModel;
   readonly achievements: readonly AchievementItem[];
   readonly education: readonly EducationItem[];
 }

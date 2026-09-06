@@ -32,8 +32,43 @@ describe('App Global Layout & Anchors', () => {
     expect(container.querySelector('#experience')).toBeInTheDocument();
     expect(container.querySelector('#engineering')).toBeInTheDocument();
     expect(container.querySelector('#domains')).toBeInTheDocument();
+    expect(container.querySelector('#ai')).toBeInTheDocument();
     expect(container.querySelector('#about')).toBeInTheDocument();
     expect(container.querySelector('#contact')).toBeInTheDocument();
+  });
+
+  it('renders AI-Augmented Engineering section at #ai anchor', () => {
+    const { container } = render(<App />);
+    const aiSection = container.querySelector('#ai');
+    expect(aiSection).toBeInTheDocument();
+    expect(
+      within(aiSection as HTMLElement).getByRole('heading', {
+        level: 2,
+        name: /ai-augmented engineering: an engineering multiplier grounded in architectural control/i,
+      }),
+    ).toBeInTheDocument();
+    expect(
+      within(aiSection as HTMLElement).getByRole('tablist', {
+        name: /ai-augmented engineering workflow pipeline/i,
+      }),
+    ).toBeInTheDocument();
+  });
+
+  it('renders Selected Work & Case Studies section at #work anchor', () => {
+    const { container } = render(<App />);
+    const workSection = container.querySelector('#work');
+    expect(workSection).toBeInTheDocument();
+    expect(
+      within(workSection as HTMLElement).getByRole('heading', {
+        level: 2,
+        name: /architectural teardowns of mission-critical production systems/i,
+      }),
+    ).toBeInTheDocument();
+    expect(
+      within(workSection as HTMLElement).getByRole('tablist', {
+        name: /case studies and architecture teardowns/i,
+      }),
+    ).toBeInTheDocument();
   });
 
   it('renders Domain Experience section at #domains anchor', () => {

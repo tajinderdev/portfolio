@@ -35,12 +35,32 @@ describe('Portfolio Content Model & Data Integrity', () => {
     });
   });
 
-  it('preserves client confidentiality on enterprise case studies', () => {
-    expect(content.projects.length).toBeGreaterThanOrEqual(5);
+  it('preserves client confidentiality on enterprise case studies and provides full 11-dimension reasoning', () => {
+    expect(content.projects.length).toBeGreaterThanOrEqual(4);
     content.projects.forEach((project) => {
       expect(project.isConfidential).toBe(true);
       // Ensure no confidential internal company names leaked into title
       expect(project.title).not.toMatch(/client secret|internal/i);
+
+      // Verify all 11 engineering reasoning dimensions
+      expect(project.reasoning).toBeDefined();
+      expect(project.reasoning.context.length).toBeGreaterThan(0);
+      expect(project.reasoning.problem.length).toBeGreaterThan(0);
+      expect(project.reasoning.constraints.length).toBeGreaterThan(0);
+      expect(project.reasoning.engineeringApproach.length).toBeGreaterThan(0);
+      expect(project.reasoning.architectureThinking.length).toBeGreaterThan(0);
+      expect(project.reasoning.integrations.length).toBeGreaterThan(0);
+      expect(project.reasoning.securityConsiderations.length).toBeGreaterThan(0);
+      expect(project.reasoning.performanceConsiderations.length).toBeGreaterThan(0);
+      expect(project.reasoning.deliveryCollaboration.length).toBeGreaterThan(0);
+      expect(project.reasoning.outcome.length).toBeGreaterThan(0);
+      expect(project.reasoning.engineeringInsight.length).toBeGreaterThan(0);
+
+      // Verify architecture diagram structure
+      expect(project.reasoning.architectureDiagram).toBeDefined();
+      expect(project.reasoning.architectureDiagram.title.length).toBeGreaterThan(0);
+      expect(project.reasoning.architectureDiagram.nodes.length).toBeGreaterThanOrEqual(3);
+      expect(project.reasoning.architectureDiagram.dataFlow.length).toBeGreaterThanOrEqual(2);
     });
   });
 
@@ -109,6 +129,44 @@ describe('Portfolio Content Model & Data Integrity', () => {
       // Verify no confidential leakages
       expect(exp.summary).not.toMatch(/secret|client proprietary|confidential/i);
       expect(exp.environment).not.toMatch(/secret|internal-only/i);
+    });
+  });
+
+  it('provides verified AI-augmented engineering data and workflow steps', () => {
+    const ai = content.aiEngineering;
+    expect(ai).toBeDefined();
+    expect(ai.headline.length).toBeGreaterThan(0);
+    expect(ai.positioning.length).toBeGreaterThan(0);
+    expect(ai.philosophy.multiplier.length).toBeGreaterThan(0);
+    expect(ai.philosophy.control.length).toBeGreaterThan(0);
+
+    // Verify 6 workflow stages: Idea, Reason, Architect, Build, Validate, Improve
+    expect(ai.workflowSteps.length).toBe(6);
+    const stepIds = ai.workflowSteps.map((s) => s.id);
+    expect(stepIds).toEqual([
+      'step-idea',
+      'step-reason',
+      'step-architect',
+      'step-build',
+      'step-validate',
+      'step-improve',
+    ]);
+
+    ai.workflowSteps.forEach((step) => {
+      expect(step.name.length).toBeGreaterThan(0);
+      expect(step.tag.length).toBeGreaterThan(0);
+      expect(step.summary.length).toBeGreaterThan(0);
+      expect(step.aiRole.length).toBeGreaterThan(0);
+      expect(step.humanControl.length).toBeGreaterThan(0);
+      expect(step.technologies.length).toBeGreaterThan(0);
+    });
+
+    // Verify 2 capability spheres
+    expect(ai.capabilitySpheres.length).toBe(2);
+    ai.capabilitySpheres.forEach((sphere) => {
+      expect(sphere.title.length).toBeGreaterThan(0);
+      expect(sphere.description.length).toBeGreaterThan(0);
+      expect(sphere.capabilities.length).toBeGreaterThan(0);
     });
   });
 });
