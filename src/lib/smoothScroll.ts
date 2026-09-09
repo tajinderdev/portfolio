@@ -75,7 +75,7 @@ export function smoothScrollTo(
     targetY = Math.max(0, target);
   } else if (typeof target === 'string') {
     const cleanId = target.startsWith('#') ? target.slice(1) : target;
-    if (!cleanId || cleanId === 'hero' || cleanId === 'top' || cleanId === 'main-content') {
+    if (!cleanId || cleanId === 'hero' || cleanId === 'top' || cleanId === 'main-content' || cleanId === '/') {
       // Top of page
       targetY = 0;
       targetElement = cleanId ? document.getElementById(cleanId) : null;

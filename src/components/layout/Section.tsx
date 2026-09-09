@@ -36,7 +36,7 @@ export function Section<T extends ElementType = 'section'>({
   return (
     <Component
       id={id}
-      className={cn('relative w-full', spacingClasses[spacing], className)}
+      className={cn('relative w-full z-10', spacingClasses[spacing], className)}
       {...rest}
     >
       {container ? (

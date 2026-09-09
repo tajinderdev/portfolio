@@ -15,11 +15,9 @@ describe('Header & Navigation Component', () => {
     expect(nav).toBeInTheDocument();
 
     const expectedLinks = [
-      { name: 'Work', href: '#work' },
-      { name: 'Experience', href: '#experience' },
-      { name: 'Engineering', href: '#engineering' },
+      { name: 'Home', href: '/' },
+      { name: 'Portfolio', href: '/portfolio' },
       { name: 'About', href: '#about' },
-      { name: 'Contact', href: '#contact' },
     ];
 
     expectedLinks.forEach(({ name, href }) => {

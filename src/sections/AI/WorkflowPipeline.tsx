@@ -65,7 +65,7 @@ export function WorkflowPipeline({
               tabIndex={isSelected ? 0 : -1}
               onClick={() => onSelectStep(step.id)}
               onKeyDown={(e) => handleKeyDown(e, index)}
-              className={`group relative flex flex-col justify-between rounded-lg border p-3.5 text-left transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background ${
+              className={`group relative flex flex-col justify-between rounded-lg border p-3.5 text-left transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
                 isSelected
                   ? 'border-accent bg-accent-muted/20 ring-1 ring-accent'
                   : 'border-border-subtle bg-surface/50 hover:border-border hover:bg-surface-raised/60'

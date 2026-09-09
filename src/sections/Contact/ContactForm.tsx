@@ -125,10 +125,10 @@ export function ContactForm({
           aria-invalid={Boolean(errors.name)}
           aria-describedby={errors.name ? 'contact-name-error' : undefined}
           placeholder="e.g. Alex Miller"
-          className={`w-full rounded border bg-background/60 px-3.5 py-2.5 text-sm text-text-primary placeholder:text-text-muted transition-colors focus:outline-none focus:ring-1 ${
+          className={`w-full rounded border bg-background/60 px-3.5 py-2.5 text-sm text-text-primary placeholder:text-text-muted transition-colors focus:outline-none focus-visible:ring-1 ${
             errors.name
-              ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-              : 'border-border-subtle focus:border-accent focus:ring-accent'
+              ? 'border-red-500 focus-visible:border-red-500 focus-visible:ring-red-500'
+              : 'border-border-subtle focus-visible:border-accent focus-visible:ring-accent'
           } disabled:opacity-60 disabled:cursor-not-allowed`}
         />
         {errors.name && (
@@ -163,10 +163,10 @@ export function ContactForm({
           aria-invalid={Boolean(errors.email)}
           aria-describedby={errors.email ? 'contact-email-error' : undefined}
           placeholder="e.g. alex@company.com"
-          className={`w-full rounded border bg-background/60 px-3.5 py-2.5 text-sm text-text-primary placeholder:text-text-muted transition-colors focus:outline-none focus:ring-1 ${
+          className={`w-full rounded border bg-background/60 px-3.5 py-2.5 text-sm text-text-primary placeholder:text-text-muted transition-colors focus:outline-none focus-visible:ring-1 ${
             errors.email
-              ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-              : 'border-border-subtle focus:border-accent focus:ring-accent'
+              ? 'border-red-500 focus-visible:border-red-500 focus-visible:ring-red-500'
+              : 'border-border-subtle focus-visible:border-accent focus-visible:ring-accent'
           } disabled:opacity-60 disabled:cursor-not-allowed`}
         />
         {errors.email && (
@@ -200,10 +200,10 @@ export function ContactForm({
           aria-invalid={Boolean(errors.subject)}
           aria-describedby={errors.subject ? 'contact-subject-error' : undefined}
           placeholder="e.g. System Architecture / Senior Role"
-          className={`w-full rounded border bg-background/60 px-3.5 py-2.5 text-sm text-text-primary placeholder:text-text-muted transition-colors focus:outline-none focus:ring-1 ${
+          className={`w-full rounded border bg-background/60 px-3.5 py-2.5 text-sm text-text-primary placeholder:text-text-muted transition-colors focus:outline-none focus-visible:ring-1 ${
             errors.subject
-              ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-              : 'border-border-subtle focus:border-accent focus:ring-accent'
+              ? 'border-red-500 focus-visible:border-red-500 focus-visible:ring-red-500'
+              : 'border-border-subtle focus-visible:border-accent focus-visible:ring-accent'
           } disabled:opacity-60 disabled:cursor-not-allowed`}
         />
         {errors.subject && (
@@ -239,8 +239,8 @@ export function ContactForm({
           placeholder="Briefly describe your project, system challenge, or role..."
           className={`w-full rounded border bg-background/60 px-3.5 py-2.5 text-sm text-text-primary placeholder:text-text-muted transition-colors focus:outline-none focus:ring-1 resize-y ${
             errors.message
-              ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-              : 'border-border-subtle focus:border-accent focus:ring-accent'
+              ? 'border-red-500 focus-visible:border-red-500 focus-visible:ring-red-500'
+              : 'border-border-subtle focus-visible:border-accent focus-visible:ring-accent'
           } disabled:opacity-60 disabled:cursor-not-allowed`}
         />
         {errors.message && (

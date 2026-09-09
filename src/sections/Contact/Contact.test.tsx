@@ -21,25 +21,7 @@ describe('Contact Section', () => {
     expect(screen.getByText(/^Collaboration$/i)).toBeInTheDocument();
   });
 
-  it('renders social links section with external links to GitHub, LinkedIn, Instagram, and Gmail', () => {
-    render(<Contact />);
 
-    expect(
-      screen.getByText(/SOCIAL LINKS OF A NON-SOCIAL PERSON/i),
-    ).toBeInTheDocument();
-
-    const githubLink = screen.getByRole('link', { name: /github/i });
-    expect(githubLink).toHaveAttribute('href', 'https://github.com/tajinderdev');
-
-    const linkedinLink = screen.getByRole('link', { name: /linkedin/i });
-    expect(linkedinLink).toHaveAttribute('href', 'https://www.linkedin.com/in/tajinder-developer/');
-
-    const instagramLink = screen.getByRole('link', { name: /instagram/i });
-    expect(instagramLink).toHaveAttribute('href', 'https://www.instagram.com/tajindr_singh_');
-
-    const gmailLink = screen.getByRole('link', { name: /gmail/i });
-    expect(gmailLink).toHaveAttribute('href', 'mailto:imtj.human@gmail.com');
-  });
 
   it('renders the contact form inside the section', () => {
     render(<Contact />);

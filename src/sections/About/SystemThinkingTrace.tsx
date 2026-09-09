@@ -87,7 +87,7 @@ export function SystemThinkingTrace({
                   tabIndex={isActive ? 0 : -1}
                   onClick={() => setActiveNodeIndex(index)}
                   onKeyDown={(e) => handleKeyDown(e, index)}
-                  className={`group relative flex flex-col items-start rounded-md border px-3 py-2 text-left transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background ${
+                  className={`group relative flex flex-col items-start rounded-md border px-3 py-2 text-left transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
                     isActive
                       ? 'border-accent bg-accent-muted/20 text-accent ring-1 ring-accent'
                       : 'border-border-subtle bg-surface-raised/40 text-text-secondary hover:border-border hover:bg-surface-raised/70'

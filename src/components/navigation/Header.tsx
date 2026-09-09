@@ -1,19 +1,22 @@
 import { useState, useRef, type ReactElement } from 'react';
 import { navigationItems, type NavigationItem } from '@/config/navigation';
 import { useActiveSection } from '@/hooks';
-import { Button, StatusDot } from '@/components/ui';
+import { Button, StatusDot, ThemeToggle } from '@/components/ui';
 import { MonoText } from '@/components/typography';
 import { MobileNavigation } from './MobileNavigation';
 import { handleSmoothScrollClick } from '@/lib/smoothScroll';
 import { cn } from '@/lib/utils';
+import { navigateTo, useRouterPath } from '@/lib/router';
 
 const SECTION_IDS = navigationItems.map((item) => item.id);
 
 export function Header(): ReactElement {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const toggleButtonRef = useRef<HTMLButtonElement>(null);
-
-  const activeSection = useActiveSection(SECTION_IDS);
+  
+  const currentPath = useRouterPath();
+  const intersectionSection = useActiveSection(SECTION_IDS, {}, currentPath);
+  const activeSection = currentPath === '/portfolio' ? 'portfolio' : intersectionSection;
 
   const handleCloseMobileMenu = () => {
     setIsMobileMenuOpen(false);
@@ -25,8 +28,17 @@ export function Header(): ReactElement {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-4">
         {/* Brand / Professional Identity */}
         <a
-          href="#"
-          onClick={(e) => handleSmoothScrollClick(e, '#')}
+          href="/"
+          onClick={(e) => {
+            e.preventDefault();
+            const isCurrentlyHome = currentPath === '/';
+            if (isCurrentlyHome) {
+              handleSmoothScrollClick(e, '#');
+            } else {
+              navigateTo('/');
+              window.scrollTo(0, 0);
+            }
+          }}
           className="group flex items-center gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-sm py-1"
           aria-label="Tajinder Singh - Home"
         >
@@ -58,12 +70,38 @@ export function Header(): ReactElement {
                 <li key={item.id}>
                   <a
                     href={item.href}
-                    onClick={(e) => handleSmoothScrollClick(e, item.href)}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      
+                      if (item.href === '/portfolio') {
+                        navigateTo('/portfolio');
+                        window.scrollTo(0, 0);
+                        return;
+                      }
+
+                      if (item.href === '/') {
+                        if (currentPath !== '/') {
+                          navigateTo('/');
+                          window.scrollTo(0, 0);
+                        } else {
+                          handleSmoothScrollClick(e, '/');
+                        }
+                        return;
+                      }
+
+                      const isCurrentlyHome = currentPath === '/';
+                      if (!isCurrentlyHome && item.href.startsWith('#')) {
+                        navigateTo('/');
+                        setTimeout(() => handleSmoothScrollClick(e, item.href), 100);
+                      } else {
+                        handleSmoothScrollClick(e, item.href);
+                      }
+                    }}
                     className={cn(
                       'relative px-3 py-2 text-sm font-sans rounded-md transition-colors duration-150',
                       isActive
                         ? 'text-text-primary font-medium'
-                        : 'text-text-secondary hover:text-text-primary hover:bg-white/5',
+                        : 'text-text-secondary hover:text-text-primary hover:bg-surface-elevated',
                     )}
                     aria-current={isActive ? 'page' : undefined}
                   >
@@ -80,11 +118,21 @@ export function Header(): ReactElement {
             })}
           </ul>
 
-          <div className="ml-4 pl-4 border-l border-border-subtle">
+          <div className="ml-4 pl-4 flex items-center gap-4 border-l border-border-subtle">
+            <ThemeToggle />
             <Button
               as="a"
               href="#contact"
-              onClick={(e) => handleSmoothScrollClick(e, '#contact')}
+              onClick={(e) => {
+                e.preventDefault();
+                const isCurrentlyHome = currentPath === '/';
+                if (!isCurrentlyHome) {
+                  navigateTo('/');
+                  setTimeout(() => handleSmoothScrollClick(e, '#contact'), 100);
+                } else {
+                  handleSmoothScrollClick(e, '#contact');
+                }
+              }}
               variant="outline"
               size="sm"
               className="text-xs"
@@ -94,8 +142,9 @@ export function Header(): ReactElement {
           </div>
         </nav>
 
-        {/* Mobile Menu Button */}
+        {/* Mobile Actions */}
         <div className="flex items-center md:hidden gap-2">
+          <ThemeToggle />
           <button
             ref={toggleButtonRef}
             type="button"
@@ -103,7 +152,7 @@ export function Header(): ReactElement {
             aria-expanded={isMobileMenuOpen}
             aria-controls="mobile-navigation"
             aria-label={isMobileMenuOpen ? 'Close menu' : 'Open navigation menu'}
-            className="p-2 text-text-secondary hover:text-text-primary hover:bg-white/5 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            className="p-2 text-text-secondary hover:text-text-primary hover:bg-surface-elevated rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
           >
             {isMobileMenuOpen ? (
               <svg

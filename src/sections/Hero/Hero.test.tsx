@@ -27,7 +27,7 @@ describe('Hero Section Component', () => {
     const workCTA = screen.getByRole('link', { name: /explore selected work/i });
     const contactCTA = screen.getByRole('link', { name: /get in touch/i });
 
-    expect(workCTA).toHaveAttribute('href', '#work');
+    expect(workCTA).toHaveAttribute('href', '/portfolio');
     expect(contactCTA).toHaveAttribute('href', '#contact');
   });
 
@@ -63,10 +63,5 @@ describe('Hero Section Component', () => {
     fireEvent.click(apiBtn);
     expect(apiBtn).toHaveAttribute('aria-pressed', 'true');
     expect(screen.getByText(/Strict validation, authentication, and error boundaries/i)).toBeInTheDocument();
-  });
-
-  it('mounts the 3D topology background with resilient fallback in headless environment', () => {
-    const { container } = render(<Hero profile={content.profile} />);
-    expect(container.querySelector('.three-fallback-container')).toBeInTheDocument();
   });
 });

@@ -3,6 +3,7 @@ import type { ProfileContent } from '@/content/models';
 import { Heading, Text, MonoText } from '@/components/typography';
 import { Button, StatusDot } from '@/components/ui';
 import { handleSmoothScrollClick } from '@/lib/smoothScroll';
+import { navigateTo } from '@/lib/router';
 
 export interface HeroContentProps {
   profile: ProfileContent;
@@ -41,8 +42,12 @@ export function HeroContent({ profile }: HeroContentProps): ReactElement {
       <div className="flex flex-wrap items-center gap-4 pt-2">
         <Button
           as="a"
-          href="#work"
-          onClick={(e) => handleSmoothScrollClick(e, '#work')}
+          href="/portfolio"
+          onClick={(e) => {
+            e.preventDefault();
+            navigateTo('/portfolio');
+            window.scrollTo(0, 0);
+          }}
           variant="primary"
           size="lg"
         >

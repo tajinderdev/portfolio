@@ -50,7 +50,7 @@ export function CapabilityFilter({
               type="button"
               aria-pressed={isSelected}
               onClick={() => onSelectPillar(opt.id)}
-              className={`rounded px-2.5 py-1 font-mono text-xs font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-accent ${
+              className={`rounded px-2.5 py-1 font-mono text-xs font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
                 isSelected
                   ? 'bg-accent text-background font-semibold shadow-xs'
                   : 'border border-border-subtle bg-surface-raised/40 text-text-secondary hover:border-border hover:bg-surface-raised/80 hover:text-text-primary'

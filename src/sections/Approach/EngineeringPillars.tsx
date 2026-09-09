@@ -14,18 +14,7 @@ export function EngineeringPillars({
 }: EngineeringPillarsProps): ReactElement {
   return (
     <div className={`space-y-6 ${className}`} aria-label="Engineering Philosophy Pillars">
-      <div className="flex flex-col gap-1">
-        <MonoText size="xs" color="accent" className="uppercase tracking-wider font-semibold">
-          Approach & Methodology
-        </MonoText>
-        <Heading as="h3" variant="card" className="text-xl sm:text-2xl">
-          How I Think, Build, and Ship
-        </Heading>
-        <Text variant="small" color="muted" className="max-w-2xl">
-          Engineering principles applied across the complete software delivery lifecycle—from domain
-          analysis to cloud deployment.
-        </Text>
-      </div>
+
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {themes.map((theme, index) => (
