@@ -134,7 +134,7 @@ export function ArchitectureMap({
                 type="button"
                 onClick={() => onSelectPillar?.(tier.pillar)}
                 aria-pressed={isSelected}
-                className={`group relative flex flex-col justify-between rounded-md border p-3.5 text-left transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background ${
+                className={`group relative flex flex-col justify-between rounded-md border p-3.5 text-left transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
                   isSelected
                     ? 'border-accent bg-accent-muted/20 ring-1 ring-accent'
                     : 'border-border-subtle bg-surface-raised/40 hover:border-border hover:bg-surface-raised/80'
@@ -190,7 +190,7 @@ export function ArchitectureMap({
                 type="button"
                 onClick={() => onSelectPillar?.(guardrail.pillar)}
                 aria-pressed={isSelected}
-                className={`group flex items-center justify-between rounded-md border p-3 text-left transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background ${
+                className={`group flex items-center justify-between rounded-md border p-3 text-left transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
                   isSelected
                     ? 'border-accent bg-accent-muted/20 ring-1 ring-accent'
                     : 'border-border-subtle/80 bg-surface-raised/30 hover:border-border hover:bg-surface-raised/70'

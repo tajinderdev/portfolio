@@ -5,6 +5,7 @@ import { Button, StatusDot } from '@/components/ui';
 import { MonoText } from '@/components/typography';
 import { smoothScrollTo } from '@/lib/smoothScroll';
 import { cn } from '@/lib/utils';
+import { navigateTo, getCurrentPath } from '@/lib/router';
 
 export interface MobileNavigationProps {
   isOpen: boolean;
@@ -22,10 +23,35 @@ export function MobileNavigation({
 
   const handleItemClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
+    if (href === '/portfolio') {
+      navigateTo('/portfolio');
+      window.scrollTo(0, 0);
+      onClose();
+      return;
+    }
+    
+    if (href === '/') {
+      if (getCurrentPath() !== '/') {
+        navigateTo('/');
+        window.scrollTo(0, 0);
+      } else {
+        smoothScrollTo('/');
+      }
+      onClose();
+      return;
+    }
+
     onClose();
-    requestAnimationFrame(() => {
-      smoothScrollTo(href);
-    });
+    
+    const isCurrentlyHome = getCurrentPath() === '/';
+    if (!isCurrentlyHome && href.startsWith('#')) {
+      navigateTo('/');
+      setTimeout(() => smoothScrollTo(href), 100);
+    } else {
+      requestAnimationFrame(() => {
+        smoothScrollTo(href);
+      });
+    }
   };
 
   // Focus management and keyboard trap inside modal dialog

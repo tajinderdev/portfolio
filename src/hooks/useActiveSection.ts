@@ -17,6 +17,7 @@ export function useActiveSection(
     rootMargin = '-20% 0px -60% 0px',
     threshold = 0,
   }: UseActiveSectionOptions = {},
+  revalidateKey?: any,
 ): string | null {
   const [activeSection, setActiveSection] = useState<string | null>(null);
 
@@ -36,17 +37,21 @@ export function useActiveSection(
       { rootMargin, threshold },
     );
 
-    sectionIds.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) {
-        observer.observe(el);
-      }
-    });
+    // Small delay to ensure DOM is updated before observing
+    const timeoutId = setTimeout(() => {
+      sectionIds.forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) {
+          observer.observe(el);
+        }
+      });
+    }, 100);
 
     return () => {
+      clearTimeout(timeoutId);
       observer.disconnect();
     };
-  }, [sectionIds, rootMargin, threshold]);
+  }, [sectionIds, rootMargin, threshold, revalidateKey]);
 
   return activeSection;
 }

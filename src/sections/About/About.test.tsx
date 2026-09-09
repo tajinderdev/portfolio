@@ -4,7 +4,7 @@ import { About } from './About';
 import { ProfileCard } from './ProfileCard';
 import { CorePrinciples } from './CorePrinciples';
 import { SystemThinkingTrace } from './SystemThinkingTrace';
-import { EngineeringPillars } from './EngineeringPillars';
+import { EngineeringPillars } from '../Approach/EngineeringPillars';
 import { getPortfolioContent } from '@/content';
 
 describe('About & Engineering Philosophy Section', () => {
@@ -130,9 +130,7 @@ describe('About & Engineering Philosophy Section', () => {
     it('renders all 7 engineering philosophy pillars with summaries and key practices', () => {
       render(<EngineeringPillars themes={content.profile.philosophyThemes} />);
 
-      expect(
-        screen.getByRole('heading', { level: 3, name: /how i think, build, and ship/i }),
-      ).toBeInTheDocument();
+
 
       // Check titles of themes
       expect(

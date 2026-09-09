@@ -1,6 +1,7 @@
 import type { ReactNode, ReactElement } from 'react';
 import { Header, ScrollProgressBar } from '@/components/navigation';
 import { Footer } from './Footer';
+import { GlobalBackground } from './GlobalBackground';
 import { useSmoothScroll } from '@/hooks';
 
 interface RootLayoutProps {
@@ -12,7 +13,8 @@ export function RootLayout({ children }: RootLayoutProps): ReactElement {
   useSmoothScroll();
 
   return (
-    <div className="min-h-screen flex flex-col bg-background text-text-primary selection:bg-accent/20 selection:text-accent">
+    <div className="min-h-screen flex flex-col text-text-primary selection:bg-accent/20 selection:text-accent">
+      <GlobalBackground />
       {/* Top Precision Scroll Progress Bar */}
       <ScrollProgressBar />
 
@@ -28,7 +30,7 @@ export function RootLayout({ children }: RootLayoutProps): ReactElement {
       <Header />
 
       {/* Main Content Area */}
-      <main id="main-content" tabIndex={-1} className="flex-1 w-full focus:outline-none">
+      <main id="main-content" tabIndex={-1} className="flex-1 w-full focus:outline-none relative z-10">
         {children}
       </main>
 

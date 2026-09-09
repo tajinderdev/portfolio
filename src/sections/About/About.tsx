@@ -4,7 +4,6 @@ import { SectionHeader } from '@/components/typography';
 import { ProfileCard } from './ProfileCard';
 import { CorePrinciples } from './CorePrinciples';
 import { SystemThinkingTrace } from './SystemThinkingTrace';
-import { EngineeringPillars } from './EngineeringPillars';
 import type { ProfileContent } from '@/content/models';
 
 export interface AboutProps {
@@ -35,11 +34,6 @@ export function About({ profile, className = '' }: AboutProps): ReactElement {
           <div className="lg:col-span-7">
             <SystemThinkingTrace systemThinking={profile.systemThinking} />
           </div>
-        </div>
-
-        {/* Bottom Section: 7 Philosophy Pillars */}
-        <div className="border-t border-border-subtle/80 pt-10 sm:pt-12">
-          <EngineeringPillars themes={profile.philosophyThemes} />
         </div>
       </div>
     </Section>

@@ -82,7 +82,7 @@ export function Experience({
             <button
               type="button"
               onClick={allExpanded ? handleCollapseAll : handleExpandAll}
-              className="rounded border border-border-subtle/80 bg-surface/50 px-3 py-1 font-mono text-xs font-medium text-text-secondary transition-colors hover:border-border hover:bg-surface-raised hover:text-text-primary focus:outline-none focus:ring-2 focus:ring-accent"
+              className="rounded border border-border-subtle/80 bg-surface/50 px-3 py-1 font-mono text-xs font-medium text-text-secondary transition-colors hover:border-border hover:bg-surface-raised hover:text-text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             >
               {allExpanded ? 'Collapse All' : 'Expand All Details'}
             </button>

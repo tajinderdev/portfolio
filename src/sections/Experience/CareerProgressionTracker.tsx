@@ -120,7 +120,7 @@ export function CareerProgressionTracker({
               tabIndex={isCurrent ? 0 : -1}
               onClick={() => onSelectStage?.(m.id)}
               onKeyDown={(e) => handleKeyDown(e, index)}
-              className={`group flex flex-col items-start rounded-md border p-3 text-left transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background ${
+              className={`group flex flex-col items-start rounded-md border p-3 text-left transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
                 isCurrent
                   ? 'border-accent bg-accent-muted/20 ring-1 ring-accent'
                   : 'border-border-subtle/80 bg-surface-raised/30 hover:border-border hover:bg-surface-raised/70'

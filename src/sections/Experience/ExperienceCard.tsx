@@ -85,7 +85,7 @@ export function ExperienceCard({
           aria-expanded={isExpanded}
           aria-controls={detailsId}
           onClick={onToggleExpand}
-          className="group inline-flex items-center gap-2 rounded px-3 py-1.5 font-mono text-xs font-semibold text-accent transition-colors hover:bg-accent-muted/20 focus:outline-none focus:ring-2 focus:ring-accent"
+          className="group inline-flex items-center gap-2 rounded px-3 py-1.5 font-mono text-xs font-semibold text-accent transition-colors hover:bg-accent-muted/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
         >
           <span>
             {isExpanded

@@ -12,11 +12,9 @@ export interface NavigationItem {
 }
 
 export const navigationItems: readonly NavigationItem[] = [
-  { id: 'work', label: 'Work', href: '#work' },
-  { id: 'experience', label: 'Experience', href: '#experience' },
-  { id: 'engineering', label: 'Engineering', href: '#engineering' },
+  { id: 'hero', label: 'Home', href: '/' },
+  { id: 'portfolio', label: 'Portfolio', href: '/portfolio' },
   { id: 'about', label: 'About', href: '#about' },
-  { id: 'contact', label: 'Contact', href: '#contact' },
 ];
 
 export interface SocialLink {

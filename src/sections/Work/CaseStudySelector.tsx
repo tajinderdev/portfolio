@@ -72,7 +72,7 @@ export function CaseStudySelector({
               tabIndex={isSelected ? 0 : -1}
               onClick={() => onSelect(project.id)}
               onKeyDown={(e) => handleKeyDown(e, index)}
-              className="group flex h-full w-full flex-col justify-between p-4 text-left focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
+              className="group flex h-full w-full flex-col justify-between p-4 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               <div>
                 {/* Header Meta: Domain Tag & Formatted Index */}

@@ -31,7 +31,7 @@ describe('Responsive Navigation & Viewport Behavior', () => {
     expect(dialog).toBeInTheDocument();
 
     // Target the link inside the mobile drawer
-    const mobileWorkLink = within(dialog).getByRole('link', { name: /work/i });
+    const mobileWorkLink = within(dialog).getByRole('link', { name: /portfolio/i });
     expect(mobileWorkLink).toBeInTheDocument();
 
     // Clicking the mobile nav link closes the drawer
