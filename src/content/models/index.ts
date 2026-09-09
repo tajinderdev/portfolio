@@ -16,6 +16,7 @@ export interface TraceNode {
   readonly layer: string;
   readonly diagnosticFocus: string;
   readonly keyConsiderations: readonly string[];
+  readonly tools?: readonly string[];
 }
 
 export interface SystemThinkingModel {

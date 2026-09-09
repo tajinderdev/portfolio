@@ -44,3 +44,20 @@ if (typeof window !== 'undefined' && !window.scrollTo) {
 }
 
 
+
+import { vi } from 'vitest';
+vi.mock('@/app/ThemeProvider', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/app/ThemeProvider')>();
+  return {
+    ...actual,
+    useThemeContext: () => ({
+      theme: 'dark',
+      toggleTheme: vi.fn(),
+    }),
+  };
+});
+
+// Mock Element.scrollBy for JSDOM
+if (typeof Element !== 'undefined' && !Element.prototype.scrollBy) {
+  Element.prototype.scrollBy = function() {};
+}

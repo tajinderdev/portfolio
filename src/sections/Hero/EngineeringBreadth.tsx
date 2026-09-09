@@ -19,7 +19,7 @@ export function EngineeringBreadth({
   return (
     <div
       className={cn(
-        'rounded-lg border border-border-subtle bg-surface/80 p-5 backdrop-blur-sm space-y-4',
+        'rounded-lg border border-border-subtle bg-surface/40 p-5 backdrop-blur-lg shadow-[0_8px_32px_0_rgba(0,0,0,0.12)] space-y-4',
         className,
       )}
       aria-label="Engineering Breadth Map"

@@ -13,7 +13,7 @@ export function Contact({ client, className = '' }: ContactProps): ReactElement 
   return (
     <Section id="contact" className={className}>
       <SectionHeader
-        kicker="07 / CONTACT"
+        kicker="02 / CONTACT"
         title="LET'S CONNECT"
         description="Open for senior engineering roles, system architecture consulting, and high-impact technical collaboration."
       />

@@ -48,6 +48,7 @@ export const profileData: ProfileContent = {
           'Defensive UI error boundaries',
           'Optimistic updates with rollback',
         ],
+        tools: ['react', 'tailwind', 'materialui', 'bootstrap', 'css', 'html', 'figma', 'ts', 'js'],
       },
       {
         id: 'node-api',
@@ -60,6 +61,7 @@ export const profileData: ProfileContent = {
           'JWT / session authentication',
           'Consistent HTTP status semantics',
         ],
+        tools: ['graphql', 'postman', 'swagger'],
       },
       {
         id: 'node-backend',
@@ -72,6 +74,7 @@ export const profileData: ProfileContent = {
           'Asynchronous queue dispatching',
           'Layered fault isolation',
         ],
+        tools: ['laravel', 'nodejs', 'express', 'python', 'django'],
       },
       {
         id: 'node-database',
@@ -84,6 +87,7 @@ export const profileData: ProfileContent = {
           'Atomic transaction boundaries',
           'N+1 query prevention',
         ],
+        tools: ['postgresql', 'mysql', 'mongodb', 'redis', 'elasticsearch'],
       },
       {
         id: 'node-external',
@@ -96,6 +100,7 @@ export const profileData: ProfileContent = {
           'Exponential backoff & retries',
           'Fallback states on third-party outage',
         ],
+        tools: ['github', 'gitlab', 'wordpress', 'paypal', 'stripe', 'zoho', 'hubspot', 'squarespace'],
       },
       {
         id: 'node-infrastructure',
@@ -108,6 +113,7 @@ export const profileData: ProfileContent = {
           'Automated CI/CD validation pipelines',
           'Nginx reverse proxy & SSL termination',
         ],
+        tools: ['docker', 'nginx', 'githubactions', 'aws', 'linux', 'bash'],
       },
     ],
     focus: 'Identify the root cause before choosing a solution.',

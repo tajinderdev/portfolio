@@ -9,7 +9,7 @@ describe('Contact Section', () => {
     const section = container.querySelector('section#contact');
     expect(section).toBeInTheDocument();
 
-    expect(screen.getByText(/07 \/ CONTACT/i)).toBeInTheDocument();
+    expect(screen.getByText('02 / CONTACT')).toBeInTheDocument();
     expect(screen.getByText(/LET'S CONNECT/i)).toBeInTheDocument();
   });
 

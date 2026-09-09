@@ -15,7 +15,7 @@ describe('About & Engineering Philosophy Section', () => {
     const section = container.querySelector('section#about');
     expect(section).toBeInTheDocument();
 
-    expect(screen.getByText('04 / ENGINEERING PHILOSOPHY')).toBeInTheDocument();
+    expect(screen.getByText('01 / ENGINEERING PHILOSOPHY')).toBeInTheDocument();
     expect(
       screen.getByRole('heading', {
         level: 2,

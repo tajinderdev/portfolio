@@ -24,8 +24,11 @@ export function Header(): ReactElement {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-md border-b border-border-subtle transition-colors duration-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-4">
+    <header className="sticky top-0 z-50 w-full transition-colors duration-200">
+      {/* Background layer with blur to prevent fixed positioning containment context for MobileNavigation */}
+      <div className="absolute inset-0 bg-background/80 backdrop-blur-md border-b border-border-subtle -z-10 pointer-events-none" aria-hidden="true" />
+      
+      <div className="relative z-50 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-4">
         {/* Brand / Professional Identity */}
         <a
           href="/"

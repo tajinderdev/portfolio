@@ -29,7 +29,7 @@ export function ContactForm({
   if (isSuccess) {
     return (
       <div
-        className={`rounded-lg border border-accent/40 bg-surface/80 p-6 sm:p-8 backdrop-blur-sm space-y-6 text-center ${className}`}
+        className={`rounded-lg border border-accent/40 bg-surface/40 p-6 sm:p-8 backdrop-blur-lg shadow-[0_8px_32px_0_rgba(0,0,0,0.12)] space-y-6 text-center ${className}`}
         aria-live="polite"
       >
         <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-accent/60 bg-accent/10 text-accent text-xl">
@@ -57,7 +57,7 @@ export function ContactForm({
     <form
       onSubmit={handleSubmit}
       noValidate
-      className={`rounded-lg border border-border-subtle bg-surface/70 p-6 sm:p-8 backdrop-blur-sm space-y-5 transition-all duration-200 hover:border-border ${className}`}
+      className={`rounded-lg border border-border-subtle bg-surface/40 p-6 sm:p-8 backdrop-blur-lg shadow-[0_8px_32px_0_rgba(0,0,0,0.12)] space-y-5 transition-all duration-200 hover:border-border-strong ${className}`}
     >
       {/* Honeypot anti-spam field (hidden from assistive tech and visual layout) */}
       <div

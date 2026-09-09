@@ -17,7 +17,7 @@ export function About({ profile, className = '' }: AboutProps): ReactElement {
       <div className="space-y-12 sm:space-y-16">
         {/* Section Header */}
         <SectionHeader
-          kicker="04 / ENGINEERING PHILOSOPHY"
+          kicker="01 / ENGINEERING PHILOSOPHY"
           title="Systems over silos. Root causes over symptoms."
           description="Full-stack engineering grounded in deep domain analysis, architectural discipline, cross-functional collaboration, and pragmatic modernization."
         />

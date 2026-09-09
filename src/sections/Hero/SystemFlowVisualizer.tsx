@@ -70,8 +70,8 @@ export function SystemFlowVisualizer({
   return (
     <div
       className={cn(
-        'rounded-xl border border-border-subtle bg-surface/90 p-5 sm:p-6 backdrop-blur-md space-y-5',
-        'shadow-lg relative overflow-hidden',
+        'rounded-xl border border-border-subtle bg-surface/40 p-5 sm:p-6 backdrop-blur-lg space-y-5',
+        'shadow-[0_8px_32px_0_rgba(0,0,0,0.12)] relative overflow-hidden',
         className,
       )}
       aria-label="Interactive System Architecture Visualizer"
