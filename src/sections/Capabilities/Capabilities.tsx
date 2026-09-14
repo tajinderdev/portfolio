@@ -54,7 +54,7 @@ export function Capabilities({
         {/* Section Header */}
         <SectionHeader
           kicker="03 / TECHNICAL CAPABILITIES"
-          title="Engineered for capability, resilience, and architectural clarity."
+          title="Technical Capabilities"
           description="Technologies organized by engineering function across the application lifecycle—from interface construction and API contracts to cloud deployment and legacy modernization."
         />
 
@@ -73,9 +73,9 @@ export function Capabilities({
           resultCount={filteredGroups.length}
         />
 
-        {/* Capability Groups Grid */}
+        {/* Capability Groups Grid (Compact 4-Column Layout) */}
         {filteredGroups.length > 0 ? (
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-4">
             {filteredGroups.map((group) => (
               <CapabilityGroupCard
                 key={group.pillar}

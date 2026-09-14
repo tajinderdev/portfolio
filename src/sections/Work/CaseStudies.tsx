@@ -2,7 +2,7 @@ import { useState, type ReactElement } from 'react';
 import { Section } from '@/components/layout';
 import { SectionHeader } from '@/components/typography';
 import { CaseStudySelector } from './CaseStudySelector';
-import { CaseStudyDetails } from './CaseStudyDetails';
+import { CaseStudyModal } from './CaseStudyModal';
 import type { ProjectCaseStudy } from '@/content/models';
 
 export interface CaseStudiesProps {
@@ -14,31 +14,35 @@ export function CaseStudies({
   projects,
   className = '',
 }: CaseStudiesProps): ReactElement {
-  const [activeId, setActiveId] = useState<string>(
-    () => projects[0]?.id ?? 'project-content-platform',
-  );
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
 
-  const activeProject = projects.find((p) => p.id === activeId) ?? projects[0];
+  const activeProject = projects.find((p) => p.id === selectedProjectId) ?? null;
 
   return (
     <Section id="work" spacing="default" className={`border-b border-border-subtle ${className}`}>
       <div className="space-y-6 sm:space-y-8">
         {/* Section Header */}
         <SectionHeader
-          kicker="01 / SELECTED WORK & CASE STUDIES"
-          title="Architectural teardowns of mission-critical production systems."
+          kicker="01 / SELECTED WORK"
+          title="Case Studies"
           description="In-depth analysis of technical challenges, system constraints, architectural decisions, and verified engineering outcomes across complex enterprise domains."
         />
 
-        {/* Interactive Case Study Selector Tabs */}
+        {/* Compact Interactive Case Study Cards Grid */}
         <CaseStudySelector
           projects={projects}
-          activeId={activeId}
-          onSelect={setActiveId}
+          activeId={selectedProjectId ?? ''}
+          onSelect={(id) => setSelectedProjectId(id)}
         />
 
-        {/* Active Case Study Details Panel */}
-        {activeProject && <CaseStudyDetails project={activeProject} />}
+        {/* Centered Case Study Deep Dive Teardown Modal */}
+        <CaseStudyModal
+          project={activeProject}
+          projects={projects}
+          isOpen={activeProject !== null}
+          onClose={() => setSelectedProjectId(null)}
+          onSelectProject={(project) => setSelectedProjectId(project.id)}
+        />
       </div>
     </Section>
   );

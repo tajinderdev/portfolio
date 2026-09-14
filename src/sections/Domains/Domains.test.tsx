@@ -3,6 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { Domains } from './Domains';
 import { DomainSelector } from './DomainSelector';
 import { DomainInspector } from './DomainInspector';
+import { DomainModal } from './DomainModal';
 import { getPortfolioContent } from '@/content';
 import type { DomainItem } from '@/content/models';
 
@@ -18,12 +19,12 @@ describe('Domain Experience Section', () => {
     expect(
       screen.getByRole('heading', {
         level: 2,
-        name: /bridging complex business domains with resilient engineering/i,
+        name: /domain expertise/i,
       }),
     ).toBeInTheDocument();
   });
 
-  it('renders all 6 domain tabs in the tablist', () => {
+  it('renders all 6 domain cards in the selector list', () => {
     render(<Domains domains={content.domains} />);
 
     const tablist = screen.getByRole('tablist', { name: /selectable business domains/i });
@@ -41,20 +42,7 @@ describe('Domain Experience Section', () => {
     expect(tabNames.some((t) => t?.includes('AI-Enabled Applications & Automation'))).toBe(true);
   });
 
-  it('renders the first domain in the inspector by default', () => {
-    render(<Domains domains={content.domains} />);
-
-    const firstDomain = content.domains[0]!;
-    const panel = screen.getByRole('tabpanel');
-    expect(panel).toHaveAttribute('id', `domain-panel-${firstDomain.id}`);
-    expect(panel).toHaveAttribute('aria-labelledby', `domain-tab-${firstDomain.id}`);
-
-    // Inspector title
-    expect(screen.getByRole('heading', { level: 3, name: firstDomain.name })).toBeInTheDocument();
-    expect(screen.getByText(firstDomain.problemSpace)).toBeInTheDocument();
-  });
-
-  it('switches domain inspector details when selecting another domain tab', () => {
+  it('opens domain modal deep dive when clicking a domain card', () => {
     render(<Domains domains={content.domains} />);
 
     const crmTab = screen.getByRole('tab', {
@@ -62,7 +50,10 @@ describe('Domain Experience Section', () => {
     });
     fireEvent.click(crmTab);
 
-    expect(crmTab).toHaveAttribute('aria-selected', 'true');
+    // Modal dialog should now be open
+    const dialog = screen.getByRole('dialog');
+    expect(dialog).toBeInTheDocument();
+
     expect(
       screen.getByRole('heading', {
         level: 3,
@@ -149,6 +140,32 @@ describe('Domain Experience Section', () => {
       expect(screen.getByText('Node.js')).toBeInTheDocument();
       expect(screen.getByText('Redis')).toBeInTheDocument();
       expect(screen.getByText('Kafka')).toBeInTheDocument();
+    });
+  });
+
+  describe('DomainModal Component', () => {
+    const mockDomain = content.domains[0]!;
+
+    it('renders modal with domain details when open and handles close and navigation', () => {
+      const onClose = vi.fn();
+      const onSelectDomain = vi.fn();
+
+      render(
+        <DomainModal
+          domain={mockDomain}
+          domains={content.domains}
+          isOpen={true}
+          onClose={onClose}
+          onSelectDomain={onSelectDomain}
+        />,
+      );
+
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
+      expect(screen.getByRole('heading', { level: 3, name: mockDomain.name })).toBeInTheDocument();
+
+      const closeBtn = screen.getByRole('button', { name: /close domain details/i });
+      fireEvent.click(closeBtn);
+      expect(onClose).toHaveBeenCalled();
     });
   });
 });

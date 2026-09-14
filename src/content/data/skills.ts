@@ -15,7 +15,6 @@ export const skillPillarsData: readonly SkillPillarGroup[] = [
           'React',
           'TypeScript',
           'Vue',
-          'Angular',
           'JavaScript (ES6+)',
           'Tailwind CSS',
           'HTML5 / CSS3',

@@ -104,6 +104,16 @@ export function CaseStudySelector({
               <p className="mt-3 line-clamp-2 text-xs leading-relaxed text-text-secondary">
                 {project.subtitle ?? project.description}
               </p>
+
+              {/* Technologies and Explore footer */}
+              <div className="mt-4 flex items-center justify-between border-t border-border-subtle/50 pt-2.5 text-[11px] font-mono">
+                <span className="text-text-muted">
+                  {project.technologies.length} technologies
+                </span>
+                <span className="text-accent flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+                  Explore <span aria-hidden="true">→</span>
+                </span>
+              </div>
             </button>
           </Card3D>
         );

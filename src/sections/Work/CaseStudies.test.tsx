@@ -1,6 +1,7 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { CaseStudies } from './CaseStudies';
+import { CaseStudyModal } from './CaseStudyModal';
 import { getPortfolioContent } from '@/content';
 
 describe('CaseStudies Section', () => {
@@ -11,11 +12,11 @@ describe('CaseStudies Section', () => {
     const section = container.querySelector('section#work');
     expect(section).toBeInTheDocument();
 
-    expect(screen.getByText('01 / SELECTED WORK & CASE STUDIES')).toBeInTheDocument();
+    expect(screen.getByText('01 / SELECTED WORK')).toBeInTheDocument();
     expect(
       screen.getByRole('heading', {
         level: 2,
-        name: /architectural teardowns of mission-critical production systems/i,
+        name: /case studies/i,
       }),
     ).toBeInTheDocument();
   });
@@ -27,16 +28,7 @@ describe('CaseStudies Section', () => {
     expect(tabs).toHaveLength(4);
   });
 
-  it('renders the first case study in the details viewer by default', () => {
-    render(<CaseStudies projects={content.projects} />);
-
-    const firstProject = content.projects[0]!;
-    const panel = screen.getByRole('tabpanel');
-    expect(panel).toHaveAttribute('id', `casestudy-panel-${firstProject.id}`);
-    expect(screen.getByRole('heading', { level: 3, name: firstProject.title })).toBeInTheDocument();
-  });
-
-  it('switches the case study details when a user clicks a different tab', () => {
+  it('opens case study modal when clicking a case study card', () => {
     render(<CaseStudies projects={content.projects} />);
 
     const crmTab = screen.getByRole('tab', {
@@ -44,7 +36,9 @@ describe('CaseStudies Section', () => {
     });
     fireEvent.click(crmTab);
 
-    expect(crmTab).toHaveAttribute('aria-selected', 'true');
+    const dialog = screen.getByRole('dialog');
+    expect(dialog).toBeInTheDocument();
+
     expect(
       screen.getByRole('heading', {
         level: 3,
@@ -54,5 +48,31 @@ describe('CaseStudies Section', () => {
 
     const crmProject = content.projects.find((p) => p.id === 'project-crm-platform')!;
     expect(screen.getByText(crmProject.reasoning.problem)).toBeInTheDocument();
+  });
+
+  describe('CaseStudyModal Component', () => {
+    const mockProject = content.projects[0]!;
+
+    it('renders modal when open and handles close action', () => {
+      const onClose = vi.fn();
+      const onSelectProject = vi.fn();
+
+      render(
+        <CaseStudyModal
+          project={mockProject}
+          projects={content.projects}
+          isOpen={true}
+          onClose={onClose}
+          onSelectProject={onSelectProject}
+        />,
+      );
+
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
+      expect(screen.getByRole('heading', { level: 3, name: mockProject.title })).toBeInTheDocument();
+
+      const closeBtn = screen.getByRole('button', { name: /close case study details/i });
+      fireEvent.click(closeBtn);
+      expect(onClose).toHaveBeenCalled();
+    });
   });
 });

@@ -2,7 +2,7 @@ import { useState, type ReactElement } from 'react';
 import { Section } from '@/components/layout';
 import { SectionHeader } from '@/components/typography';
 import { DomainSelector } from './DomainSelector';
-import { DomainInspector } from './DomainInspector';
+import { DomainModal } from './DomainModal';
 import type { DomainItem } from '@/content/models';
 
 export interface DomainsProps {
@@ -14,11 +14,9 @@ export function Domains({
   domains,
   className = '',
 }: DomainsProps): ReactElement {
-  const [activeDomainId, setActiveDomainId] = useState<string>(
-    () => domains[0]?.id ?? 'domain-ecommerce',
-  );
+  const [selectedDomainId, setSelectedDomainId] = useState<string | null>(null);
 
-  const activeDomain = domains.find((d) => d.id === activeDomainId) ?? domains[0];
+  const activeDomain = domains.find((d) => d.id === selectedDomainId) ?? null;
 
   return (
     <Section id="domains" spacing="default" className={`border-b border-border-subtle ${className}`}>
@@ -26,19 +24,25 @@ export function Domains({
         {/* Section Header */}
         <SectionHeader
           kicker="04 / DOMAIN EXPERTISE"
-          title="Bridging complex business domains with resilient engineering."
-          description="Understanding unfamiliar domains and translating business requirements into scalable, dependable production systems across the complete software delivery lifecycle."
+          title="Domain Expertise"
+          description="Understanding unfamiliar domains and translating complex business rules into dependable, high-throughput production systems."
         />
 
-        {/* Interactive Domain Selection Grid */}
+        {/* Consolidated Interactive Domain Cards */}
         <DomainSelector
           domains={domains}
-          activeId={activeDomainId}
-          onSelect={setActiveDomainId}
+          activeId={selectedDomainId ?? ''}
+          onSelect={(id) => setSelectedDomainId(id)}
         />
 
-        {/* Selected Domain Deep Dive Inspector */}
-        {activeDomain && <DomainInspector domain={activeDomain} />}
+        {/* Centered Deep Dive Details Modal */}
+        <DomainModal
+          domain={activeDomain}
+          domains={domains}
+          isOpen={activeDomain !== null}
+          onClose={() => setSelectedDomainId(null)}
+          onSelectDomain={(domain) => setSelectedDomainId(domain.id)}
+        />
       </div>
     </Section>
   );

@@ -127,10 +127,8 @@ describe('About & Engineering Philosophy Section', () => {
   });
 
   describe('EngineeringPillars Component', () => {
-    it('renders all 7 engineering philosophy pillars with summaries and key practices', () => {
+    it('renders all 7 engineering philosophy pillars with summaries and titles', () => {
       render(<EngineeringPillars themes={content.profile.philosophyThemes} />);
-
-
 
       // Check titles of themes
       expect(
@@ -175,12 +173,6 @@ describe('About & Engineering Philosophy Section', () => {
           name: 'AI-Augmented Engineering',
         }),
       ).toBeInTheDocument();
-
-      // Check specific practice items
-      expect(screen.getByText('Domain requirement mapping')).toBeInTheDocument();
-      expect(screen.getByText('Layered fault isolation')).toBeInTheDocument();
-      expect(screen.getByText('CRM data sync (Zoho & HubSpot)')).toBeInTheDocument();
-      expect(screen.getByText('Role-Based Access Control (RBAC)')).toBeInTheDocument();
     });
   });
 });

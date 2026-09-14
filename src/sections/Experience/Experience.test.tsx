@@ -3,6 +3,7 @@ import { render, screen, fireEvent, within } from '@testing-library/react';
 import { Experience } from './Experience';
 import { CareerProgressionTracker } from './CareerProgressionTracker';
 import { ExperienceCard } from './ExperienceCard';
+import { ExperienceModal } from './ExperienceModal';
 import { getPortfolioContent } from '@/content';
 
 describe('Professional Experience Section', () => {
@@ -17,12 +18,12 @@ describe('Professional Experience Section', () => {
     expect(
       screen.getByRole('heading', {
         level: 2,
-        name: /engineering progression from implementation to systems architecture/i,
+        name: /professional experience/i,
       }),
     ).toBeInTheDocument();
   });
 
-  it('renders all 5 chronological experience milestones', () => {
+  it('renders all 5 chronological experience milestones in horizontal cards', () => {
     render(<Experience experiences={content.experiences} />);
 
     expect(
@@ -38,54 +39,32 @@ describe('Professional Experience Section', () => {
     expect(headingTexts).toContain('Junior Web Developer');
   });
 
-  it('has the most recent experience expanded by default and allows toggling details', () => {
+  it('opens detailed popup modal when clicking on a milestone card and closes on close button', () => {
     render(<Experience experiences={content.experiences} />);
 
-    // Default expanded: current role
-    expect(
-      screen.getByText('Hide Architectural & Delivery Details'),
-    ).toBeInTheDocument();
+    // Initially modal is not open
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+
+    // Click on the first card
+    const viewDetailButtons = screen.getAllByText('View Details');
+    expect(viewDetailButtons.length).toBeGreaterThanOrEqual(5);
+    fireEvent.click(viewDetailButtons[0]!);
+
+    // Modal dialog is now visible with full details
+    const dialog = screen.getByRole('dialog');
+    expect(dialog).toBeInTheDocument();
     expect(
       screen.getByText(/Designed role-based access control \(RBAC\)/i),
     ).toBeInTheDocument();
 
-    // Toggle collapse on current role
-    const hideBtn = screen.getByText('Hide Architectural & Delivery Details');
-    fireEvent.click(hideBtn);
+    // Close modal via close button
+    const closeBtn = screen.getByRole('button', { name: /close details/i });
+    fireEvent.click(closeBtn);
 
-    // Now it should show View
-    expect(
-      screen.queryByText(/Designed role-based access control \(RBAC\)/i),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
-  it('supports Expand All and Collapse All global actions', () => {
-    render(<Experience experiences={content.experiences} />);
-
-    const expandAllBtn = screen.getByRole('button', { name: /expand all details/i });
-    fireEvent.click(expandAllBtn);
-
-    // All 5 should be expanded
-    const hideButtons = screen.getAllByText('Hide Architectural & Delivery Details');
-    expect(hideButtons).toHaveLength(5);
-
-    // Verified outcomes from multiple roles are visible
-    expect(screen.getByText('Awarded Employee of the Year recognition for outstanding leadership and engineering contribution.')).toBeInTheDocument();
-    expect(screen.getByText(/Key engineering contributor during organization scaling from 4 to 20\+ team members/i)).toBeInTheDocument();
-
-    // Collapse All
-    const collapseAllBtn = screen.getByRole('button', { name: /collapse all/i });
-    fireEvent.click(collapseAllBtn);
-
-    expect(
-      screen.queryByText('Hide Architectural & Delivery Details'),
-    ).not.toBeInTheDocument();
-  });
-
-  it('expands experience and highlights stage when clicking milestone in tracker', () => {
-    // Mock scrollIntoView
-    window.HTMLElement.prototype.scrollIntoView = vi.fn();
-
+  it('opens modal for corresponding stage when clicking milestone in tracker', () => {
     render(<Experience experiences={content.experiences} />);
 
     const tracker = screen.getByRole('tablist', { name: /career progression milestones/i });
@@ -97,7 +76,8 @@ describe('Professional Experience Section', () => {
     expect(stage2Tab).toBeDefined();
     fireEvent.click(stage2Tab!);
 
-    // Should expand 2020-2022 card details
+    // Modal opens with 2020-2022 card details
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
     expect(
       screen.getByText(/Delivered multi-application architectures balancing diverse client constraints/i),
     ).toBeInTheDocument();
@@ -120,36 +100,43 @@ describe('Professional Experience Section', () => {
   });
 
   describe('ExperienceCard Component', () => {
-    it('renders role details, context, technologies and accessible disclosure panel', () => {
+    it('renders role details, context, and triggers onOpenDetails', () => {
       const exp = content.experiences[0]!;
-      const onToggle = vi.fn();
+      const onOpen = vi.fn();
 
-      const { rerender } = render(
-        <ExperienceCard experience={exp} isExpanded={false} onToggleExpand={onToggle} />,
-      );
+      render(<ExperienceCard experience={exp} isSelected={false} onOpenDetails={onOpen} />);
 
       expect(screen.getByText('2023 – Present')).toBeInTheDocument();
       expect(screen.getByText(/STAGE 05/i)).toBeInTheDocument();
-      expect(screen.getByText('Architecture, Modernization & Scale')).toBeInTheDocument();
-      expect(screen.getByText(/Context: Enterprise Workflow & Modernization Systems/i)).toBeInTheDocument();
+      expect(screen.getByText('Senior Software Engineer')).toBeInTheDocument();
 
-      const toggleButton = screen.getByRole('button', {
-        name: /view architectural & delivery details/i,
-      });
-      expect(toggleButton).toHaveAttribute('aria-expanded', 'false');
+      const viewBtn = screen.getByRole('button', { name: /view details/i });
+      fireEvent.click(viewBtn);
+      expect(onOpen).toHaveBeenCalledTimes(1);
+    });
+  });
 
-      fireEvent.click(toggleButton);
-      expect(onToggle).toHaveBeenCalledTimes(1);
+  describe('ExperienceModal Component', () => {
+    it('renders full architectural, leadership, and outcome details in modal', () => {
+      const exp = content.experiences[0]!;
+      const onClose = vi.fn();
+      const onSelect = vi.fn();
 
-      // Re-render expanded
-      rerender(<ExperienceCard experience={exp} isExpanded={true} onToggleExpand={onToggle} />);
-      const expandedButton = screen.getByRole('button', {
-        name: /hide architectural & delivery details/i,
-      });
-      expect(expandedButton).toHaveAttribute('aria-expanded', 'true');
+      render(
+        <ExperienceModal
+          experience={exp}
+          experiences={content.experiences}
+          isOpen={true}
+          onClose={onClose}
+          onSelectExperience={onSelect}
+        />,
+      );
+
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
       expect(screen.getByText(/Architectural Involvement/i)).toBeInTheDocument();
       expect(screen.getByText(/Responsibilities & Technical Scope/i)).toBeInTheDocument();
       expect(screen.getByText(/Collaboration & Leadership/i)).toBeInTheDocument();
+      expect(screen.getByText(/Verified Outcomes & Impact/i)).toBeInTheDocument();
     });
   });
 });
