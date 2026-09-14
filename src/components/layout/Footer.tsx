@@ -3,9 +3,38 @@ import { navigationItems, socialLinks, type NavigationItem, type SocialLink } fr
 import { StatusDot } from '@/components/ui';
 import { MonoText } from '@/components/typography';
 import { handleSmoothScrollClick } from '@/lib/smoothScroll';
+import { navigateTo, useRouterPath } from '@/lib/router';
 
 export function Footer(): ReactElement {
   const currentYear = new Date().getFullYear();
+  const currentPath = useRouterPath();
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    if (href === '/portfolio') {
+      navigateTo('/portfolio');
+      window.scrollTo(0, 0);
+      return;
+    }
+
+    if (href === '/') {
+      if (currentPath !== '/') {
+        navigateTo('/');
+        window.scrollTo(0, 0);
+      } else {
+        handleSmoothScrollClick(e, '/');
+      }
+      return;
+    }
+
+    const isCurrentlyHome = currentPath === '/';
+    if (!isCurrentlyHome && href.startsWith('#')) {
+      navigateTo('/');
+      setTimeout(() => handleSmoothScrollClick(e, href), 100);
+    } else {
+      handleSmoothScrollClick(e, href);
+    }
+  };
 
   return (
     <footer className="relative z-10 w-full border-t border-border-subtle bg-surface text-text-secondary">
@@ -44,7 +73,7 @@ export function Footer(): ReactElement {
                 <li key={item.id}>
                   <a
                     href={item.href}
-                    onClick={(e) => handleSmoothScrollClick(e, item.href)}
+                    onClick={(e) => handleNavClick(e, item.href)}
                     className="text-text-secondary hover:text-text-primary hover:underline underline-offset-4 transition-colors duration-150"
                   >
                     {item.label}

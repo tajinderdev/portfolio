@@ -15,8 +15,8 @@ export interface TextProps<T extends ElementType = 'p'> {
 const variantClasses: Record<TextVariant, string> = {
   lead: 'text-lg sm:text-xl leading-relaxed',
   body: 'text-base leading-relaxed',
-  small: 'text-sm leading-normal',
-  caption: 'text-xs leading-normal',
+  small: 'text-sm leading-normal font-medium',
+  caption: 'text-xs leading-normal font-medium',
 };
 
 const colorClasses: Record<TextColor, string> = {

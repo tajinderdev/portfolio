@@ -38,7 +38,7 @@ export function MonoText<T extends ElementType = 'span'>({
   return (
     <Component
       className={cn(
-        'font-mono tracking-wide',
+        'font-mono font-medium tracking-wide',
         sizeClasses[size],
         colorClasses[color],
         className,
