@@ -21,7 +21,7 @@ export function AIEngineering({
 
   return (
     <Section id="ai" spacing="default" className={`border-b border-border-subtle ${className}`}>
-      <div className="space-y-12 sm:space-y-16">
+      <div className="space-y-8 sm:space-y-10">
         {/* Section Header */}
         <SectionHeader
           kicker={data.kicker}

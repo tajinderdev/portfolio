@@ -14,7 +14,7 @@ export interface AboutProps {
 export function About({ profile, className = '' }: AboutProps): ReactElement {
   return (
     <Section id="about" spacing="default" className={`border-b border-border-subtle ${className}`}>
-      <div className="space-y-12 sm:space-y-16">
+      <div className="space-y-8 sm:space-y-10">
         {/* Section Header */}
         <SectionHeader
           kicker="01 / ENGINEERING PHILOSOPHY"
@@ -30,8 +30,8 @@ export function About({ profile, className = '' }: AboutProps): ReactElement {
             <CorePrinciples principles={profile.principles} />
           </div>
 
-          {/* Right Column: Interactive System Thinking Trace (7 cols) */}
-          <div className="lg:col-span-7">
+          {/* Right Column: Interactive System Thinking Trace (7 cols) - Sticky during section scroll */}
+          <div className="lg:col-span-7 lg:sticky lg:top-28">
             <SystemThinkingTrace systemThinking={profile.systemThinking} />
           </div>
         </div>

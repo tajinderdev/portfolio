@@ -53,12 +53,12 @@ export function createTopologyScene(
     try {
       const ctx = canvas.getContext('2d');
       if (ctx) {
-        // High-contrast, pinpoint crisp circular disc with subtle subpixel antialiasing
+        // High-contrast, pinpoint crisp circular disc with luminous cyan-indigo gradient
         const gradient = ctx.createRadialGradient(32, 32, 0, 32, 32, 28);
         gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
-        gradient.addColorStop(0.55, 'rgba(0, 255, 136, 1)');
-        gradient.addColorStop(0.92, 'rgba(0, 255, 136, 0.95)');
-        gradient.addColorStop(1, 'rgba(0, 255, 136, 0)');
+        gradient.addColorStop(0.5, 'rgba(56, 189, 248, 1)');
+        gradient.addColorStop(0.85, 'rgba(99, 102, 241, 0.9)');
+        gradient.addColorStop(1, 'rgba(99, 102, 241, 0)');
         ctx.fillStyle = gradient;
         ctx.beginPath();
         ctx.arc(32, 32, 28, 0, Math.PI * 2);
@@ -75,7 +75,7 @@ export function createTopologyScene(
 
   const circleTexture = createCircleTexture();
 
-  // Particle distribution parameters: 160 desktop / 75 mobile (further 50% reduction as requested)
+  // Particle distribution parameters: 160 desktop / 75 mobile
   const particleCount = isMobile ? 75 : 160;
   const positions = new Float32Array(particleCount * 3);
   const basePositions = new Float32Array(particleCount * 3);
@@ -83,20 +83,22 @@ export function createTopologyScene(
   const colors = new Float32Array(particleCount * 3);
   const seeds = new Float32Array(particleCount * 2);
 
-  // High-contrast vibrant Antigravity Green Palette
-  const greenPalette = [
-    new THREE.Color('#00FF88'), // Luminous vibrant electric green
-    new THREE.Color('#00F59B'), // Bright terminal neon
-    new THREE.Color('#10B981'), // Crisp tech emerald
-    new THREE.Color('#34D399'), // Vivid mint green
-    new THREE.Color('#6EE7B7'), // White-mint apex highlight
+  // Modern Luminous Tri-Gradient Cosmic/Cyber Palette (Cyan · Indigo · Violet · Rose · White)
+  const triGradientPalette = [
+    new THREE.Color('#38BDF8'), // Luminous vibrant sky cyan
+    new THREE.Color('#00F0FF'), // Vivid electric cyan
+    new THREE.Color('#6366F1'), // Radiant electric indigo
+    new THREE.Color('#818CF8'), // Bright iris violet
+    new THREE.Color('#A855F7'), // Luminous tech purple
+    new THREE.Color('#FB7185'), // Sunset coral rose highlight
+    new THREE.Color('#FFFFFF'), // Crisp pinpoint starlight apex
   ];
 
   const spreadX = 260;
   const spreadY = 160;
   const spreadZ = 70;
 
-  const defaultColor = new THREE.Color('#00FF88');
+  const defaultColor = new THREE.Color('#38BDF8');
 
   for (let i = 0; i < particleCount; i++) {
     const i3 = i * 3;
@@ -128,8 +130,8 @@ export function createTopologyScene(
     seeds[i2 + 1] = 0.4 + Math.random() * 0.8; // Drift speed factor
 
     // High-contrast color gradient maintaining vivid brightness across all depths
-    const paletteIndex = Math.floor(Math.random() * greenPalette.length);
-    const chosenColor = greenPalette[paletteIndex] ?? defaultColor;
+    const paletteIndex = Math.floor(Math.random() * triGradientPalette.length);
+    const chosenColor = triGradientPalette[paletteIndex] ?? defaultColor;
     const depthFactor = THREE.MathUtils.clamp((nz + spreadZ / 2) / spreadZ, 0.75, 1.0);
 
     colors[i3] = chosenColor.r * depthFactor;

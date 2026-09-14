@@ -9,7 +9,7 @@ export function Footer(): ReactElement {
 
   return (
     <footer className="relative z-10 w-full border-t border-border-subtle bg-surface text-text-secondary">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20 space-y-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-14 space-y-8">
         {/* Main Footer Content Grid */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 lg:gap-12">
           {/* Brand & Purpose (Columns 1-6) */}

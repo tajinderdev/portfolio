@@ -66,7 +66,7 @@ export function ScrollProgressBar(): ReactElement {
         style={{
           transform: `scaleX(${progress})`,
         }}
-        className="h-full w-full bg-gradient-to-r from-accent via-cyan-400 to-accent origin-left shadow-[0_0_8px_rgba(0,245,212,0.8)] transition-transform duration-75 ease-out"
+        className="h-full w-full bg-gradient-to-r from-indigo-500 via-sky-400 to-rose-400 origin-left shadow-[0_0_12px_rgba(56,189,248,0.7)] transition-transform duration-75 ease-out"
       />
     </div>
   );

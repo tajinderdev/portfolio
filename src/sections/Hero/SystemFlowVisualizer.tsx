@@ -64,9 +64,6 @@ export function SystemFlowVisualizer({
 }: SystemFlowVisualizerProps): ReactElement {
   const [selectedTierId, setSelectedTierId] = useState<string>('tier-frontend');
 
-  const selectedTier =
-    systemTiers.find((tier) => tier.id === selectedTierId) || systemTiers[0];
-
   return (
     <div
       className={cn(
@@ -99,86 +96,113 @@ export function SystemFlowVisualizer({
         and Cloud Infrastructure (AWS, Docker).
       </div>
 
-      {/* Interactive System Flow Stack */}
-      <div className="space-y-2 relative" aria-label="System architecture tiers">
+      {/* Interactive System Flow Stack with Inline Smooth Expand/Collapse */}
+      <div className="space-y-2.5 relative" aria-label="System architecture tiers">
         {systemTiers.map((tier, index) => {
           const isSelected = tier.id === selectedTierId;
           return (
-            <button
+            <div
               key={tier.id}
-              type="button"
-              onClick={() => setSelectedTierId(tier.id)}
               className={cn(
-                'w-full text-left p-2.5 sm:p-3 rounded-lg border transition-all duration-200 relative',
-                'flex items-center justify-between group cursor-pointer',
+                'rounded-lg border transition-all duration-300 relative overflow-hidden',
                 isSelected
-                  ? 'bg-surface-elevated border-accent/60 shadow-sm'
+                  ? 'bg-surface-elevated/90 border-accent/60 shadow-sm ring-1 ring-accent/20'
                   : 'bg-surface/40 border-border-subtle hover:border-border-strong hover:bg-surface/80',
               )}
-              aria-pressed={isSelected}
             >
-              <div className="flex items-center gap-3">
-                <span
-                  className={cn(
-                    'w-6 h-6 rounded flex items-center justify-center font-mono text-[10px] font-bold transition-colors',
-                    isSelected
-                      ? 'bg-accent text-background'
-                      : 'bg-white/5 text-text-muted group-hover:text-text-secondary',
-                  )}
-                >
-                  {index + 1}
-                </span>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span
-                      className={cn(
-                        'text-xs sm:text-sm font-heading font-medium tracking-tight',
-                        isSelected ? 'text-text-primary' : 'text-text-secondary',
-                      )}
-                    >
-                      {tier.layer}
-                    </span>
-                    {isSelected && (
-                      <span className="hidden sm:inline-block w-1.5 h-1.5 rounded-full bg-accent" />
+              <button
+                type="button"
+                onClick={() => setSelectedTierId(tier.id)}
+                className="w-full text-left p-2.5 sm:p-3 flex items-center justify-between group cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-lg"
+                aria-pressed={isSelected}
+                aria-expanded={isSelected}
+              >
+                <div className="flex items-center gap-3">
+                  <span
+                    className={cn(
+                      'w-6 h-6 rounded flex items-center justify-center font-mono text-[10px] font-bold transition-colors duration-200',
+                      isSelected
+                        ? 'bg-accent text-background'
+                        : 'bg-white/5 text-text-muted group-hover:text-text-secondary',
                     )}
+                  >
+                    {index + 1}
+                  </span>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span
+                        className={cn(
+                          'text-xs sm:text-sm font-heading font-medium tracking-tight transition-colors duration-200',
+                          isSelected ? 'text-text-primary font-semibold' : 'text-text-secondary',
+                        )}
+                      >
+                        {tier.layer}
+                      </span>
+                      {isSelected && (
+                        <span className="hidden sm:inline-block w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+                      )}
+                    </div>
+                    <MonoText
+                      size="xs"
+                      color={isSelected ? 'accent' : 'muted'}
+                      className="text-[10px] sm:text-[11px] transition-colors duration-200"
+                    >
+                      {tier.technologies}
+                    </MonoText>
                   </div>
-                  <MonoText size="xs" color={isSelected ? 'accent' : 'muted'} className="text-[10px] sm:text-[11px]">
-                    {tier.technologies}
-                  </MonoText>
+                </div>
+
+                {/* Expand / Status Indicator Icon */}
+                <div className="flex items-center gap-1.5">
+                  <svg
+                    className={cn(
+                      'w-4 h-4 text-text-muted transition-transform duration-300 ease-in-out',
+                      isSelected ? 'rotate-180 text-accent' : 'group-hover:text-text-secondary',
+                    )}
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </button>
+
+              {/* Inline Smooth Expand/Collapse Content Container */}
+              <div
+                className={cn(
+                  'grid transition-[grid-template-rows,opacity] duration-300 ease-in-out',
+                  isSelected ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0',
+                )}
+              >
+                <div className="overflow-hidden">
+                  <div className="px-3 pb-3 pt-0 sm:px-3.5 sm:pb-3.5">
+                    <div className="p-2.5 sm:p-3 rounded-md bg-background/60 border border-border-subtle/80 space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <MonoText
+                          size="xs"
+                          color="accent"
+                          className="font-semibold uppercase tracking-wider text-[10px] sm:text-[11px]"
+                        >
+                          {tier.name} Principle
+                        </MonoText>
+                        <span className="text-[9px] sm:text-[10px] font-mono text-text-muted">
+                          Live Architecture
+                        </span>
+                      </div>
+                      <p className="text-xs text-text-secondary leading-relaxed font-sans">
+                        {tier.architecturePrinciple}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
-
-              {/* Status Signal Indicator */}
-              <div className="flex items-center gap-1.5">
-                <span
-                  className={cn(
-                    'w-1.5 h-1.5 rounded-full transition-all',
-                    isSelected ? 'bg-accent scale-125' : 'bg-border-strong',
-                  )}
-                  aria-hidden="true"
-                />
-              </div>
-            </button>
+            </div>
           );
         })}
       </div>
-
-      {/* Architectural Trace Detail Card */}
-      {selectedTier && (
-        <div className="p-3.5 rounded-lg bg-surface-elevated/70 border border-border-subtle text-xs space-y-1.5">
-          <div className="flex items-center justify-between">
-            <MonoText size="xs" color="accent" className="font-semibold uppercase tracking-wider text-[11px]">
-              {selectedTier.name} Principle
-            </MonoText>
-            <span className="text-[10px] font-mono text-text-muted">
-              End-to-End Tracing
-            </span>
-          </div>
-          <p className="text-text-secondary leading-relaxed">
-            {selectedTier.architecturePrinciple}
-          </p>
-        </div>
-      )}
     </div>
   );
 }

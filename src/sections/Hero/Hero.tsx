@@ -14,7 +14,7 @@ export function Hero({ profile }: HeroProps): ReactElement {
     <section
       id="hero"
       aria-label="Hero Introduction"
-      className="relative w-full border-b border-border-subtle pt-12 pb-20 sm:pt-16 sm:pb-28 lg:py-32"
+      className="relative w-full border-b border-border-subtle pt-8 pb-12 sm:pt-12 sm:pb-16 lg:py-16"
     >
 
 

@@ -14,19 +14,19 @@
   --color-text-muted: #8e8e8e;
 
   /* Accent & Interactive */
-  --color-accent: #7cff6b;
-  --color-accent-hover: #95ff87;
-  --color-accent-subtle: rgba(124, 255, 107, 0.12);
-  --color-accent-border: rgba(124, 255, 107, 0.35);
+  --color-accent: #38bdf8;
+  --color-accent-hover: #7dd3fc;
+  --color-accent-subtle: rgba(56, 189, 248, 0.12);
+  --color-accent-border: rgba(56, 189, 248, 0.35);
 
   /* Border colors */
   --color-border-subtle: rgba(255, 255, 255, 0.10);
   --color-border-strong: rgba(255, 255, 255, 0.16);
 
   /* Typography */
-  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-heading: 'Outfit', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-sans: 'Josefin Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-heading: 'Outfit', 'Josefin Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'Inter', 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
   /* Transition timing */
   --transition-fast: 150ms ease;
@@ -60,10 +60,10 @@
   --color-text-muted: #737373;
 
   /* Accent & Interactive */
-  --color-accent: #16a34a; /* Tailwind green-600 */
-  --color-accent-hover: #15803d; /* Tailwind green-700 */
-  --color-accent-subtle: rgba(22, 163, 74, 0.12);
-  --color-accent-border: rgba(22, 163, 74, 0.35);
+  --color-accent: #0284c7; /* Tailwind sky-600: strong 4.8:1+ contrast on light surfaces */
+  --color-accent-hover: #0369a1; /* Tailwind sky-700 */
+  --color-accent-subtle: rgba(2, 132, 199, 0.10);
+  --color-accent-border: rgba(2, 132, 199, 0.30);
 
   /* Border colors */
   --color-border-subtle: rgba(0, 0, 0, 0.10);
@@ -124,6 +124,84 @@ main section:not(#hero) {
 section[id],
 main[id] {
   scroll-margin-top: 5rem;
+}
+
+/* Tri-Gradient Utilities */
+.bg-gradient-tri {
+  background-image: linear-gradient(135deg, #6366f1 0%, #38bdf8 50%, #f43f5e 100%);
+}
+
+.text-gradient-tri {
+  background-image: linear-gradient(135deg, #818cf8 0%, #38bdf8 50%, #fb7185 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+:root[data-theme="light"] .text-gradient-tri {
+  background-image: linear-gradient(135deg, #4f46e5 0%, #0284c7 50%, #e11d48 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Hypnotic Fluid Gradient Animations (Monopo Saigon & Zona de Propulsão aesthetic) */
+@keyframes hypnotic-flow-1 {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+  }
+  33% {
+    transform: translate3d(80px, -60px, 0) scale(1.18) rotate(120deg);
+  }
+  66% {
+    transform: translate3d(-60px, 80px, 0) scale(0.9) rotate(240deg);
+  }
+}
+
+@keyframes hypnotic-flow-2 {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+  }
+  33% {
+    transform: translate3d(-90px, 70px, 0) scale(1.2) rotate(-120deg);
+  }
+  66% {
+    transform: translate3d(70px, -70px, 0) scale(0.85) rotate(-240deg);
+  }
+}
+
+@keyframes hypnotic-flow-3 {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(0.95) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(90px, 60px, 0) scale(1.22) rotate(180deg);
+  }
+}
+
+@keyframes hypnotic-flow-4 {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1.05) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(-80px, -90px, 0) scale(0.88) rotate(-180deg);
+  }
+}
+
+.animate-hypnotic-1 {
+  animation: hypnotic-flow-1 20s ease-in-out infinite alternate;
+}
+
+.animate-hypnotic-2 {
+  animation: hypnotic-flow-2 24s ease-in-out infinite alternate;
+}
+
+.animate-hypnotic-3 {
+  animation: hypnotic-flow-3 28s ease-in-out infinite alternate;
+}
+
+.animate-hypnotic-4 {
+  animation: hypnotic-flow-4 22s ease-in-out infinite alternate;
 }
 
 

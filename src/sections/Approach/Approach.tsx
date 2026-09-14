@@ -17,7 +17,7 @@ export function Approach({ themes, className = '' }: ApproachProps): ReactElemen
         title="How I Think, Build, and Ship"
         description="Engineering principles applied across the complete software delivery lifecycle—from domain analysis to cloud deployment."
       />
-      <div className="mt-12 sm:mt-16">
+      <div className="mt-8 sm:mt-10">
         <EngineeringPillars themes={themes} />
       </div>
     </Section>
