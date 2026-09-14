@@ -18,6 +18,6 @@ describe('Layout Primitives', () => {
     const section = screen.getByText('Section Content').closest('section');
     expect(section).toBeInTheDocument();
     expect(section).toHaveAttribute('id', 'test-section');
-    expect(section).toHaveClass('py-12');
+    expect(section).toHaveClass('py-8');
   });
 });

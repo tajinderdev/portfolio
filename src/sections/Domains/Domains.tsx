@@ -22,7 +22,7 @@ export function Domains({
 
   return (
     <Section id="domains" spacing="default" className={`border-b border-border-subtle ${className}`}>
-      <div className="space-y-10 sm:space-y-12">
+      <div className="space-y-6 sm:space-y-8">
         {/* Section Header */}
         <SectionHeader
           kicker="04 / DOMAIN EXPERTISE"

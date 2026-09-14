@@ -11,14 +11,15 @@ export interface ContactProps {
 
 export function Contact({ client, className = '' }: ContactProps): ReactElement {
   return (
-    <Section id="contact" className={className}>
-      <SectionHeader
-        kicker="02 / CONTACT"
-        title="LET'S CONNECT"
-        description="Open for senior engineering roles, system architecture consulting, and high-impact technical collaboration."
-      />
+    <Section id="contact" spacing="default" className={className}>
+      <div className="space-y-6 sm:space-y-8">
+        <SectionHeader
+          kicker="02 / CONTACT"
+          title="LET'S CONNECT"
+          description="Open for senior engineering roles, system architecture consulting, and high-impact technical collaboration."
+        />
 
-      <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 items-start">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 items-start">
         {/* Left Column: Context, Availability & Social Profiles */}
         <div className="space-y-6 lg:col-span-5">
           <div className="space-y-3">
@@ -77,6 +78,7 @@ export function Contact({ client, className = '' }: ContactProps): ReactElement 
           <ContactForm client={client} />
         </div>
       </div>
-    </Section>
-  );
+    </div>
+  </Section>
+);
 }

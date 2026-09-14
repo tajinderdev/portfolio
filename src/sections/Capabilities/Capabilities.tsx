@@ -50,7 +50,7 @@ export function Capabilities({
 
   return (
     <Section id="engineering" spacing="default" className={`border-b border-border-subtle ${className}`}>
-      <div className="space-y-10 sm:space-y-12">
+      <div className="space-y-6 sm:space-y-8">
         {/* Section Header */}
         <SectionHeader
           kicker="03 / TECHNICAL CAPABILITIES"

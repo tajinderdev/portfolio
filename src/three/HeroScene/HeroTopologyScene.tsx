@@ -63,8 +63,15 @@ export function HeroTopologyScene({
         scrollRafId = null;
         if (!container) return;
         const rect = container.getBoundingClientRect();
-        const height = rect.height || 600;
-        const progress = Math.min(1, Math.max(0, -rect.top / height));
+        const scrollableHeight =
+          typeof document !== 'undefined'
+            ? Math.max(1, document.documentElement.scrollHeight - window.innerHeight)
+            : 600;
+        const relativeScroll =
+          rect.top < -1
+            ? -rect.top / (rect.height || 600)
+            : (typeof window !== 'undefined' ? window.scrollY / Math.min(scrollableHeight, window.innerHeight * 2.5) : 0);
+        const progress = Math.min(1, Math.max(0, relativeScroll));
         controller.setScrollProgress(progress);
       });
     };

@@ -17,54 +17,60 @@ export function ProfileCard({
       className={`rounded-lg border border-border-subtle bg-surface/50 p-6 backdrop-blur-sm sm:p-7 ${className}`}
       aria-label="Engineer Profile & Background"
     >
-      <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
-        {/* Profile Portrait */}
+      {/* Top 2-Column Layout: Portrait (Col 1) and Designation / Name (Col 2) */}
+      <div className="grid grid-cols-[auto_1fr] items-center gap-5 sm:gap-6">
+        {/* Column 1: Profile Portrait (Larger Size) */}
         <div className="relative shrink-0">
-          <div className="relative h-28 w-28 overflow-hidden rounded-lg border-2 border-border-subtle bg-surface-raised shadow-md sm:h-32 sm:w-32">
+          <div className="group relative h-36 w-36 overflow-hidden rounded-xl border-2 border-border-subtle bg-surface-raised shadow-md sm:h-44 sm:w-44 cursor-pointer">
             <img
               src="/images/face.webp"
               alt={`${profile.name} - ${profile.title}`}
-              width={128}
-              height={128}
+              width={176}
+              height={176}
               loading="lazy"
               decoding="async"
-              className="h-full w-full object-cover object-center grayscale contrast-105 filter transition-all duration-300 hover:grayscale-0"
+              className="h-full w-full object-cover object-top origin-top grayscale contrast-105 filter transition-all duration-500 ease-out group-hover:scale-135 group-hover:grayscale-0 hover:scale-135 hover:grayscale-0"
             />
           </div>
-          <div className="absolute -bottom-2 -right-2 rounded border border-border-subtle bg-background px-2 py-0.5 shadow-sm">
+          <div className="absolute -bottom-2 -right-2 rounded border border-border-subtle bg-background px-2.5 py-0.5 shadow-sm pointer-events-none">
             <MonoText size="xs" color="accent" className="font-semibold">
               {profile.experienceYears} EXP
             </MonoText>
           </div>
         </div>
 
-        {/* Identity & Core Positioning */}
-        <div className="flex-1 space-y-3">
+        {/* Column 2: Designation, Name & Global Reach */}
+        <div className="flex flex-col justify-center space-y-2 sm:space-y-3">
           <div>
-            <MonoText size="xs" color="muted" className="uppercase tracking-wider font-medium">
+            <MonoText size="xs" color="muted" className="uppercase tracking-wider font-semibold text-[11px] sm:text-xs">
               {profile.title}
             </MonoText>
-            <Heading as="h3" variant="card" className="text-xl sm:text-2xl font-bold">
+            <Heading as="h3" variant="card" className="mt-0.5 text-2xl sm:text-3xl font-bold tracking-tight">
               {profile.name}
             </Heading>
           </div>
 
-          <Text variant="small" color="secondary" className="leading-relaxed">
-            {profile.summary}
-          </Text>
-
           {/* International Reach */}
-          <div className="flex flex-wrap items-center gap-1.5 pt-1">
-            <MonoText size="xs" color="muted" className="mr-1 font-mono text-[11px]">
+          <div className="space-y-1.5 pt-0.5">
+            <MonoText size="xs" color="muted" className="block font-mono text-[11px] font-medium">
               Global Reach:
             </MonoText>
-            {profile.internationalReach.map((region) => (
-              <Badge key={region} variant="outline" size="sm" className="font-mono text-[11px] py-0 px-1.5">
-                {region}
-              </Badge>
-            ))}
+            <div className="flex flex-wrap items-center gap-1.5">
+              {profile.internationalReach.map((region) => (
+                <Badge key={region} variant="outline" size="sm" className="font-mono text-[11px] py-0 px-1.5">
+                  {region}
+                </Badge>
+              ))}
+            </div>
           </div>
         </div>
+      </div>
+
+      {/* Full-Width Description / About Text Below the 2 Columns */}
+      <div className="mt-5 pt-4 border-t border-border-subtle/50">
+        <Text variant="body" color="secondary" className="text-sm sm:text-base leading-relaxed">
+          {profile.summary}
+        </Text>
       </div>
 
       {/* Engineering Stance Block */}

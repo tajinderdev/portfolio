@@ -15,9 +15,9 @@ export interface SectionProps<T extends ElementType = 'section'> {
 }
 
 const spacingClasses: Record<SectionSpacing, string> = {
-  default: 'py-20 md:py-32',
-  compact: 'py-12 md:py-20',
-  large: 'py-28 md:py-40',
+  default: 'py-10 md:py-14 lg:py-16',
+  compact: 'py-8 md:py-10',
+  large: 'py-14 md:py-20',
   none: 'py-0',
 };
 
