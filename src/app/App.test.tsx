@@ -40,7 +40,6 @@ describe('App Global Routing & Layout', () => {
     expect(container.querySelector('#experience')).toBeInTheDocument();
     expect(container.querySelector('#engineering')).toBeInTheDocument();
     expect(container.querySelector('#domains')).toBeInTheDocument();
-    expect(container.querySelector('#ai')).toBeInTheDocument();
     expect(container.querySelector('#approach')).toBeInTheDocument();
 
     // Home sections should not be present (except those wrapped in layouts like Header)

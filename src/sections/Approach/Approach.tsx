@@ -18,7 +18,7 @@ export function Approach({ themes, className = '' }: ApproachProps): ReactElemen
   return (
     <Section id="approach" spacing="default" className={`border-b border-border-subtle ${className}`}>
       <SectionHeader
-        kicker="06 / APPROACH & METHODOLOGY"
+        kicker="05 / APPROACH & METHODOLOGY"
         title="Approach & Methodology"
         description="Engineering principles applied across the complete software delivery lifecycle—from domain analysis to cloud deployment."
       />

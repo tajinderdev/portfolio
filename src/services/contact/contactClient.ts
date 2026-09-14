@@ -60,7 +60,28 @@ export class ContactApiClient implements ContactClient {
 
       clearTimeout(timeoutId);
 
-      const data = (await response.json()) as ContactApiResponse;
+      let data: Partial<ContactApiResponse> = {};
+      const responseText = await response.text();
+      if (responseText) {
+        try {
+          data = JSON.parse(responseText) as Partial<ContactApiResponse>;
+        } catch {
+          return {
+            success: false,
+            message: response.ok
+              ? 'Message sent successfully.'
+              : `Service temporarily unavailable (${response.status}). Please try again.`,
+          };
+        }
+      }
+
+      if (!response.ok && !data.message) {
+        return {
+          success: false,
+          message: `Submission failed with status ${response.status}. Please try again later.`,
+        };
+      }
+
       return {
         success: Boolean(data.success),
         message: data.message || (data.success ? 'Message sent successfully.' : 'Failed to send message.'),

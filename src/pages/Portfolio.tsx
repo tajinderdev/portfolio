@@ -4,7 +4,6 @@ import {
   Experience,
   Capabilities,
   Domains,
-  AIEngineering,
   Approach,
 } from '@/sections';
 import { getPortfolioContent } from '@/content';
@@ -34,13 +33,10 @@ export function Portfolio(): ReactElement {
       {/* Section Anchor 3: Architecture & Technical Capabilities (#engineering) */}
       <Capabilities skillPillars={content.skillPillars} />
 
-      {/* Section Anchor: Domain Experience (#domains) */}
+      {/* Section Anchor 4: Domain Experience (#domains) */}
       <Domains domains={content.domains} />
 
-      {/* Section Anchor: AI-Augmented Engineering (#ai) */}
-      <AIEngineering data={content.aiEngineering} />
-
-      {/* Section Anchor: Approach & Methodology (#approach) */}
+      {/* Section Anchor 5: Approach & Methodology (#approach) */}
       <Approach themes={content.profile.philosophyThemes} />
     </div>
   );
