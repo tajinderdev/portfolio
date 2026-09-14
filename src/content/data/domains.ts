@@ -29,7 +29,6 @@ export const domainsData: readonly DomainItem[] = [
     ],
     relevantTechnologies: [
       'Magento 2',
-      'PHP',
       'MySQL',
       'Elasticsearch',
       'Redis',
@@ -68,7 +67,6 @@ export const domainsData: readonly DomainItem[] = [
       'React',
       'TypeScript',
       'Laravel',
-      'PHP',
       'PostgreSQL',
       'MySQL',
       'REST APIs',
@@ -139,7 +137,6 @@ export const domainsData: readonly DomainItem[] = [
     relevantTechnologies: [
       'Node.js',
       'Express',
-      'PHP',
       'Zoho CRM API',
       'HubSpot API',
       'Stripe API',
@@ -176,7 +173,6 @@ export const domainsData: readonly DomainItem[] = [
     relevantTechnologies: [
       'TypeScript',
       'Laravel',
-      'PHP',
       'PostgreSQL',
       'MySQL',
       'Docker',

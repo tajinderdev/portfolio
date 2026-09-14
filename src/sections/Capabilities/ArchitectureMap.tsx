@@ -1,5 +1,5 @@
 import { type ReactElement } from 'react';
-import { Heading, Text, MonoText } from '@/components/typography';
+import { Heading, MonoText } from '@/components/typography';
 import { StatusDot } from '@/components/ui';
 import type { SkillPillar } from '@/content/models';
 
@@ -22,36 +22,36 @@ const mainTiers: readonly TierDefinition[] = [
     pillar: 'BUILD',
     step: '01',
     label: 'Application Tier',
-    layer: 'Presentation & Business Logic',
-    sampleTech: 'React · TypeScript · Laravel · Node',
+    layer: 'Presentation & Logic',
+    sampleTech: 'React · TS · Laravel · Node',
   },
   {
     pillar: 'ARCHITECT',
     step: '02',
     label: 'Contract & Topology',
-    layer: 'API Contracts & State Coordination',
-    sampleTech: 'REST · GraphQL · OAuth · Queues',
+    layer: 'APIs & Coordination',
+    sampleTech: 'REST · GraphQL · Queues',
   },
   {
     pillar: 'INTEGRATE',
     step: '03',
     label: 'External Services',
-    layer: 'Payments, CRMs & Webhooks',
-    sampleTech: 'Stripe · Zoho · HubSpot · Webhooks',
+    layer: 'Payments & CRMs',
+    sampleTech: 'Stripe · Zoho · Webhooks',
   },
   {
     pillar: 'DATA',
     step: '04',
     label: 'Persistence & Cache',
-    layer: 'Relational Integrity & Low-Latency Search',
-    sampleTech: 'PostgreSQL · MySQL · Redis · Elastic',
+    layer: 'Relational & Search',
+    sampleTech: 'PostgreSQL · MySQL · Redis',
   },
   {
     pillar: 'DEPLOY',
     step: '05',
     label: 'Cloud & Runtime',
-    layer: 'Containers, Web Servers & CI/CD',
-    sampleTech: 'Docker · AWS · Nginx · Cloud',
+    layer: 'Containers & CI/CD',
+    sampleTech: 'Docker · AWS · Nginx',
   },
 ];
 
@@ -67,19 +67,19 @@ const crossCuttingPillars: readonly CrossCuttingDefinition[] = [
     pillar: 'TEST',
     label: 'Automated Testing',
     role: 'Quality & Regressions',
-    sampleTech: 'PHPUnit · Jest · Selenium · TDD',
+    sampleTech: 'Jest · Vitest · TDD',
   },
   {
     pillar: 'MODERNIZE',
     label: 'Security & Modernization',
     role: 'Debt Reduction & RBAC',
-    sampleTech: 'RBAC · Dependency Auditing · Refactoring',
+    sampleTech: 'RBAC · Auditing · Refactoring',
   },
   {
     pillar: 'INTELLIGENCE',
     label: 'AI Augmentation',
     role: 'Velocity & Workflows',
-    sampleTech: 'Generative AI · LLM Tooling · Automation',
+    sampleTech: 'GenAI · LLM Automation',
   },
 ];
 
@@ -91,133 +91,108 @@ export function ArchitectureMap({
   return (
     <div
       role="region"
-      className={`rounded-lg border border-border-subtle bg-surface/50 p-6 backdrop-blur-sm sm:p-8 ${className}`}
+      className={`rounded-xl border border-border-subtle bg-surface/40 p-4 sm:p-5 backdrop-blur-sm ${className}`}
       aria-label="Interactive Architecture & Dependency Map"
     >
-      <div className="mb-6 flex flex-col gap-2 border-b border-border-subtle/70 pb-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <StatusDot status="active" label="System Architecture Map" />
-            <MonoText size="xs" color="accent" className="font-semibold uppercase tracking-wider">
-              Dependency Topology
-            </MonoText>
-          </div>
-          <Heading as="h3" variant="card" className="text-lg sm:text-xl font-bold">
-            How Technical Capabilities Connect in Production
+      {/* Header bar */}
+      <div className="mb-3 flex items-center justify-between border-b border-border-subtle/70 pb-2.5">
+        <div className="flex items-center gap-2">
+          <StatusDot status="active" label="System Architecture Map" />
+          <Heading as="h3" variant="card" className="text-xs sm:text-sm font-bold text-text-primary">
+            Production Architecture & Dependency Pipeline
           </Heading>
         </div>
-        <MonoText size="xs" color="muted" className="font-mono">
-          [ Click any layer to inspect ]
+        <MonoText size="xs" color="muted" className="text-[10px] hidden sm:inline-block font-mono">
+          Click any layer to filter
         </MonoText>
       </div>
 
-      <Text variant="small" color="muted" className="mb-6 max-w-3xl">
-        Rather than isolated technology badges, software systems require synchronized layers:
-        interfaces communicate through strict API contracts to resilient backends, persistent data
-        stores, external platforms, and containerized cloud runtime environments.
-      </Text>
+      {/* Primary Linear Pipeline (5 Tiers) */}
+      <div className="grid grid-cols-1 gap-2 sm:grid-cols-3 lg:grid-cols-5 mb-3">
+        {mainTiers.map((tier, idx) => {
+          const isSelected = activePillar === tier.pillar;
+          const isLast = idx === mainTiers.length - 1;
 
-      {/* Primary Linear Flow: 5 Tiers */}
-      <div className="space-y-3 mb-6">
-        <MonoText size="xs" color="muted" className="font-semibold uppercase tracking-wider block text-[11px]">
-          Linear Execution Pipeline
-        </MonoText>
-
-        <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-3 lg:grid-cols-5">
-          {mainTiers.map((tier, idx) => {
-            const isSelected = activePillar === tier.pillar;
-            const isLast = idx === mainTiers.length - 1;
-
-            return (
-              <button
-                key={tier.pillar}
-                type="button"
-                onClick={() => onSelectPillar?.(tier.pillar)}
-                aria-pressed={isSelected}
-                className={`group relative flex flex-col justify-between rounded-md border p-3.5 text-left transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
-                  isSelected
-                    ? 'border-accent bg-accent-muted/20 ring-1 ring-accent'
-                    : 'border-border-subtle bg-surface-raised/40 hover:border-border hover:bg-surface-raised/80'
-                }`}
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-1.5">
-                    <span className="font-mono text-[10px] text-accent font-semibold">
-                      TIER {tier.step}
-                    </span>
-                    {!isLast && (
-                      <span
-                        aria-hidden="true"
-                        className="hidden lg:inline-block font-mono text-[11px] text-text-muted select-none"
-                      >
-                        →
-                      </span>
-                    )}
-                  </div>
-                  <span
-                    className={`font-heading text-sm font-semibold tracking-tight transition-colors ${
-                      isSelected ? 'text-accent' : 'text-text-primary group-hover:text-accent'
-                    }`}
-                  >
-                    {tier.label}
+          return (
+            <button
+              key={tier.pillar}
+              type="button"
+              onClick={() => onSelectPillar?.(tier.pillar)}
+              aria-pressed={isSelected}
+              className={`group flex flex-col justify-between rounded-lg border p-2.5 text-left transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent cursor-pointer ${
+                isSelected
+                  ? 'border-accent bg-accent-muted/20 ring-1 ring-accent'
+                  : 'border-border-subtle/80 bg-surface/60 hover:border-accent/40 hover:bg-surface-raised'
+              }`}
+            >
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <span className="font-mono text-[9px] text-accent font-semibold">
+                    TIER {tier.step}
                   </span>
-                  <span className="mt-1 block text-xs leading-snug text-text-muted">
-                    {tier.layer}
-                  </span>
-                </div>
-
-                <div className="mt-3 border-t border-border-subtle/50 pt-2 font-mono text-[10px] text-text-secondary truncate">
-                  {tier.sampleTech}
-                </div>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Cross-Cutting Engineering Guardrails */}
-      <div className="border-t border-border-subtle/60 pt-4">
-        <MonoText size="xs" color="muted" className="font-semibold uppercase tracking-wider block text-[11px] mb-2.5">
-          Cross-Cutting System Guardrails
-        </MonoText>
-
-        <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-3">
-          {crossCuttingPillars.map((guardrail) => {
-            const isSelected = activePillar === guardrail.pillar;
-            return (
-              <button
-                key={guardrail.pillar}
-                type="button"
-                onClick={() => onSelectPillar?.(guardrail.pillar)}
-                aria-pressed={isSelected}
-                className={`group flex items-center justify-between rounded-md border p-3 text-left transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
-                  isSelected
-                    ? 'border-accent bg-accent-muted/20 ring-1 ring-accent'
-                    : 'border-border-subtle/80 bg-surface-raised/30 hover:border-border hover:bg-surface-raised/70'
-                }`}
-              >
-                <div>
-                  <div className="flex items-center gap-1.5">
-                    <span className="h-1.5 w-1.5 rounded-full bg-accent shrink-0" />
+                  {!isLast && (
                     <span
-                      className={`font-heading text-xs font-semibold ${
-                        isSelected ? 'text-accent' : 'text-text-primary group-hover:text-accent'
-                      }`}
+                      aria-hidden="true"
+                      className="hidden lg:inline-block font-mono text-[10px] text-text-muted select-none"
                     >
-                      {guardrail.label}
+                      →
                     </span>
-                  </div>
-                  <span className="mt-0.5 block text-[11px] text-text-muted font-mono">
-                    {guardrail.sampleTech}
-                  </span>
+                  )}
                 </div>
-                <span className="font-mono text-[10px] text-accent uppercase ml-2 shrink-0">
-                  [{guardrail.pillar}]
+                <span
+                  className={`font-heading text-xs font-bold tracking-tight block ${
+                    isSelected ? 'text-accent' : 'text-text-primary group-hover:text-accent'
+                  }`}
+                >
+                  {tier.label}
                 </span>
-              </button>
-            );
-          })}
-        </div>
+                <span className="text-[10px] text-text-muted block line-clamp-1">
+                  {tier.layer}
+                </span>
+              </div>
+
+              <div className="mt-2 pt-1.5 border-t border-border-subtle/50 font-mono text-[9px] text-text-secondary truncate">
+                {tier.sampleTech}
+              </div>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Cross-Cutting Guardrails */}
+      <div className="grid grid-cols-1 gap-2 sm:grid-cols-3 pt-2 border-t border-border-subtle/50">
+        {crossCuttingPillars.map((guardrail) => {
+          const isSelected = activePillar === guardrail.pillar;
+          return (
+            <button
+              key={guardrail.pillar}
+              type="button"
+              onClick={() => onSelectPillar?.(guardrail.pillar)}
+              aria-pressed={isSelected}
+              className={`group flex items-center justify-between rounded-lg border px-3 py-2 text-left transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent cursor-pointer ${
+                isSelected
+                  ? 'border-accent bg-accent-muted/20 ring-1 ring-accent'
+                  : 'border-border-subtle/80 bg-surface/40 hover:border-accent/40 hover:bg-surface-raised'
+              }`}
+            >
+              <div>
+                <span
+                  className={`font-heading text-xs font-semibold block ${
+                    isSelected ? 'text-accent' : 'text-text-primary group-hover:text-accent'
+                  }`}
+                >
+                  {guardrail.label}
+                </span>
+                <span className="text-[10px] text-text-muted font-mono block">
+                  {guardrail.sampleTech}
+                </span>
+              </div>
+              <span className="font-mono text-[9px] text-accent uppercase shrink-0 ml-2">
+                [{guardrail.pillar}]
+              </span>
+            </button>
+          );
+        })}
       </div>
     </div>
   );

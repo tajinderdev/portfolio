@@ -20,7 +20,6 @@ export const projectsData: readonly ProjectCaseStudy[] = [
       'React',
       'TypeScript',
       'Laravel',
-      'PHP',
       'PostgreSQL',
       'Docker',
       'AWS S3',
@@ -102,7 +101,6 @@ export const projectsData: readonly ProjectCaseStudy[] = [
     ],
     technologies: [
       'Laravel',
-      'PHP',
       'Stripe API',
       'Redis',
       'PostgreSQL',
@@ -182,7 +180,6 @@ export const projectsData: readonly ProjectCaseStudy[] = [
     ],
     technologies: [
       'Magento 2',
-      'PHP',
       'MySQL',
       'Elasticsearch',
       'Redis',
@@ -265,7 +262,6 @@ export const projectsData: readonly ProjectCaseStudy[] = [
     technologies: [
       'Node.js',
       'Express.js',
-      'PHP',
       'Zoho CRM API',
       'HubSpot API',
       'Webhooks',

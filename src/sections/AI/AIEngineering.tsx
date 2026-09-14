@@ -3,6 +3,7 @@ import { Section } from '@/components/layout';
 import { SectionHeader, MonoText } from '@/components/typography';
 import { GovernanceMatrix } from './GovernanceMatrix';
 import { WorkflowPipeline } from './WorkflowPipeline';
+import { WorkflowStepModal } from './WorkflowStepModal';
 import { ApplicationCapabilities } from './ApplicationCapabilities';
 import type { AIEngineeringModel } from '@/content/models';
 
@@ -15,9 +16,9 @@ export function AIEngineering({
   data,
   className = '',
 }: AIEngineeringProps): ReactElement {
-  const [activeStepId, setActiveStepId] = useState<string>(
-    () => data.workflowSteps[0]?.id ?? 'step-idea',
-  );
+  const [selectedStepId, setSelectedStepId] = useState<string | null>(null);
+
+  const activeStep = data.workflowSteps.find((s) => s.id === selectedStepId) ?? null;
 
   return (
     <Section id="ai" spacing="default" className={`border-b border-border-subtle ${className}`}>
@@ -25,7 +26,7 @@ export function AIEngineering({
         {/* Section Header */}
         <SectionHeader
           kicker={data.kicker}
-          title={data.headline}
+          title="Modern Engineering"
           description={data.positioning}
         />
 
@@ -50,10 +51,19 @@ export function AIEngineering({
           </div>
           <WorkflowPipeline
             steps={data.workflowSteps}
-            activeStepId={activeStepId}
-            onSelectStep={setActiveStepId}
+            activeStepId={selectedStepId ?? ''}
+            onSelectStep={(id) => setSelectedStepId(id)}
           />
         </div>
+
+        {/* Centered Workflow Stage Deep Dive Modal */}
+        <WorkflowStepModal
+          step={activeStep}
+          steps={data.workflowSteps}
+          isOpen={activeStep !== null}
+          onClose={() => setSelectedStepId(null)}
+          onSelectStep={(step) => setSelectedStepId(step.id)}
+        />
 
         {/* 3. Two Capability Spheres */}
         <div className="space-y-4">

@@ -3,6 +3,7 @@ import { Section } from '@/components/layout';
 import { SectionHeader, MonoText } from '@/components/typography';
 import { CareerProgressionTracker } from './CareerProgressionTracker';
 import { ExperienceCard } from './ExperienceCard';
+import { ExperienceModal } from './ExperienceModal';
 import type { ExperienceItem } from '@/content/models';
 
 export interface ExperienceProps {
@@ -14,44 +15,27 @@ export function Experience({
   experiences,
   className = '',
 }: ExperienceProps): ReactElement {
-  // Default to having the most senior/current role expanded for immediate scanning
-  const [expandedIds, setExpandedIds] = useState<Set<string>>(
-    () => new Set([experiences[0]?.id ?? 'exp-current']),
-  );
   const [selectedMilestoneId, setSelectedMilestoneId] = useState<string | undefined>(
     experiences[0]?.id,
   );
-
-  const toggleExpand = (id: string): void => {
-    setExpandedIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) {
-        next.delete(id);
-      } else {
-        next.add(id);
-      }
-      return next;
-    });
-  };
-
-  const handleExpandAll = (): void => {
-    setExpandedIds(new Set(experiences.map((e) => e.id)));
-  };
-
-  const handleCollapseAll = (): void => {
-    setExpandedIds(new Set());
-  };
+  const [modalExperience, setModalExperience] = useState<ExperienceItem | null>(null);
 
   const handleSelectStage = (id: string): void => {
     setSelectedMilestoneId(id);
-    setExpandedIds((prev) => new Set(prev).add(id));
-    const targetElement = document.getElementById(`heading-${id}`);
-    if (targetElement) {
-      targetElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    const targetExp = experiences.find((e) => e.id === id);
+    if (targetExp) {
+      setModalExperience(targetExp);
     }
   };
 
-  const allExpanded = experiences.length > 0 && expandedIds.size === experiences.length;
+  const handleOpenModal = (experience: ExperienceItem): void => {
+    setSelectedMilestoneId(experience.id);
+    setModalExperience(experience);
+  };
+
+  const handleCloseModal = (): void => {
+    setModalExperience(null);
+  };
 
   return (
     <Section id="experience" spacing="default" className={`border-b border-border-subtle ${className}`}>
@@ -59,17 +43,17 @@ export function Experience({
         {/* Section Header */}
         <SectionHeader
           kicker="02 / CAREER PROGRESSION"
-          title="Engineering progression from implementation to systems architecture."
+          title="Professional Experience"
           description="7+ years building, modernizing, and supporting web platforms across diverse business domains—progressing from core implementation to architectural ownership, technical leadership, and AI augmentation."
         />
 
-        {/* Visual Progression Stepper Arc */}
+        {/* Visual Progression Stepper Arc (Trajectory) */}
         <CareerProgressionTracker
           activeId={selectedMilestoneId}
           onSelectStage={handleSelectStage}
         />
 
-        {/* Global Toolbar: Count & Expand/Collapse Toggle */}
+        {/* Global Toolbar: Count & Quick Instruction */}
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border-subtle/80 pb-4">
           <div className="flex items-center gap-2">
             <span className="h-2 w-2 rounded-full bg-accent" />
@@ -78,41 +62,34 @@ export function Experience({
             </MonoText>
           </div>
 
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={allExpanded ? handleCollapseAll : handleExpandAll}
-              className="rounded border border-border-subtle/80 bg-surface/50 px-3 py-1 font-mono text-xs font-medium text-text-secondary transition-colors hover:border-border hover:bg-surface-raised hover:text-text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-            >
-              {allExpanded ? 'Collapse All' : 'Expand All Details'}
-            </button>
-          </div>
+          <MonoText size="xs" color="muted" className="text-[11px]">
+            Click any milestone card to view complete architectural details
+          </MonoText>
         </div>
 
-        {/* Experience Timeline Stream */}
-        <div className="relative space-y-8 pl-0 sm:pl-6 before:hidden sm:before:block before:absolute before:left-2 before:top-4 before:bottom-4 before:w-px before:bg-border-subtle/80">
+        {/* Horizontal Milestones Grid (Compact, Minimal Scroll) */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5 items-stretch">
           {experiences.map((experience) => (
-            <div key={experience.id} className="relative">
-              {/* Timeline Indicator Dot (Desktop) */}
-              <div
-                aria-hidden="true"
-                className="hidden sm:flex absolute -left-6 top-7 -translate-x-1/2 h-3.5 w-3.5 items-center justify-center rounded-full border border-border-subtle bg-background"
-              >
-                <div
-                  className={`h-1.5 w-1.5 rounded-full ${
-                    expandedIds.has(experience.id) ? 'bg-accent' : 'bg-text-muted/40'
-                  }`}
-                />
-              </div>
-
-              <ExperienceCard
-                experience={experience}
-                isExpanded={expandedIds.has(experience.id)}
-                onToggleExpand={() => toggleExpand(experience.id)}
-              />
-            </div>
+            <ExperienceCard
+              key={experience.id}
+              experience={experience}
+              isSelected={selectedMilestoneId === experience.id}
+              onOpenDetails={() => handleOpenModal(experience)}
+            />
           ))}
         </div>
+
+        {/* Detailed Experience Modal / Popup */}
+        <ExperienceModal
+          experience={modalExperience}
+          experiences={experiences}
+          isOpen={modalExperience !== null}
+          onClose={handleCloseModal}
+          onSelectExperience={(exp) => {
+            setSelectedMilestoneId(exp.id);
+            setModalExperience(exp);
+          }}
+        />
       </div>
     </Section>
   );

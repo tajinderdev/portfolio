@@ -18,7 +18,7 @@ describe('Technical Capabilities Section', () => {
     expect(
       screen.getByRole('heading', {
         level: 2,
-        name: /engineered for capability, resilience, and architectural clarity/i,
+        name: /technical capabilities/i,
       }),
     ).toBeInTheDocument();
   });

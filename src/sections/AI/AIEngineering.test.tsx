@@ -1,6 +1,7 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { AIEngineering } from './AIEngineering';
+import { WorkflowStepModal } from './WorkflowStepModal';
 import { getPortfolioContent } from '@/content';
 
 describe('AIEngineering Section', () => {
@@ -15,7 +16,7 @@ describe('AIEngineering Section', () => {
     expect(
       screen.getByRole('heading', {
         level: 2,
-        name: /ai-augmented engineering: an engineering multiplier grounded in architectural control/i,
+        name: /modern engineering/i,
       }),
     ).toBeInTheDocument();
   });
@@ -35,7 +36,7 @@ describe('AIEngineering Section', () => {
     expect(screen.getByText('In-Application AI Capabilities')).toBeInTheDocument();
   });
 
-  it('allows interacting with workflow steps to inspect different stages', () => {
+  it('allows interacting with workflow steps to open modal for stage details', () => {
     render(<AIEngineering data={content.aiEngineering} />);
 
     const validateTab = screen.getByRole('tab', {
@@ -43,7 +44,35 @@ describe('AIEngineering Section', () => {
     });
     fireEvent.click(validateTab);
 
-    expect(validateTab).toHaveAttribute('aria-selected', 'true');
+    // Modal opens
+    const dialog = screen.getByRole('dialog');
+    expect(dialog).toBeInTheDocument();
     expect(screen.getByText('STAGE 05 // QUALITY')).toBeInTheDocument();
+  });
+
+  describe('WorkflowStepModal Component', () => {
+    const mockStep = content.aiEngineering.workflowSteps[0]!;
+
+    it('renders modal when open and handles close action', () => {
+      const onClose = vi.fn();
+      const onSelectStep = vi.fn();
+
+      render(
+        <WorkflowStepModal
+          step={mockStep}
+          steps={content.aiEngineering.workflowSteps}
+          isOpen={true}
+          onClose={onClose}
+          onSelectStep={onSelectStep}
+        />,
+      );
+
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
+      expect(screen.getByRole('heading', { level: 3, name: mockStep.name })).toBeInTheDocument();
+
+      const closeBtn = screen.getByRole('button', { name: /close workflow step details/i });
+      fireEvent.click(closeBtn);
+      expect(onClose).toHaveBeenCalled();
+    });
   });
 });
