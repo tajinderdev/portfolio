@@ -147,7 +147,6 @@ export function Footer(): ReactElement {
           </p>
 
           <div className="flex items-center gap-4">
-            <span>React 19 · TS · Tailwind v4</span>
             <a
               href="#main-content"
               onClick={(e) => handleSmoothScrollClick(e, '#')}
