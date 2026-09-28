@@ -9,6 +9,16 @@ export default async function handler(
   req: VercelRequest,
   res: ServerResponse
 ): Promise<void> {
+  // Handle CORS preflight
+  if (req.method === 'OPTIONS') {
+    res.statusCode = 204;
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.end();
+    return;
+  }
+
   let body: unknown = req.body;
 
   // If body has not been parsed by Vercel middleware, buffer the stream
@@ -55,6 +65,9 @@ export default async function handler(
 
   res.statusCode = result.status;
   res.setHeader('Content-Type', 'application/json');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   if (result.headers) {
     for (const [key, value] of Object.entries(result.headers)) {

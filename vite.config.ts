@@ -15,6 +15,16 @@ function contactDevPlugin(): Plugin {
     name: 'contact-api-dev-middleware',
     configureServer(server) {
       server.middlewares.use('/api/contact', async (req, res) => {
+        // Handle CORS preflight (OPTIONS) — browsers send this before POST
+        if (req.method === 'OPTIONS') {
+          res.statusCode = 204;
+          res.setHeader('Access-Control-Allow-Origin', '*');
+          res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+          res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+          res.end();
+          return;
+        }
+
         if (req.method !== 'POST') {
           res.statusCode = 405;
           res.setHeader('Content-Type', 'application/json');
@@ -74,6 +84,7 @@ function contactDevPlugin(): Plugin {
 
         res.statusCode = result.status;
         res.setHeader('Content-Type', 'application/json');
+        res.setHeader('Access-Control-Allow-Origin', '*');
 
         if (result.headers) {
           for (const [key, value] of Object.entries(result.headers)) {
