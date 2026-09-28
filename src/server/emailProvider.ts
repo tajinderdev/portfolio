@@ -6,7 +6,7 @@
  * Keeps all API keys strictly on the server-side.
  */
 
-import type { ValidatedContactData } from './validator';
+import type { ValidatedContactData } from './validator.js';
 
 export interface EmailDispatchResult {
   readonly success: boolean;
@@ -138,9 +138,16 @@ export class ResendEmailProvider implements EmailProvider {
           // ignore
         }
         console.error('[Resend Error] API responded with status:', response.status, errDetails);
+        
+        let parsedMessage = errDetails;
+        try {
+           const parsed = JSON.parse(errDetails);
+           if (parsed.message) parsedMessage = parsed.message;
+        } catch {}
+
         return {
           success: false,
-          error: 'Failed to deliver notification email.',
+          error: `Email provider error (${response.status}): ${parsedMessage || 'Failed to deliver notification email'}`,
         };
       }
 
