@@ -1,5 +1,5 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
-import { handleContactRequest } from '../src/server/contactHandler';
+import { handleContactRequest } from '../src/server/contactHandler.js';
 
 interface VercelRequest extends IncomingMessage {
   body?: unknown;

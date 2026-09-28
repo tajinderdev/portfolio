@@ -14,9 +14,9 @@
 import {
   validateAndSanitizeContactInput,
   type RawContactInput,
-} from './validator';
-import { defaultRateLimiter, type RateLimiter } from './rateLimiter';
-import { defaultEmailProvider, type EmailProvider } from './emailProvider';
+} from './validator.js';
+import { defaultRateLimiter, type RateLimiter } from './rateLimiter.js';
+import { defaultEmailProvider, type EmailProvider } from './emailProvider.js';
 
 export interface ServerRequest {
   readonly method?: string;
@@ -137,7 +137,7 @@ export async function handleContactRequest(
       status: 500,
       body: {
         success: false,
-        message: 'Unable to send message at this time. Please try again later.',
+        message: dispatchResult.error || 'Unable to send message at this time. Please try again later.',
       },
     };
   }
