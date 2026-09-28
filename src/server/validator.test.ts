@@ -322,42 +322,40 @@ describe('validateAndSanitizeContactInput', () => {
       expect(result.data).toBeUndefined();
     });
 
-    it('flags isBot: true when submission timing is less than 2000ms', () => {
-      const clientMountTime = 10000;
-      const fastSubmitTime = 11500; // 1500ms elapsed (< 2000ms)
+    it('flags isBot: true when submission timing is less than 1000ms', () => {
+      const clientDuration = 500; // 500ms elapsed (< 1000ms)
 
       const input: RawContactInput = {
         ...validPayload,
         _hp_verify: '',
-        _hp_time: clientMountTime,
+        _hp_time: clientDuration,
       };
 
-      const result = validateAndSanitizeContactInput(input, fastSubmitTime);
+      const result = validateAndSanitizeContactInput(input, 10000);
 
       expect(result.isBot).toBe(true);
       expect(result.isValid).toBe(false);
       expect(result.data).toBeUndefined();
     });
 
-    it('flags isBot: false when submission timing is greater than or equal to 2000ms', () => {
-      const clientMountTime = 10000;
-      const validSubmitTime = 12500; // 2500ms elapsed (>= 2000ms)
+    it('flags isBot: false when submission timing is greater than or equal to 1000ms', () => {
+      const clientDuration = 2500; // 2500ms elapsed (>= 1000ms)
 
       const input: RawContactInput = {
         ...validPayload,
         _hp_verify: '',
-        _hp_time: clientMountTime,
+        _hp_time: clientDuration,
       };
 
-      const result = validateAndSanitizeContactInput(input, validSubmitTime);
+      const result = validateAndSanitizeContactInput(input, 10000);
 
       expect(result.isBot).toBe(false);
       expect(result.isValid).toBe(true);
     });
 
-    it('flags isBot: true when _hp_time indicates a future timestamp', () => {
-      const clientMountTime = 15000;
-      const serverReceiveTime = 10000; // Elapsed is negative (-5000ms)
+    it('flags isBot: true when _hp_time indicates an extreme future timestamp (>30s clock skew)', () => {
+      const clientMountTime = Date.now() + 60000;
+      const serverReceiveTime = Date.now(); // Elapsed is negative (-60000ms)
 
       const input: RawContactInput = {
         ...validPayload,

@@ -113,14 +113,14 @@ describe('handleContactRequest', () => {
     expect(mockEmailProvider.send).not.toHaveBeenCalled();
   });
 
-  it('silently discards automated submissions (< 2000ms elapsed) with fake 200 OK without emailing', async () => {
+  it('silently discards automated submissions (< 1000ms elapsed) with fake 200 OK without emailing', async () => {
     const now = 5000;
     const req: ServerRequest = {
       method: 'POST',
       ip: '127.0.0.1',
       body: {
         ...validBody,
-        _hp_time: 4000, // Only 1000ms elapsed
+        _hp_time: 500, // 500ms elapsed duration (< 1000ms)
       },
     };
 
