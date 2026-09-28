@@ -49,7 +49,8 @@ export class ContactApiClient implements ContactClient {
     const timeoutId = setTimeout(() => controller.abort(), this.timeoutMs);
 
     try {
-      const response = await this.fetchFn(this.endpoint, {
+      const doFetch = this.fetchFn;
+      const response = await doFetch(this.endpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -91,11 +92,12 @@ export class ContactApiClient implements ContactClient {
         message: data.message || (data.success ? 'Message sent successfully.' : 'Failed to send message.'),
         errors: data.errors,
       };
-    } catch {
+    } catch (err) {
       clearTimeout(timeoutId);
+      const errorMessage = err instanceof Error ? err.message : String(err);
       return {
         success: false,
-        message: 'Unable to connect to contact service. Please try again.',
+        message: `Unable to connect: ${errorMessage}`,
       };
     }
   }
