@@ -131,7 +131,13 @@ export class ResendEmailProvider implements EmailProvider {
       });
 
       if (!response.ok) {
-        console.error('[Resend Error] API responded with status:', response.status);
+        let errDetails = '';
+        try {
+          errDetails = await response.text();
+        } catch {
+          // ignore
+        }
+        console.error('[Resend Error] API responded with status:', response.status, errDetails);
         return {
           success: false,
           error: 'Failed to deliver notification email.',

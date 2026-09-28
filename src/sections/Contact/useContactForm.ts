@@ -153,13 +153,14 @@ export function useContactForm(
       setStatusMessage('');
 
       try {
+        const interactionDuration = Date.now() - mountTimeRef.current;
         const response = await client.sendContactMessage({
           name: values.name.trim(),
           email: values.email.trim(),
           subject: values.subject.trim() || undefined,
           message: values.message.trim(),
           _hp_verify: values._hp_verify,
-          _hp_time: mountTimeRef.current,
+          _hp_time: interactionDuration,
         });
 
         if (response.success) {

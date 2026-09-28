@@ -51,19 +51,24 @@ export function validateAndSanitizeContactInput(
     };
   }
 
-  // 2. Bot Detection: Interaction Timing Check (Minimum 2000ms elapsed)
+  // 2. Bot Detection: Interaction Timing Check (Minimum 1000ms elapsed)
   if (input._hp_time !== undefined && input._hp_time !== null && input._hp_time !== '') {
-    const clientTimestamp = Number(input._hp_time);
-    if (!Number.isFinite(clientTimestamp)) {
+    const rawVal = Number(input._hp_time);
+    if (!Number.isFinite(rawVal)) {
       return {
         isValid: false,
         isBot: true,
       };
     }
 
-    const elapsed = receivedAt - clientTimestamp;
-    // If elapsed is under 2000ms or negative (future timestamp), flag as bot
-    if (elapsed < 2000 || elapsed < 0) {
+    // Determine if rawVal is a duration in ms or an absolute timestamp
+    const elapsed = rawVal > 1_000_000_000_000
+      ? receivedAt - rawVal
+      : rawVal;
+
+    // Reject if interaction duration is under 1000ms (too fast for humans)
+    // Or if timestamp is impossibly far in the future (> 30s clock skew)
+    if (elapsed < 1000 || elapsed < -30000) {
       return {
         isValid: false,
         isBot: true,
